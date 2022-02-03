@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 
 @RestController
@@ -68,10 +71,10 @@ public class MemberController {
 //        private String goal;
 //    }
 
-    @Data
-    static class PasswordCheckRequest {
-        private String passwordCheck;
-    }
+//    @Data
+//    static class PasswordCheckRequest {
+//        private String passwordCheck;
+//    }
 
     // 비밀번호 확인
     @PostMapping("/check")
@@ -97,7 +100,7 @@ public class MemberController {
 
     // 회원정보 수정
     @PutMapping("/{memberId}")
-    public ResponseEntity<String> updateMember(@PathVariable("memberId") int memberId, @RequestBody Member member) {
+    public ResponseEntity<String> updateMember(@PathVariable("memberId") Integer memberId, @RequestBody Member member) {
         memberService.update(memberId, member);
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -105,14 +108,25 @@ public class MemberController {
 
     // 회원정보 탈퇴
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<String> deleteMember(@PathVariable("memberId") int memberId) {
+    public ResponseEntity<String> deleteMember(@PathVariable("memberId") Integer memberId) {
         memberService.delete(memberId);
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
     // 회원정보 불러오기
-    //@GetMapping("/{memberId}/profile")
+    @GetMapping("/{memberId}/profile")
+    public ResponseEntity<Map<String, Object>> getMemberInfo(@PathVariable("memberID") Integer memberId){
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.ACCEPTED;
+
+        Member member = memberService.findOne(memberId);
+        resultMap.put("info", member);
+        resultMap.put("message", SUCCESS);
+        status = HttpStatus.ACCEPTED;
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
 
 
 }

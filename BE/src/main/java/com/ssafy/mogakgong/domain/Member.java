@@ -20,7 +20,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "email")
     private String email;
@@ -46,7 +46,7 @@ public class Member {
     private Timestamp regDate;
 
     @Column(name = "is_exist")
-    private int isExist;
+    private Integer isExist;
 
     @Column(name = "type")
     private String type;
