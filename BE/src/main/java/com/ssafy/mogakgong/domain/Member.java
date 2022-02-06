@@ -51,4 +51,7 @@ public class Member {
     @Column(name = "type")
     private String type;
 
+    @OneToMany(mappedBy = "member")
+    private List<MemberCategory> memberCategories = new ArrayList<>();
+
 }

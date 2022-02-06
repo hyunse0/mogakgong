@@ -3,6 +3,7 @@ package com.ssafy.mogakgong.service;
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +35,9 @@ public class MemberService {
     // 이메일 중복 검사
     public Boolean validateDuplicateMember(Member member) {
         // 해당 E-mail 을 사용중인 멤버 탐색
-        List<Member> findMembers = memberRepository.findByEmail(member.getEmail());
+        Member findMember = memberRepository.findByEmail(member.getEmail());
         // 사용중인 멤버가 존재한다면
-        if ( !findMembers.isEmpty()) {
+        if ( findMember != null) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
             //return true; // E-mail 중복 사용 불가능
         }
@@ -54,8 +55,8 @@ public class MemberService {
     // 로그인 및 마이페이지 입장 시 비밀번호 확인
     public void validatePassword(String email, String password) {
         // 해당 E-mail 을 사용중인 멤버 탐색
-        List<Member> findMembers = memberRepository.findByEmail(email);
-        if(!findMembers.get(0).getPassword().equals(password)) {
+        Member findMember = memberRepository.findByEmail(email);
+        if(!findMember.getPassword().equals(password)) {
             throw new IllegalStateException("비밀번호 일치하지 않습니다.");
         }
     }

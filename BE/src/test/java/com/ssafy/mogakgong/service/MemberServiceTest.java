@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ public class MemberServiceTest {
     @Autowired MemberService memberService;
     @Autowired MemberRepository memberRepository;
     @Autowired EntityManager em;
+    @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
     //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
@@ -40,11 +42,13 @@ public class MemberServiceTest {
         member.setIsExist(1);
         member.setType("mogakgong");
         //when
+        String rawPassword = member.getPassword();
+        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        member.setPassword(encPassword);
         memberService.join(member);
 
         //then
         em.flush();
-        assertEquals(member, memberRepository.findById(member.getId()));
 
     }
 
@@ -77,10 +81,18 @@ public class MemberServiceTest {
     @Test
     public void 비밀번호확인_맞음() throws Exception {
         //given
+        Member member1 = new Member();
+        member1.setEmail("test@naver.com");
+        member1.setPassword("abc");
+        member1.setNickname("ssafy1");
+        member1.setIsExist(1);
+        member1.setType("mogakgong");
+
         String email = "test@naver.com";
         String password = "abc";
 
         //when
+        memberService.join(member1);
         memberService.validatePassword(email, password);
 
         //then
@@ -90,10 +102,18 @@ public class MemberServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 비밀번호확인_틀림() throws Exception {
         //given
+        Member member1 = new Member();
+        member1.setEmail("test@naver.com");
+        member1.setPassword("abc");
+        member1.setNickname("ssafy1");
+        member1.setIsExist(1);
+        member1.setType("mogakgong");
+
         String email = "test@naver.com";
         String password = "abcd";
 
         //when
+        memberService.join(member1);
         memberService.validatePassword(email, password);
 
         //then

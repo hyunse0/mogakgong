@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.Objects;
 public class MemberController {
 
     private final MemberService memberService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
@@ -31,6 +33,9 @@ public class MemberController {
             return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
         }
         try {
+            String rawPassword = member.getPassword();
+            String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+            member.setPassword(encPassword);
             memberService.join(member);  // 데이터 저장
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
