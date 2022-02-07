@@ -64,4 +64,7 @@ public class Member {
     @ApiModelProperty(value = "회원 등급?")
     private String type;
 
+    @OneToMany(mappedBy = "member")
+    private List<MemberCategory> memberCategories = new ArrayList<>();
+
 }
