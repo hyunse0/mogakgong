@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface QnARepository extends JpaRepository<QnA, Integer> {
-    Page<QnA> findByMemberIdOrderByIdDesc(Integer memberId, Pageable pageable);
+    Page<QnA> findByMemberIdAndIsExistOrderByIdDesc(Integer memberId, Integer isExist, Pageable pageable);
 }

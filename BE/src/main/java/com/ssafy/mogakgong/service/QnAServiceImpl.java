@@ -35,7 +35,7 @@ public class QnAServiceImpl implements QnAService{
 
     @Override
     public Page<QnAResponse> getQnAList(Integer memberId, Pageable pageable) {
-        return qnaRepository.findByMemberIdOrderByIdDesc(memberId, pageable)
+        return qnaRepository.findByMemberIdAndIsExistOrderByIdDesc(memberId, 1, pageable)
                 .map(QnAResponse::from);
     }
 
