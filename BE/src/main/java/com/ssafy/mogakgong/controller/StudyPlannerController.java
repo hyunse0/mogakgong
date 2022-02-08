@@ -21,6 +21,7 @@ public class StudyPlannerController {
     private final StudyPlannerService studyPlannerService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
+    private Integer isExist = 1;
 
     // 스터디 플래너 작성
     @PostMapping("")
@@ -35,10 +36,15 @@ public class StudyPlannerController {
 
     // 스터디 플래너 목록
     @GetMapping("/{memberId}")
-    public ResponseEntity<String> listStudyPlanner(@PathVariable int memberId, Model model) {
-        List<StudyPlanner> studyPlanners = studyPlannerService.findStudyPlanners(memberId);
-        model.addAttribute("studyPlanners",studyPlanners);
-        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> getStudyPlannerList(@PathVariable int memberId) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        List<StudyPlanner> studyPlanners = studyPlannerService.findStudyPlanners(memberId, isExist);
+
+        resultMap.put("info", studyPlanners);
+        resultMap.put("message", SUCCESS);
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     }
 
     // 스터디 플래너 수정

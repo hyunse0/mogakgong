@@ -2,6 +2,8 @@ package com.ssafy.mogakgong.service;
 
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.repository.MemberRepository;
+import com.ssafy.mogakgong.request.MemberJoinRequest;
+import com.ssafy.mogakgong.request.MemberUpdateRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,8 @@ import static org.junit.Assert.*;
 @Transactional
 public class MemberServiceTest {
 
-    @Autowired MemberService memberService;
+    @Autowired
+    MemberService memberService;
     @Autowired MemberRepository memberRepository;
     @Autowired EntityManager em;
     @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -32,7 +35,7 @@ public class MemberServiceTest {
     //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원가입() throws Exception {
         //given
-        Member member = new Member();
+        MemberJoinRequest member = new MemberJoinRequest();
         member.setEmail("test@naver.com");
         member.setPassword("abc");
         member.setNickname("ssafy");
@@ -55,14 +58,14 @@ public class MemberServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 중복_회원() throws Exception {
         //given
-        Member member1 = new Member();
+        MemberJoinRequest member1 = new MemberJoinRequest();
         member1.setEmail("test@ssafy.com");
         member1.setPassword("abc");
         member1.setNickname("ssafy1");
         member1.setIsExist(1);
         member1.setType("mogakgong");
 
-        Member member2 = new Member();
+        MemberJoinRequest member2 = new MemberJoinRequest();
         member2.setEmail("test@ssafy.com");
         member2.setPassword("bcd");
         member2.setNickname("ssafy2");
@@ -81,19 +84,28 @@ public class MemberServiceTest {
     @Test
     public void 비밀번호확인_맞음() throws Exception {
         //given
-        Member member1 = new Member();
-        member1.setEmail("test@naver.com");
-        member1.setPassword("abc");
-        member1.setNickname("ssafy1");
-        member1.setIsExist(1);
-        member1.setType("mogakgong");
+        MemberJoinRequest member = new MemberJoinRequest();
+        member.setEmail("test@naver.com");
+        member.setPassword("abc");
+        member.setNickname("ssafy");
+        member.setImg("noImage");
+        member.setBirth(Date.valueOf("2020-02-02"));
+        member.setGoal("화팅");
+        member.setIsExist(1);
+        member.setType("mogakgong");
 
-        String email = "test@naver.com";
-        String password = "abc";
+        String emailCheck = "test@naver.com";
+        String passwordCheck = "abc";
 
         //when
-        memberService.join(member1);
-        memberService.validatePassword(email, password);
+        String rawPassword = member.getPassword();
+        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
+        member.setPassword(encPassword);
+        memberService.join(member);
+
+        String encPasswordCheck = bCryptPasswordEncoder.encode(passwordCheck);
+
+        memberService.validatePassword(emailCheck, encPasswordCheck);
 
         //then
         em.flush();
@@ -102,7 +114,7 @@ public class MemberServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 비밀번호확인_틀림() throws Exception {
         //given
-        Member member1 = new Member();
+        MemberJoinRequest member1 = new MemberJoinRequest();
         member1.setEmail("test@naver.com");
         member1.setPassword("abc");
         member1.setNickname("ssafy1");
@@ -124,22 +136,22 @@ public class MemberServiceTest {
     //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원정보_수정() throws Exception {
         //given
-        Member member1 = new Member();
-        member1.setEmail("test@ssafy.com");
+        MemberJoinRequest member1 = new MemberJoinRequest();
+        member1.setEmail("test@naver.com");
         member1.setPassword("abc");
         member1.setNickname("ssafy");
         member1.setIsExist(1);
         member1.setType("mogakgong");
         memberService.join(member1);
 
-        Member member2 = new Member();
+        Member member = memberRepository.findByEmail("test@naver.com");
+
+        MemberUpdateRequest member2 = new MemberUpdateRequest();
         member2.setPassword("bcd");
         member2.setNickname("ssafy2");
-        member2.setIsExist(1);
-        member2.setType("mogakgong");
 
         //when
-        memberService.update(member1.getId(), member2);
+        memberService.update(member.getId(), member2);
 
         //then
         em.flush();
@@ -149,21 +161,21 @@ public class MemberServiceTest {
     //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원정보_조회() throws Exception {
         //given
-        Member member1 = new Member();
+        MemberJoinRequest member1 = new MemberJoinRequest();
         member1.setEmail("test@ssafy.com");
         member1.setPassword("abc");
         member1.setNickname("ssafy");
         member1.setIsExist(1);
         member1.setType("mogakgong");
 
-        Member member2 = new Member();
+        MemberJoinRequest member2 = new MemberJoinRequest();
         member2.setEmail("test@naver.com");
         member2.setPassword("abc");
         member2.setNickname("ssafy");
         member2.setIsExist(1);
         member2.setType("mogakgong");
 
-        Member member3 = new Member();
+        MemberJoinRequest member3 = new MemberJoinRequest();
         member3.setEmail("test@daum.net");
         member3.setPassword("abc");
         member3.setNickname("ssafy");
@@ -186,21 +198,21 @@ public class MemberServiceTest {
     //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원정보_삭제() throws Exception {
         //given
-        Member member1 = new Member();
+        MemberJoinRequest member1 = new MemberJoinRequest();
         member1.setEmail("test@ssafy.com");
         member1.setPassword("abc");
         member1.setNickname("ssafy");
         member1.setIsExist(1);
         member1.setType("mogakgong");
 
-        Member member2 = new Member();
+        MemberJoinRequest member2 = new MemberJoinRequest();
         member2.setEmail("test@naver.com");
         member2.setPassword("abc");
         member2.setNickname("ssafy");
         member2.setIsExist(1);
         member2.setType("mogakgong");
 
-        Member member3 = new Member();
+        MemberJoinRequest member3 = new MemberJoinRequest();
         member3.setEmail("test@daum.net");
         member3.setPassword("abc");
         member3.setNickname("ssafy");

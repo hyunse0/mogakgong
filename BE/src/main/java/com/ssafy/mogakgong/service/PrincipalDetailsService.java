@@ -18,11 +18,23 @@ public class PrincipalDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     // 시큐리티 session => Authentication => UserDetails
+//    @Override
+//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//        // 파라미터 변수 String email 이랑 프론트에서 <input type="text" name ="email"> 부분 맞춰야 매핑 됨
+//
+//        Member memberEntity = memberRepository.findByEmail(email);
+//        if(memberEntity != null) {
+//            return new PrincipalDetails(memberEntity); // 시큐리티 세션( authentication( UserDetails ) )
+//        }
+//        return null;
+//    }
+
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 파라미터 변수 String email 이랑 프론트에서 <input type="text" name ="email"> 부분 맞춰야 매핑 됨
 
-        Member memberEntity = memberRepository.findByEmail(email);
+        Member memberEntity = memberRepository.findByEmail(username);
+        System.out.println("memberEntity:" + memberEntity);
         if(memberEntity != null) {
             return new PrincipalDetails(memberEntity); // 시큐리티 세션( authentication( UserDetails ) )
         }

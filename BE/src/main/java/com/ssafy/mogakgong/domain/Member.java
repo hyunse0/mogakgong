@@ -3,11 +3,15 @@ package com.ssafy.mogakgong.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.management.relation.Role;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -61,10 +65,32 @@ public class Member {
     private Integer isExist;
 
     @Column(name = "type")
-    @ApiModelProperty(value = "회원 등급?")
+    @ApiModelProperty(value = "회원 가입 방식")
     private String type;
+
+    @Column(name = "role")
+    @ApiModelProperty(value = "회원 등급")
+    private String role;
 
     @OneToMany(mappedBy = "member")
     private List<MemberCategory> memberCategories = new ArrayList<>();
+
+    public Member() {
+        this.role = "USER";
+    }
+
+    @Builder
+    public Member(String email, String password, String nickname, String img, Date birth, String goal, Timestamp regDate, Integer isExist, String type) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.img = img;
+        this.birth = birth;
+        this.goal = goal;
+        this.regDate = regDate;
+        this.isExist = isExist;
+        this.type = type;
+        this.role = "USER";
+    }
 
 }

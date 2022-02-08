@@ -9,11 +9,14 @@ package com.ssafy.mogakgong.config.auth;
 // Security Session => Authentication 객체 => UserDetails 타입
 
 import com.ssafy.mogakgong.domain.Member;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+@Data
 public class PrincipalDetails implements UserDetails{
 
     private Member member;
@@ -25,8 +28,9 @@ public class PrincipalDetails implements UserDetails{
     // 해당 Member 의 권한을 리턴하는 곳
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Member 권한 없음
-        return null;
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(()->"ROLE_USER");
+        return authorities;
     }
 
     @Override
