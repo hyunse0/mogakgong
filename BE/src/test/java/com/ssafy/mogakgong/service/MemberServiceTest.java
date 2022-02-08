@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -32,7 +34,7 @@ public class MemberServiceTest {
     @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
-    //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
+    @Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원가입() throws Exception {
         //given
         MemberJoinRequest member = new MemberJoinRequest();
@@ -77,57 +79,6 @@ public class MemberServiceTest {
         //then
         fail("예외가 발생해야 한다.");
 
-    }
-
-    @Test
-    public void 비밀번호확인_맞음() throws Exception {
-        //given
-        MemberJoinRequest member = new MemberJoinRequest();
-        member.setEmail("test@naver.com");
-        member.setPassword("abc");
-        member.setNickname("ssafy");
-        member.setImg("noImage");
-        member.setBirth("2020-02-02");
-        member.setGoal("화팅");
-        member.setIsExist(1);
-        member.setType("mogakgong");
-
-        String emailCheck = "test@naver.com";
-        String passwordCheck = "abc";
-
-        //when
-        String rawPassword = member.getPassword();
-        String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-        member.setPassword(encPassword);
-        memberService.join(member);
-
-        String encPasswordCheck = bCryptPasswordEncoder.encode(passwordCheck);
-
-        memberService.validatePassword(emailCheck, encPasswordCheck);
-
-        //then
-        em.flush();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void 비밀번호확인_틀림() throws Exception {
-        //given
-        MemberJoinRequest member1 = new MemberJoinRequest();
-        member1.setEmail("test@naver.com");
-        member1.setPassword("abc");
-        member1.setNickname("ssafy1");
-        member1.setIsExist(1);
-        member1.setType("mogakgong");
-
-        String email = "test@naver.com";
-        String password = "abcd";
-
-        //when
-        memberService.join(member1);
-        memberService.validatePassword(email, password);
-
-        //then
-        fail("예외가 발생해야 한다.");
     }
 
     @Test
