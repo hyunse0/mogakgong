@@ -1,12 +1,10 @@
 package com.ssafy.mogakgong.service;
 
 import com.ssafy.mogakgong.domain.StudyPlanner;
-import net.bytebuddy.implementation.bind.MethodDelegationBinder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +17,8 @@ import java.util.List;
 public class StudyPlannerServiceTest {
 
     @Autowired StudyPlannerService studyPlannerService;
-    @Autowired MemberService memberService;
+    @Autowired
+    MemberService memberService;
     @Autowired EntityManager em;
 
     @Test
@@ -43,7 +42,7 @@ public class StudyPlannerServiceTest {
     //@Rollback(false)
     public void 플래너목록() throws Exception {
         //given
-        List<StudyPlanner> findStudyPlanners = studyPlannerService.findStudyPlanners(1);
+        List<StudyPlanner> findStudyPlanners = studyPlannerService.findStudyPlanners(1, 1);
 
         //when
         for(StudyPlanner now :findStudyPlanners) {

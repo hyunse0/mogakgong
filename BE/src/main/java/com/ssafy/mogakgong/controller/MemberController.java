@@ -1,21 +1,20 @@
 package com.ssafy.mogakgong.controller;
 
 import com.ssafy.mogakgong.domain.Member;
+import com.ssafy.mogakgong.request.JwtRequest;
+import com.ssafy.mogakgong.request.MemberJoinRequest;
+import com.ssafy.mogakgong.request.MemberUpdateRequest;
 import com.ssafy.mogakgong.service.MemberService;
-import io.swagger.annotations.Api;
+import com.ssafy.mogakgong.service.PrincipalDetailsService;
 import io.swagger.annotations.ApiOperation;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 @RestController
@@ -27,62 +26,25 @@ public class MemberController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
+    private Integer isExist = 1;
 
     // 회원가입
     @PostMapping("/join")
     @ApiOperation(value = "회원가입", notes = "새로운 회원 가입 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
-    public ResponseEntity<String> createMember(@RequestBody Member member) {
-//        if(!memberService.checkPassword(member.getPassword(), passwordCheck)) { // 비밀번호 일치 체크
-//            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
-//        }
+    public ResponseEntity<String> createMember(@RequestBody MemberJoinRequest memberJoinRequest) {
+        if(!memberService.checkPassword(memberJoinRequest.getPassword(), memberJoinRequest.getPasswordCheck())) { // 비밀번호 일치 체크
+            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
+        }
         try {
-            String rawPassword = member.getPassword();
+            String rawPassword = memberJoinRequest.getPassword();
             String encPassword = bCryptPasswordEncoder.encode(rawPassword);
-            member.setPassword(encPassword);
-            memberService.join(member);  // 데이터 저장
+            memberJoinRequest.setPassword(encPassword);
+            memberService.join(memberJoinRequest);  // 데이터 저장
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
-
-//    // 회원가입
-//    @PostMapping("/join")
-//    public ResponseEntity<String> createMember(
-//            @RequestBody @Valid CreateMemberRequest request,
-//            @RequestBody PasswordCheckRequest passwordRequest ) {
-//        if(!memberService.checkPassword(request.getPassword(), passwordRequest.getPasswordCheck())) { // 비밀번호 일치 체크
-//            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
-//        }
-//        try {
-//            Member member = new Member();
-//            member.setEmail(request.getEmail());
-//            member.setPassword(request.getPassword());
-//            member.setNickname(request.getNickname());
-//            member.setImg(request.getImg());
-//            member.setBirth(Date.valueOf(request.getBirth()));
-//            member.setGoal(request.getGoal());
-//            memberService.join(member);  // 데이터 저장
-//        } catch (IllegalStateException e) {
-//            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
-//        }
-//        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//    }
-//
-//    @Data
-//    static class CreateMemberRequest {
-//        private String email;
-//        private String password;
-//        private String nickname;
-//        private String img;
-//        private String birth;
-//        private String goal;
-//    }
-
-//    @Data
-//    static class PasswordCheckRequest {
-//        private String passwordCheck;
-//    }
 
     // 비밀번호 확인
     @PostMapping("/check")
@@ -97,22 +59,34 @@ public class MemberController {
     }
 
     // 로그인
-    @PostMapping("/login")
-    @ApiOperation(value = "로그인", notes = "Access-token과 로그인 결과 메세지를 반환한다.", response = Map.class)
-    public ResponseEntity<String> loginMember(@RequestBody String memberEmail, @RequestBody String memberPassword) {
-        try {
-            memberService.validatePassword(memberEmail, memberPassword);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-    }
+//    @PostMapping("/login")
+//    @ApiOperation(value = "로그인", notes = "Access-token과 로그인 결과 메세지를 반환한다.", response = Map.class)
+//    public ResponseEntity<String> loginMember(@RequestBody String memberEmail, @RequestBody String memberPassword) {
+//        try {
+//            memberService.validatePassword(memberEmail, memberPassword);
+//        } catch (IllegalStateException e) {
+//            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+//    }
+
+    // 로그인
+//    @PostMapping("/login")
+//    @ApiOperation(value = "로그인", notes = "Access-token과 로그인 결과 메세지를 반환한다.", response = Map.class)
+//        public ResponseEntity<String> loginMember(@RequestBody JwtRequest jwtRequest) {
+//        try {
+//            memberService.login(jwtRequest);
+//            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     // 회원정보 수정
     @PutMapping("/{memberId}")
     @ApiOperation(value = "회원 수정", notes = "기존의 회원 정보를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
-    public ResponseEntity<String> updateMember(@PathVariable("memberId") Integer memberId, @RequestBody Member member) {
-        memberService.update(memberId, member);
+    public ResponseEntity<String> updateMember(@PathVariable("memberId") Integer memberId, @RequestBody MemberUpdateRequest memberUpdateRequest) {
+        memberService.update(memberId, memberUpdateRequest);
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
@@ -129,14 +103,17 @@ public class MemberController {
     // 회원정보 불러오기
     @GetMapping("/{memberId}/profile")
     @ApiOperation(value = "회원 프로필 정보 갖고 오기", notes = "회원의 프로필 정보를 갖고 온다.(기본 회원 정보 + 카테고리 등)", response = Map.class)
-    public ResponseEntity<Map<String, Object>> getMemberInfo(@PathVariable("memberID") Integer memberId){
+    public ResponseEntity<Map<String, Object>> getMemberInfo(@PathVariable("memberID") Integer id, @PathVariable String memberId){
         Map<String, Object> resultMap = new HashMap<>();
-        HttpStatus status = HttpStatus.ACCEPTED;
+        HttpStatus status = HttpStatus.OK;
 
-        Member member = memberService.findOne(memberId);
+        Member member = memberService.findOne(id);
+        if ( member == null || member.getIsExist() != isExist) {
+            resultMap.put("message", FAIL);
+            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
+        }
         resultMap.put("info", member);
         resultMap.put("message", SUCCESS);
-        status = HttpStatus.ACCEPTED;
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }

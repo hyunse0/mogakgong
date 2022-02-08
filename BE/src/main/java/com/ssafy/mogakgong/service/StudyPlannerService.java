@@ -15,6 +15,7 @@ import java.util.List;
 public class StudyPlannerService {
 
     private final StudyPlannerRepository studyPlannerRepository;
+    private Integer isExist = 1;
 
     // 스터디 플래너 작성
     @Transactional // 읽기 전용이면 안 되는 기능이므로 다시 붙임
@@ -23,7 +24,7 @@ public class StudyPlannerService {
     }
 
     // 스터디 플래너 목록
-    public List<StudyPlanner> findStudyPlanners(Integer memberId) { return studyPlannerRepository.findByMemberId(memberId);}
+    public List<StudyPlanner> findStudyPlanners(Integer memberId, Integer isExist) { return studyPlannerRepository.findByMemberIdAndIsExist(memberId, isExist);}
 
     // 스터디 플래너 수정
     @Transactional
