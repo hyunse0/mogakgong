@@ -29,7 +29,7 @@ export default function CustomAppBar() {
                     <Link
                         variant="button"
                         color="text.primary"
-                        href="#"
+                        href="/studyroom"
                         sx={{ my: 1, mx: 1.5 }}
                     >
                         스터디룸
