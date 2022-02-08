@@ -58,30 +58,6 @@ public class MemberController {
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
-    // 로그인
-//    @PostMapping("/login")
-//    @ApiOperation(value = "로그인", notes = "Access-token과 로그인 결과 메세지를 반환한다.", response = Map.class)
-//    public ResponseEntity<String> loginMember(@RequestBody String memberEmail, @RequestBody String memberPassword) {
-//        try {
-//            memberService.validatePassword(memberEmail, memberPassword);
-//        } catch (IllegalStateException e) {
-//            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
-//        }
-//        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//    }
-
-    // 로그인
-//    @PostMapping("/login")
-//    @ApiOperation(value = "로그인", notes = "Access-token과 로그인 결과 메세지를 반환한다.", response = Map.class)
-//        public ResponseEntity<String> loginMember(@RequestBody JwtRequest jwtRequest) {
-//        try {
-//            memberService.login(jwtRequest);
-//            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
-//        }
-//    }
-
     // 회원정보 수정
     @PutMapping("/{memberId}")
     @ApiOperation(value = "회원 수정", notes = "기존의 회원 정보를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)

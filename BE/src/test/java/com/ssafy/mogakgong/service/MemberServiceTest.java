@@ -34,11 +34,11 @@ public class MemberServiceTest {
     @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
-    @Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
+    //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원가입() throws Exception {
         //given
         MemberJoinRequest member = new MemberJoinRequest();
-        member.setEmail("test@naver.com");
+        member.setEmail("test@daum.net");
         member.setPassword("abc");
         member.setNickname("ssafy");
         member.setImg("noImage");

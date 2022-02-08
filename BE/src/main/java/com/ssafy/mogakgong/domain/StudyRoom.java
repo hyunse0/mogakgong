@@ -2,6 +2,7 @@ package com.ssafy.mogakgong.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -71,4 +72,20 @@ public class StudyRoom {
     @ApiModelProperty(value = "스터디룸 방장 정보")
     private Member member;
 
+    public StudyRoom() {}
+
+    @Builder
+    public StudyRoom(String title, String password, String description, Timestamp startDate, Timestamp endDate, Integer limit, String img, Integer goalTime, String url, Integer isExist, Member member) {
+        this.title = title;
+        this.password = password;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.limit = limit;
+        this.img = img;
+        this.goalTime = goalTime;
+        this.url = url;
+        this.isExist = isExist;
+        this.member = member;
+    }
 }

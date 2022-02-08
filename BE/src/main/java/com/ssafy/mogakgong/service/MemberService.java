@@ -1,22 +1,16 @@
 package com.ssafy.mogakgong.service;
 
-import com.ssafy.mogakgong.config.auth.PrincipalDetails;
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.repository.MemberRepository;
-import com.ssafy.mogakgong.request.JwtRequest;
 import com.ssafy.mogakgong.request.MemberJoinRequest;
 import com.ssafy.mogakgong.request.MemberUpdateRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,7 +21,6 @@ public class MemberService {
 
     // 변경할 일이 없으므로 final 로 작성하는 걸 추천.
     private final MemberRepository memberRepository;
-    // private final AuthenticationManager authenticationManager;
 
 //    @Autowired // 생성자가 하나만 있는 경우 spring 이 자동으로 Autowire 인잭션을 해줌, 작성 안해도 됨
 //    public MemberService(MemberRepository memberRepository) {
@@ -50,19 +43,6 @@ public class MemberService {
         validateDuplicateMember(member); // 이메일 중복 검사
         memberRepository.save(member);
     }
-
-    //로그인
-//    @Transactional
-//    public String login(JwtRequest request) throws Exception {
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-//
-//        SecurityContextHolder.getContext().setAuthentication((authentication));
-//
-//        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-//        return principalDetails.getUsername();
-//    }
-
 
     // 이메일 중복 검사
     public void validateDuplicateMember(Member member) {
@@ -99,14 +79,17 @@ public class MemberService {
     }
 
     // 회원 한 명 조회
-    public Member findOne(int memberId) {
-        return memberRepository.findById(memberId);
+    public Member findOne(Integer memberId) {
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+        Member member = memberOptional.get();
+        return member;
     }
 
     // 회원 정보 수정
     @Transactional
-    public void update(int id, MemberUpdateRequest memberUpdateRequest) {
-        Member prevMember = memberRepository.findById(id);
+    public void update(Integer id, MemberUpdateRequest memberUpdateRequest) {
+        Optional<Member> memberOptional = memberRepository.findById(id);
+        Member prevMember = memberOptional.get();
         prevMember.setBirth(memberUpdateRequest.getBirth());
         prevMember.setNickname(memberUpdateRequest.getNickname());
         prevMember.setPassword(memberUpdateRequest.getPassword());
@@ -116,8 +99,9 @@ public class MemberService {
 
     // 회원 정보 삭제
     @Transactional
-    public void delete(int id) {
-        Member member = memberRepository.findById(id);
+    public void delete(Integer id) {
+        Optional<Member> memberOptional = memberRepository.findById(id);
+        Member member = memberOptional.get();
         member.setIsExist(0);
     }
 }
