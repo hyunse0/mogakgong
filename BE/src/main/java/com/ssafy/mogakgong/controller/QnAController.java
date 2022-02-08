@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,7 +42,7 @@ public class QnAController {
     }
 
     @GetMapping("/{memberId}")
-    @ApiOperation(value = "1:1 문의 글목록", notes = "회원의 모든 문의글의 정보를 반환한다.", response = List.class)
+    @ApiOperation(value = "1:1 문의 글목록", notes = "회원의 모든 문의글의 정보를 반환한다.", response = Map.class)
     public ResponseEntity<Map<String, Object>> getQnAList(@PathVariable Integer memberId,
                                                           @PageableDefault(size = 5) Pageable pageable) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -56,13 +55,13 @@ public class QnAController {
     }
 
     @GetMapping("/{memberId}/detail/{qnaId}")
-    @ApiOperation(value = "1:1 문의 글보기", notes = "글번호에 해당하는 문의글의 정보를 반환한다.", response = QnA.class)
+    @ApiOperation(value = "1:1 문의 글보기", notes = "글번호에 해당하는 문의글의 정보를 반환한다.", response = Map.class)
     public ResponseEntity<Map<String, Object>> getQnA(@PathVariable("memberId") Integer memberId,
                                                       @PathVariable("qnaId") Integer qnaId) {
         Map<String, Object> resultMap = new HashMap<>();
 
         Optional<QnA> qna = qnaService.getQnA(qnaId);
-        if (qna.get().getIsExist().equals(0)) {
+        if (qna.get().getIsExist() == 0) {
             resultMap.put("message", FAIL);
             return new ResponseEntity<>(resultMap, HttpStatus.BAD_REQUEST);
         } else {
@@ -71,11 +70,6 @@ public class QnAController {
             return new ResponseEntity<>(resultMap, HttpStatus.OK);
         }
     }
-
-//    @GetMapping("/{memberId}/totalCount")
-//    @ApiOperation(value = "총 문의글 개수", notes = "총 문의글 개수 반환", response = List.class)
-//    public ResponseEntity<Integer> getTotalCount(@PathVariable Integer memberId) {
-//    }
 
     @DeleteMapping("/{qnaId}")
     @ApiOperation(value = "1:1 문의 글삭제", notes = "1:1문의 글 번호에 해당하는 문의 글의 is_exist를 0으로 변경 한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
