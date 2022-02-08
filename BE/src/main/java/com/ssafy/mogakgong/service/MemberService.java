@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -41,7 +42,7 @@ public class MemberService {
                 .password(memberJoinRequest.getPassword())
                 .nickname(memberJoinRequest.getNickname())
                 .img(memberJoinRequest.getImg())
-                .birth(memberJoinRequest.getBirth())
+                .birth(Date.valueOf(memberJoinRequest.getBirth()))
                 .goal(memberJoinRequest.getGoal())
                 .isExist(memberJoinRequest.getIsExist())
                 .type(memberJoinRequest.getType())

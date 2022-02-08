@@ -40,10 +40,8 @@ public class MemberServiceTest {
         member.setPassword("abc");
         member.setNickname("ssafy");
         member.setImg("noImage");
-        member.setBirth(Date.valueOf("2020-02-02"));
+        member.setBirth("2020-02-02");
         member.setGoal("화팅");
-        member.setIsExist(1);
-        member.setType("mogakgong");
         //when
         String rawPassword = member.getPassword();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
@@ -89,7 +87,7 @@ public class MemberServiceTest {
         member.setPassword("abc");
         member.setNickname("ssafy");
         member.setImg("noImage");
-        member.setBirth(Date.valueOf("2020-02-02"));
+        member.setBirth("2020-02-02");
         member.setGoal("화팅");
         member.setIsExist(1);
         member.setType("mogakgong");

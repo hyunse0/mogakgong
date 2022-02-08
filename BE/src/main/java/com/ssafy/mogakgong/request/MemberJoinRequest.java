@@ -2,8 +2,6 @@ package com.ssafy.mogakgong.request;
 
 import lombok.Data;
 
-import java.sql.Date;
-
 @Data
 public class MemberJoinRequest {
     Integer id;
@@ -11,9 +9,15 @@ public class MemberJoinRequest {
     String password;
     String nickname;
     String img;
-    Date birth;
+    String birth;
     String goal;
     Integer isExist;
     String type;
     String passwordCheck;
+
+    public MemberJoinRequest() {
+        this.isExist = 1;
+        this.type = "mogakgong";
+    }
+
 }
