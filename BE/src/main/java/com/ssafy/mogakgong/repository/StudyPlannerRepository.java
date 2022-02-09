@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface StudyPlannerRepository extends JpaRepository<StudyPlanner, Integer> {
     public List<StudyPlanner> findByMemberIdAndIsExist(Integer memberId, Integer isExist);
-    public StudyPlanner findById(int id);
+
 }

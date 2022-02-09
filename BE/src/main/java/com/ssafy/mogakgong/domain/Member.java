@@ -75,6 +75,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<MemberCategory> memberCategories = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<StudyRoomMember> studyRoomMembers = new ArrayList<>();
+
     public Member() {
         this.role = "USER";
     }
