@@ -34,7 +34,7 @@ public class QStudyRoom extends EntityPathBase<StudyRoom> {
 
     public final NumberPath<Integer> isExist = createNumber("isExist", Integer.class);
 
-    public final NumberPath<Integer> limit = createNumber("limit", Integer.class);
+    public final NumberPath<Integer> limitPeople = createNumber("limitPeople", Integer.class);
 
     public final QMember member;
 
@@ -43,6 +43,10 @@ public class QStudyRoom extends EntityPathBase<StudyRoom> {
     public final DateTimePath<java.sql.Timestamp> regDate = createDateTime("regDate", java.sql.Timestamp.class);
 
     public final DateTimePath<java.sql.Timestamp> startDate = createDateTime("startDate", java.sql.Timestamp.class);
+
+    public final ListPath<StudyRoomCategory, QStudyRoomCategory> studyRoomCategories = this.<StudyRoomCategory, QStudyRoomCategory>createList("studyRoomCategories", StudyRoomCategory.class, QStudyRoomCategory.class, PathInits.DIRECT2);
+
+    public final ListPath<StudyRoomHashtag, QStudyRoomHashtag> studyRoomHashtags = this.<StudyRoomHashtag, QStudyRoomHashtag>createList("studyRoomHashtags", StudyRoomHashtag.class, QStudyRoomHashtag.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");
 

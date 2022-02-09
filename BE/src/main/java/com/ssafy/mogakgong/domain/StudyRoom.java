@@ -9,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "study_room")
@@ -42,9 +44,9 @@ public class StudyRoom {
     @ApiModelProperty(value = "스터디룸 종료 시간")
     private Timestamp endDate;
 
-    @Column(name = "limit")
+    @Column(name = "limit_people")
     @ApiModelProperty(value = "스터디룸 제한 인원")
-    private Integer limit;
+    private Integer limitPeople;
 
     @Column(name = "img")
     @ApiModelProperty(value = "스터디룸 대표 사진")
@@ -72,16 +74,29 @@ public class StudyRoom {
     @ApiModelProperty(value = "스터디룸 방장 정보")
     private Member member;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "studyRoom")
+    private List<StudyRoomHashtag> studyRoomHashtags = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "studyRoom")
+    private List<StudyRoomCategory> studyRoomCategories = new ArrayList<>();
+
+    // 해시태그 추가하는 메소드
+//    public void addHashtag(StudyRoomHashtag studyRoomHashtag)
+//    {
+//        studyRoomHashtags.add(studyRoomHashtag);
+//        studyRoomHashtag.setStudyRoom(this);
+//    }
+
     public StudyRoom() {}
 
     @Builder
-    public StudyRoom(String title, String password, String description, Timestamp startDate, Timestamp endDate, Integer limit, String img, Integer goalTime, String url, Integer isExist, Member member) {
+    public StudyRoom(String title, String password, String description, Timestamp startDate, Timestamp endDate, Integer limitPeople, String img, Integer goalTime, String url, Integer isExist, Member member) {
         this.title = title;
         this.password = password;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.limit = limit;
+        this.limitPeople = limitPeople;
         this.img = img;
         this.goalTime = goalTime;
         this.url = url;

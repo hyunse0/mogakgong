@@ -2,10 +2,12 @@ package com.ssafy.mogakgong.response;
 
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.domain.StudyRoom;
+import com.ssafy.mogakgong.domain.StudyRoomHashtag;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Builder
 @Getter
@@ -16,12 +18,13 @@ public class StudyRoomResponse {
     private String description;
     private Timestamp startDate;
     private Timestamp endDate;
-    private Integer limit;
+    private Integer limitPeople;
     private String img;
     private Integer goalTime;
     private String url;
     private Integer isExist;
     private Member member;
+    private List<StudyRoomHashtag> studyRoomHashtags;
 
     public static StudyRoomResponse from (StudyRoom studyRoom) {
         return StudyRoomResponse.builder()
@@ -31,7 +34,7 @@ public class StudyRoomResponse {
                 .description(studyRoom.getDescription())
                 .startDate(studyRoom.getStartDate())
                 .endDate(studyRoom.getEndDate())
-                .limit(studyRoom.getLimit())
+                .limitPeople(studyRoom.getLimitPeople())
                 .img(studyRoom.getImg())
                 .goalTime(studyRoom.getGoalTime())
                 .url(studyRoom.getUrl())

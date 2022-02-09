@@ -1,9 +1,6 @@
 package com.ssafy.mogakgong.request;
 
-import com.ssafy.mogakgong.domain.Member;
 import lombok.Data;
-
-import java.sql.Timestamp;
 
 @Data
 public class StudyRoomRequest {
@@ -12,9 +9,10 @@ public class StudyRoomRequest {
     String description;
     String startDate;
     String endDate;
-    Integer limit;
+    Integer limit_people;
     String img;
     Integer goalTime;
     String url;
     Integer memberId;
+    String hashtag;
 }
