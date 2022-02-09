@@ -5,6 +5,7 @@ import com.ssafy.mogakgong.repository.MemberRepository;
 import com.ssafy.mogakgong.request.MemberJoinRequest;
 import com.ssafy.mogakgong.request.MemberUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 변경할 일이 없으므로 final 로 작성하는 걸 추천.
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 //    @Autowired // 생성자가 하나만 있는 경우 spring 이 자동으로 Autowire 인잭션을 해줌, 작성 안해도 됨
 //    public MemberService(MemberRepository memberRepository) {
@@ -57,18 +59,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 회원가입 시 비밀번호 확인
-    public Boolean checkPassword(String password, String passwordCheck) {
+    public Boolean validatePassword(String password, String passwordCheck) {
         if(password.equals(passwordCheck)){
             return true; // 비밀번호 같음
         }
         return false; // 비밀번호 다름
     }
 
+
     // 로그인 및 마이페이지 입장 시 비밀번호 확인
-    public void validatePassword(String email, String password) {
+    public void checkPassword(String email, String password) {
         // 해당 E-mail 을 사용중인 멤버 탐색
         Member findMember = memberRepository.findByEmail(email);
-        if(!findMember.getPassword().equals(password)) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        if(!bCryptPasswordEncoder.matches(password, findMember.getPassword())) {
             throw new IllegalStateException("비밀번호 일치하지 않습니다.");
         }
     }

@@ -103,6 +103,32 @@ public class MemberServiceImplTest {
     }
 
     @Test
+    public void 비밀번호확인_맞음() throws  Exception {
+        //given
+        String email = "test@naver.com";
+        String password = "abc";
+
+        //when
+        memberServiceImpl.checkPassword(email, password);
+
+        //then
+        em.flush();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void 비밀번호확인_틀림() throws  Exception {
+        //given
+        String email = "test@naver.com";
+        String password = "abcd";
+
+        //when
+        memberServiceImpl.checkPassword(email, password);
+
+        //then
+        em.flush();
+    }
+
+    @Test
     //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원정보_조회() throws Exception {
         //given

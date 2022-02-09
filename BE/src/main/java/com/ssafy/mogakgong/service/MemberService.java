@@ -10,8 +10,8 @@ public interface MemberService {
 
     public void join(MemberJoinRequest memberJoinRequest);
     public void validateDuplicateMember(Member member);
-    public Boolean checkPassword(String password, String passwordCheck);
-    public void validatePassword(String email, String password);
+    public Boolean validatePassword(String password, String passwordCheck);
+    public void checkPassword(String email, String password);
     public List<Member> findMembers();
     public Member findOne(Integer memberId);
     public void update(Integer id, MemberUpdateRequest memberUpdateRequest);

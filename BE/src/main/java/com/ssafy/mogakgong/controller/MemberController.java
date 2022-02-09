@@ -2,6 +2,7 @@ package com.ssafy.mogakgong.controller;
 
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.request.MemberJoinRequest;
+import com.ssafy.mogakgong.request.MemberProfileRequest;
 import com.ssafy.mogakgong.request.MemberUpdateRequest;
 import com.ssafy.mogakgong.service.MemberServiceImpl;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +31,7 @@ public class MemberController {
     @PostMapping("/join")
     @ApiOperation(value = "회원가입", notes = "새로운 회원 가입 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
     public ResponseEntity<String> createMember(@RequestBody MemberJoinRequest memberJoinRequest) {
-        if(!memberServiceImpl.checkPassword(memberJoinRequest.getPassword(), memberJoinRequest.getPasswordCheck())) { // 비밀번호 일치 체크
+        if(!memberServiceImpl.validatePassword(memberJoinRequest.getPassword(), memberJoinRequest.getPasswordCheck())) { // 비밀번호 일치 체크
             return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
         }
         try {
@@ -47,9 +48,9 @@ public class MemberController {
     // 비밀번호 확인
     @PostMapping("/check")
     @ApiOperation(value = "비밀번호 확인", notes = "비밀번호를 확인한다. 인증 여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
-    public ResponseEntity<String> validatePassword(@RequestBody String memberEmail, @RequestBody String memberPassword) {
+    public ResponseEntity<String> validatePassword(@RequestBody MemberProfileRequest memberProfileRequest) {
         try {
-            memberServiceImpl.validatePassword(memberEmail, memberPassword);  // 데이터 저장
+            memberServiceImpl.checkPassword(memberProfileRequest.getEmail(), memberProfileRequest.getPassword());
         } catch (IllegalStateException e) {
             return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
         }
