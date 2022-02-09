@@ -1,6 +1,5 @@
 package com.ssafy.mogakgong.service;
 
-import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.domain.StudyPlanner;
 import com.ssafy.mogakgong.repository.StudyPlannerRepository;
 import lombok.RequiredArgsConstructor;

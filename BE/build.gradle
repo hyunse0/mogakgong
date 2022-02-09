@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.5.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 	id 'java'
 }
 
@@ -31,6 +32,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
 
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5'
+	implementation 'com.querydsl:querydsl-jpa'
+	implementation 'com.querydsl:querydsl-apt'
 
 	// JSON String-> Java Object
 	implementation 'com.google.code.gson:gson'
@@ -54,4 +58,23 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+def querydslDir = "src/main/java/com/ssafy/mogakgong/domain/item"
+
+querydsl { // (4)
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets { // (5)
+	main.java.srcDir querydslDir
+}
+
+configurations { // (6)
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl { // (7)
+	options.annotationProcessorPath = configurations.querydsl
 }
