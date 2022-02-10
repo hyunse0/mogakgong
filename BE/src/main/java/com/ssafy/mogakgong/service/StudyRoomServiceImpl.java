@@ -49,11 +49,10 @@ public class StudyRoomServiceImpl implements StudyRoomService {
 
         studyRoomRepository.save(studyRoom);
 
-        StringTokenizer st = new StringTokenizer(studyRoomRequest.getHashtag(), ",");
-        while(st.hasMoreTokens()){
+        for(String s : studyRoomRequest.getStudyRoomHashtags()){
             StudyRoomHashtag studyRoomHashtag = StudyRoomHashtag.builder()
                     .studyRoom(studyRoom)
-                    .name(st.nextToken().toString())
+                    .name(s)
                     .build();
             studyRoomHashtagRepository.save(studyRoomHashtag);
         }
@@ -93,10 +92,19 @@ public class StudyRoomServiceImpl implements StudyRoomService {
         prevStudyRoom.setDescription(studyRoomUpdateRequest.getDescription());
         prevStudyRoom.setStartDate(Timestamp.valueOf(studyRoomUpdateRequest.getStartDate()));
         prevStudyRoom.setEndDate(Timestamp.valueOf(studyRoomUpdateRequest.getEndDate()));
-        prevStudyRoom.setLimitPeople(studyRoomUpdateRequest.getLimit());
+        prevStudyRoom.setLimitPeople(studyRoomUpdateRequest.getLimitPeople());
         prevStudyRoom.setImg(studyRoomUpdateRequest.getImg());
         prevStudyRoom.setGoalTime(studyRoomUpdateRequest.getGoalTime());
         prevStudyRoom.setUrl(studyRoomUpdateRequest.getUrl());
+
+        studyRoomHashtagRepository.deleteAllByStudyRoomId(id);
+        for(String s : studyRoomUpdateRequest.getStudyRoomHashtags()){
+            StudyRoomHashtag studyRoomHashtag = StudyRoomHashtag.builder()
+                    .studyRoom(prevStudyRoom)
+                    .name(s)
+                    .build();
+            studyRoomHashtagRepository.save(studyRoomHashtag);
+        }
     }
 
     @Transactional
