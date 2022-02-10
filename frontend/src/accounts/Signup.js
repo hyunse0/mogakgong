@@ -13,19 +13,34 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
+import Input from '@mui/material/Input';
+import axios from 'axios';
 
+const URL = "http://52.78.47.87/"
 const theme = createTheme();
 
 export default function SignUp() {
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        // console.log({
-        //     email: data.get('email'),
-        //     password: data.get('password'),
-        // });
-        console.log(data)
+        // const data = new FormData(event.currentTarget);
+        console.log('signup!')
+        const userInfo = {
+            email: email,
+            password: password,
+            nickname: nickname,
+            img: "",
+            birth: birth,
+            goal: "null",
+            passwordCheck: passwordConfirm
+        }
+        console.log(userInfo)
+        axios.post("/member/join", userInfo)
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     };
 
     // email & password valid check regular expression
@@ -40,6 +55,7 @@ export default function SignUp() {
     const [passwordConfirm, setPasswordConfirm] = useState('')
     const [nickname, setNickname] = useState('')
     const [birth, setBirth] = useState(null);
+    const [imgFile, setImgFile] = useState(null)
 
     const [emailCheck, setEmailCheck] = useState(true)
     const [passwordCheck, setpasswordCheck] = useState(true)
@@ -65,13 +81,8 @@ export default function SignUp() {
         password === passwordConfirm ? setpasswordConfirmCheck(false) : setpasswordConfirmCheck(true)
     }
 
-    const signUp = () => {
-        console.log('signup!')
-        const userInfo = {
-            email: email,
-            password: password,
-            nickname: nickname,
-        }
+    const setImgHandler = async (e) => {
+        setImgFile(URL.createObjectURL(e.target.files[0]));
     }
 
     return (
@@ -94,6 +105,20 @@ export default function SignUp() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
+                            <Grid item xs={12} sm={4}>
+                                <Box sx={{ alignContent: 'center', ml: 3 }}>
+                                    <Avatar src={imgFile ? imgFile : "frontend/public/profile.png"} sx={{ width: 56, height: 56 }} />
+                                    <br></br>
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} sm={8}>
+                                <br></br>
+                                <Input
+                                    type="file"
+                                    onChange={setImgHandler}
+                                    accept="image/*"
+                                />
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
@@ -144,26 +169,28 @@ export default function SignUp() {
                                         label="Birth"
                                         value={birth}
                                         onChange={(newValue) => {
-                                            setBirth(newValue);
+                                            setBirth(newValue.toISOString().slice(0, 10))
                                         }}
                                         renderInput={(params) => <TextField {...params} />}
                                     />
                                 </LocalizationProvider>
                             </Grid>
-                        </Grid>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            가입하기
-                        </Button>
-                        <Grid container justifyContent="flex-end">
-                            <Grid item>
-                                <Link href="/login" variant="body2">
-                                    이미 계정이 있으신가요? 로그인하기
-                                </Link>
+                            <Grid item xs={12}>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                >
+                                    가입하기
+                                </Button>
+                            </Grid>
+                            <Grid container justifyContent="flex-end">
+                                <Grid item>
+                                    <Link href="/login" variant="body2">
+                                        이미 계정이 있으신가요? 로그인하기
+                                    </Link>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Box>

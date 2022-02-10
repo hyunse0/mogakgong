@@ -10,14 +10,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        MustacheViewResolver resolver = new MustacheViewResolver();
-
-        resolver.setCharset("UTF-8");
-        resolver.setContentType("text/html;charset=UTF-8");
-        resolver.setPrefix("classpath:/"); // 화면구성 페이지가 있는 폴더 명
-        resolver.setSuffix(".html"); // 파일명
-
-        registry.viewResolver(resolver);
+//        MustacheViewResolver resolver = new MustacheViewResolver();
+//
+//        resolver.setCharset("UTF-8");
+//        resolver.setContentType("text/html;charset=UTF-8");
+//        resolver.setPrefix("classpath:/"); // 화면구성 페이지가 있는 폴더 명
+//        resolver.setSuffix(".html"); // 파일명
+//
+//        registry.viewResolver(resolver);
     }
 
 }
