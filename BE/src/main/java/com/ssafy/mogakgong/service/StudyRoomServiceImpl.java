@@ -2,6 +2,8 @@ package com.ssafy.mogakgong.service;
 
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.domain.StudyRoom;
+import com.ssafy.mogakgong.domain.StudyRoomHashtag;
+import com.ssafy.mogakgong.repository.StudyRoomHashtagRepository;
 import com.ssafy.mogakgong.repository.StudyRoomMemberRepository;
 import com.ssafy.mogakgong.repository.StudyRoomRepository;
 import com.ssafy.mogakgong.request.StudyRoomRequest;
@@ -15,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,6 +28,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
 
     private final StudyRoomRepository studyRoomRepository;
     private final StudyRoomMemberRepository studyRoomMemberRepository;
+    private final StudyRoomHashtagRepository studyRoomHashtagRepository;
     private Integer exist = 1;
 
     @Transactional
@@ -34,14 +39,24 @@ public class StudyRoomServiceImpl implements StudyRoomService {
                 .description(studyRoomRequest.getDescription())
                 .startDate(Timestamp.valueOf(studyRoomRequest.getStartDate()))
                 .endDate(Timestamp.valueOf(studyRoomRequest.getEndDate()))
-                .limit(studyRoomRequest.getLimit())
+                .limitPeople(studyRoomRequest.getLimit_people())
                 .img(studyRoomRequest.getImg())
                 .goalTime(studyRoomRequest.getGoalTime())
                 .url(studyRoomRequest.getUrl())
                 .isExist(exist)
                 .member(member)
                 .build();
+
         studyRoomRepository.save(studyRoom);
+
+        StringTokenizer st = new StringTokenizer(studyRoomRequest.getHashtag(), ",");
+        while(st.hasMoreTokens()){
+            StudyRoomHashtag studyRoomHashtag = StudyRoomHashtag.builder()
+                    .studyRoom(studyRoom)
+                    .name(st.nextToken().toString())
+                    .build();
+            studyRoomHashtagRepository.save(studyRoomHashtag);
+        }
     }
 
     public Page<CommunityResponse> getStudyRoomList(Pageable pageable) {
@@ -51,6 +66,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
 
     public StudyRoomResponse getStudyRoom(Integer studyRoomId, Pageable pageable) {
         StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId).get();
+        List<StudyRoomHashtag> studyRoomHashtags = studyRoomHashtagRepository.findByStudyRoomId(studyRoomId);
 
         return StudyRoomResponse.builder()
                 .id(studyRoom.getId())
@@ -59,11 +75,12 @@ public class StudyRoomServiceImpl implements StudyRoomService {
                 .description(studyRoom.getDescription())
                 .startDate(studyRoom.getStartDate())
                 .endDate(studyRoom.getEndDate())
-                .limit(studyRoom.getLimit())
+                .limitPeople(studyRoom.getLimitPeople())
                 .img(studyRoom.getImg())
                 .goalTime(studyRoom.getGoalTime())
                 .url(studyRoom.getUrl())
                 .member(studyRoom.getMember())
+                .studyRoomHashtags(studyRoomHashtags)
                 .build();
     }
 
@@ -76,7 +93,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
         prevStudyRoom.setDescription(studyRoomUpdateRequest.getDescription());
         prevStudyRoom.setStartDate(Timestamp.valueOf(studyRoomUpdateRequest.getStartDate()));
         prevStudyRoom.setEndDate(Timestamp.valueOf(studyRoomUpdateRequest.getEndDate()));
-        prevStudyRoom.setLimit(studyRoomUpdateRequest.getLimit());
+        prevStudyRoom.setLimitPeople(studyRoomUpdateRequest.getLimit());
         prevStudyRoom.setImg(studyRoomUpdateRequest.getImg());
         prevStudyRoom.setGoalTime(studyRoomUpdateRequest.getGoalTime());
         prevStudyRoom.setUrl(studyRoomUpdateRequest.getUrl());
