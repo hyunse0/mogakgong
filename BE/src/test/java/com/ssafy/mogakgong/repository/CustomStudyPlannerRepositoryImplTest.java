@@ -14,10 +14,10 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class QStudyPlannerRepositoryImplTest {
+public class CustomStudyPlannerRepositoryImplTest {
 
     @Autowired
-    QStudyPlannerRepository qStudyPlannerRepository;
+    CustomStudyPlannerRepository customStudyPlannerRepository;
     @Autowired
     EntityManager em;
 
@@ -26,7 +26,7 @@ public class QStudyPlannerRepositoryImplTest {
         //given
 
         //when
-        List<StudyPlanner> studyPlannerList = qStudyPlannerRepository.findByIsExist();
+        List<StudyPlanner> studyPlannerList = customStudyPlannerRepository.findByIsExist();
         for(StudyPlanner s : studyPlannerList){
             System.out.println(s.getSubject());
         }
@@ -40,7 +40,7 @@ public class QStudyPlannerRepositoryImplTest {
         String start = "2022-02-09 00:00:00";
         String end = "2022-02-10 00:00:00";
         //when
-        List<StudyPlanner> studyPlannerList = qStudyPlannerRepository.findByRegDate(start, end);
+        List<StudyPlanner> studyPlannerList = customStudyPlannerRepository.findByRegDate(start, end);
 
         for(StudyPlanner s : studyPlannerList){
             System.out.println(s.getSubject());
