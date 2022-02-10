@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface QStudyPlannerRepository {
+public interface CustomStudyPlannerRepository {
     List<StudyPlanner> findByIsExist();
     List<StudyPlanner> findByRegDate(String date, String date2);
 }
