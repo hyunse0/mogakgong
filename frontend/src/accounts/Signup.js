@@ -16,7 +16,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import Input from '@mui/material/Input';
 import axios from 'axios';
 
-const URL = "http://52.78.47.87/"
+const URL = "http://52.78.47.87"
 const theme = createTheme();
 
 export default function SignUp() {
@@ -152,7 +152,6 @@ export default function SignUp() {
 
                             <Grid item xs={12} sm={6}>
                                 <TextField
-
                                     fullWidth
                                     label="Nickname"
                                     placeholder={email.slice(0, email.indexOf('@'))}
