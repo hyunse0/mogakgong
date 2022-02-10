@@ -7,7 +7,7 @@ import com.ssafy.mogakgong.repository.CommunityRepository;
 import com.ssafy.mogakgong.request.CommentRequest;
 import com.ssafy.mogakgong.service.CommentService;
 import com.ssafy.mogakgong.service.CommunityService;
-import com.ssafy.mogakgong.service.MemberService;
+import com.ssafy.mogakgong.service.MemberServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class CommentController {
 
     private CommentService commentService;
     private CommunityService communityService;
-    private MemberService memberService;
+    private MemberServiceImpl memberServiceImpl;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
@@ -41,7 +41,7 @@ public class CommentController {
         try {
             Pageable pageable = PageRequest.of(0, 10);
 
-            Member member = memberService.findOne(commentRequest.getMemberId());
+            Member member = memberServiceImpl.findOne(commentRequest.getMemberId());
             Community community = communityRepository.findById(commentRequest.getCommunityId()).get();
             Integer commentId = commentService.writeComment(commentRequest, member, community); // 반환이 필요할 경우 반환, 아니면 지우기
         } catch (Exception e) {

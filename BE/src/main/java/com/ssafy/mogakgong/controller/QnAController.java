@@ -4,7 +4,7 @@ import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.domain.QnA;
 import com.ssafy.mogakgong.request.QnARequest;
 import com.ssafy.mogakgong.response.QnAResponse;
-import com.ssafy.mogakgong.service.MemberService;
+import com.ssafy.mogakgong.service.MemberServiceImpl;
 import com.ssafy.mogakgong.service.QnAService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class QnAController {
 
     private QnAService qnaService;
-    private MemberService memberService;
+    private MemberServiceImpl memberServiceImpl;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
@@ -33,7 +33,7 @@ public class QnAController {
     @ApiOperation(value = "1:1 문의 글작성", notes = "새로운 문의글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<String> writeQnA(@RequestBody QnARequest qnaRequest) {
         try {
-            Member member = memberService.findOne(qnaRequest.getMemberId());
+            Member member = memberServiceImpl.findOne(qnaRequest.getMemberId());
             Integer qnaId = qnaService.writeQnA(qnaRequest, member); // 반환이 필요할 경우 반환, 아니면 변수 선언은 지우기
         } catch (Exception e) {
             return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);

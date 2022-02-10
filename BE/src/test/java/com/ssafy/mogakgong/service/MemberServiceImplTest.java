@@ -9,15 +9,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import java.sql.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -25,20 +21,20 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class MemberServiceTest {
+public class MemberServiceImplTest {
 
     @Autowired
-    MemberService memberService;
+    MemberServiceImpl memberServiceImpl;
     @Autowired MemberRepository memberRepository;
     @Autowired EntityManager em;
     @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
-    @Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
+    //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원가입() throws Exception {
         //given
         MemberJoinRequest member = new MemberJoinRequest();
-        member.setEmail("test@naver.com");
+        member.setEmail("test@daum.net");
         member.setPassword("abc");
         member.setNickname("ssafy");
         member.setImg("noImage");
@@ -48,7 +44,7 @@ public class MemberServiceTest {
         String rawPassword = member.getPassword();
         String encPassword = bCryptPasswordEncoder.encode(rawPassword);
         member.setPassword(encPassword);
-        memberService.join(member);
+        memberServiceImpl.join(member);
 
         //then
         em.flush();
@@ -73,8 +69,8 @@ public class MemberServiceTest {
         member2.setType("mogakgong");
 
         //when
-        memberService.join(member1);
-        memberService.join(member2); // email 중복
+        memberServiceImpl.join(member1);
+        memberServiceImpl.join(member2); // email 중복
 
         //then
         fail("예외가 발생해야 한다.");
@@ -91,7 +87,7 @@ public class MemberServiceTest {
         member1.setNickname("ssafy");
         member1.setIsExist(1);
         member1.setType("mogakgong");
-        memberService.join(member1);
+        memberServiceImpl.join(member1);
 
         Member member = memberRepository.findByEmail("test@naver.com");
 
@@ -100,7 +96,33 @@ public class MemberServiceTest {
         member2.setNickname("ssafy2");
 
         //when
-        memberService.update(member.getId(), member2);
+        memberServiceImpl.update(member.getId(), member2);
+
+        //then
+        em.flush();
+    }
+
+    @Test
+    public void 비밀번호확인_맞음() throws  Exception {
+        //given
+        String email = "test@naver.com";
+        String password = "abc";
+
+        //when
+        memberServiceImpl.checkPassword(email, password);
+
+        //then
+        em.flush();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void 비밀번호확인_틀림() throws  Exception {
+        //given
+        String email = "test@naver.com";
+        String password = "abcd";
+
+        //when
+        memberServiceImpl.checkPassword(email, password);
 
         //then
         em.flush();
@@ -132,10 +154,10 @@ public class MemberServiceTest {
         member3.setType("mogakgong");
 
         //when
-        memberService.join(member1);
-        memberService.join(member2);
-        memberService.join(member3);
-        List<Member> members = memberService.findMembers();
+        memberServiceImpl.join(member1);
+        memberServiceImpl.join(member2);
+        memberServiceImpl.join(member3);
+        List<Member> members = memberServiceImpl.findMembers();
         if(members.size()!=3)
             throw new IllegalStateException("조회 실패");
 
@@ -169,11 +191,11 @@ public class MemberServiceTest {
         member3.setType("mogakgong");
 
         //when
-        memberService.join(member1);
-        memberService.join(member2);
-        memberService.join(member3);
-        memberService.delete(member3.getId());
-        List<Member> members = memberService.findMembers();
+        memberServiceImpl.join(member1);
+        memberServiceImpl.join(member2);
+        memberServiceImpl.join(member3);
+        memberServiceImpl.delete(member3.getId());
+        List<Member> members = memberServiceImpl.findMembers();
         if(members.size()!=2)
             throw new IllegalStateException("조회 실패");
 
