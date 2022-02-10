@@ -4,13 +4,15 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.mogakgong.domain.QStudyPlanner;
 import com.ssafy.mogakgong.domain.StudyPlanner;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
 import java.util.List;
 
+@Repository
 @AllArgsConstructor
-public class QStudyPlannerRepositoryImpl implements QStudyPlannerRepository {
+public class CustomStudyPlannerRepositoryImpl implements CustomStudyPlannerRepository {
 
     private final EntityManager em;
 
