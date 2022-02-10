@@ -50,7 +50,7 @@ public class StudyPlannerController {
 
     // 스터디 플래너 수정
     @PutMapping("/{memberId}")
-    @ApiOperation(value = "스터디플래너 작성", notes = "새로운 스터디플래너 정보를 입력한다. 그리고 DB 수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
+    @ApiOperation(value = "스터디플래너 수정", notes = "새로운 스터디플래너 정보를 입력한다. 그리고 DB 수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
     public ResponseEntity<String> updateStudyPlanner(@PathVariable("memberId") Integer memberId, @RequestBody StudyPlanner studyPlanner) {
         studyPlannerServiceImpl.update(memberId, studyPlanner);
 
@@ -59,7 +59,7 @@ public class StudyPlannerController {
 
     // 스터디 플래너 탈퇴
     @DeleteMapping("/{memberId}")
-    @ApiOperation(value = "스터디플래너 작성", notes = "스터디플래너를 삭제한다(IsExist 0으로 변경). 그리고 DB 삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
+    @ApiOperation(value = "스터디플래너 삭제", notes = "스터디플래너를 삭제한다(IsExist 0으로 변경). 그리고 DB 삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
     public ResponseEntity<String> deleteStudyPlanner(@PathVariable("memberId") Integer memberId) {
         studyPlannerServiceImpl.delete(memberId);
 
