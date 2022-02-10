@@ -60,7 +60,7 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-def querydslDir = "src/main/java/com/ssafy/mogakgong/domain/item"
+def querydslDir = "$buildDir/generated/querydsl" // (3)
 
 querydsl { // (4)
 	jpa = true
