@@ -21,14 +21,17 @@ public class StudyRoomMember {
     private Integer id;
 
     @Column(name = "level")
+    @ApiModelProperty(value = "스터디룸 멤버들의 권한")
     private Integer level;
 
     @OneToOne
     @JoinColumn(name = "study_room_id")
+    @ApiModelProperty(value = "해당 스터디룸의 ID")
     private StudyRoom studyRoom;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
+    @ApiModelProperty(value = "해당 멤버들의 ID")
     private Member member;
 
 }
