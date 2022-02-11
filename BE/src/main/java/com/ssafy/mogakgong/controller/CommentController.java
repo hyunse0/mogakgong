@@ -7,12 +7,10 @@ import com.ssafy.mogakgong.repository.CommunityRepository;
 import com.ssafy.mogakgong.request.CommentRequest;
 import com.ssafy.mogakgong.service.CommentService;
 import com.ssafy.mogakgong.service.CommunityService;
-import com.ssafy.mogakgong.service.MemberServiceImpl;
+import com.ssafy.mogakgong.service.MemberService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +29,7 @@ public class CommentController {
 
     private CommentService commentService;
     private CommunityService communityService;
-    private MemberServiceImpl memberServiceImpl;
+    private MemberService memberService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
@@ -39,9 +37,7 @@ public class CommentController {
     @ApiOperation(value = "댓글 작성",  notes = "새로운 댓글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<String> writeComment(@RequestBody CommentRequest commentRequest) {
         try {
-            Pageable pageable = PageRequest.of(0, 10);
-
-            Member member = memberServiceImpl.findOne(commentRequest.getMemberId());
+            Member member = memberService.findOne(commentRequest.getMemberId());
             Community community = communityRepository.findById(commentRequest.getCommunityId()).get();
             Integer commentId = commentService.writeComment(commentRequest, member, community); // 반환이 필요할 경우 반환, 아니면 지우기
         } catch (Exception e) {
