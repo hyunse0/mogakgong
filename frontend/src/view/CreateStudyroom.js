@@ -1,9 +1,6 @@
-import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -13,24 +10,26 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import StudyroomInput from '../components/studyroom/StudyroomInput'
 import Review from '../components/studyroom/Review';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const steps = ['정보입력', '확인'];
+const theme = createTheme();
 
-function getStepContent(step) {
+function getStepContent(step, info, func) {
     switch (step) {
         case 0:
-            return <StudyroomInput />
+            return <StudyroomInput onButtonClick={func} />
         case 1:
-            return <Review />
+            return <Review props={info} />;
+
         default:
-            throw new Error('Unknown step')
+            throw new Error('Unknown step');
     }
 }
 
-const theme = createTheme();
-
 export default function Checkout() {
-    const [activeStep, setActiveStep] = React.useState(0);
+    const [activeStep, setActiveStep] = useState(0);
 
     const handleNext = () => {
         setActiveStep(activeStep + 1);
@@ -39,6 +38,18 @@ export default function Checkout() {
     const handleBack = () => {
         setActiveStep(activeStep - 1);
     };
+
+    const [roomInfo, setRoomInfo] = useState(null)
+    const handleRoomInfo = (info) => {
+        setRoomInfo(info)
+    }
+
+    useEffect(() => {
+    })
+
+    const createRoom = (event) => {
+        // axios.post()
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -55,26 +66,27 @@ export default function Checkout() {
                             </Step>
                         ))}
                     </Stepper>
-                    <React.Fragment>
+                    <>
                         {activeStep === steps.length ? (
-                            <React.Fragment>
+                            <Box sx={{ display: 'grid', justifyContent: 'center' }}>
                                 <Typography variant="h5" gutterBottom>
                                     스터디룸이 성공적으로 만들어졌습니다!
                                 </Typography>
                                 <Typography variant="subtitle1">
                                     설명이 들어갈 자리입니다.
                                 </Typography>
-                                <Button sx={{ mt: 3, ml: 1 }}>
+                                <Button sx={{ mt: 3, ml: 1 }} onClick={createRoom}>
                                     홈으로 돌아가기
                                 </Button>
-                            </React.Fragment>
+
+                            </Box>
                         ) : (
-                            <React.Fragment>
-                                {getStepContent(activeStep)}
+                            <>
+                                {getStepContent(activeStep, roomInfo, handleRoomInfo)}
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                     {activeStep !== 0 && (
                                         <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                                            Back
+                                            이전
                                         </Button>
                                     )}
 
@@ -83,14 +95,14 @@ export default function Checkout() {
                                         onClick={handleNext}
                                         sx={{ mt: 3, ml: 1 }}
                                     >
-                                        {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
+                                        {activeStep === steps.length - 1 ? '스터디룸 생성하기' : '다음'}
                                     </Button>
                                 </Box>
-                            </React.Fragment>
+                            </>
                         )}
-                    </React.Fragment>
+                    </>
                 </Paper>
-            </Container>
+            </Container >
         </ThemeProvider >
     );
 }
