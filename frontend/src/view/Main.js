@@ -1,119 +1,90 @@
 import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-// import { Box } from '@mui/system';
-// import Button from '@mui/material/Button';
 import SpeedDial from '@mui/material/SpeedDial';
-import { Backdrop, Card, SpeedDialAction, SpeedDialIcon, Typography } from '@mui/material';
+import { Card, SpeedDialAction, SpeedDialIcon, Typography, Modal, Box, Link } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
-// import ListSubheader from '@mui/material/ListSubheader';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import AppBar from '../components/AppBar';
+import ProgressBar from './ProgressBar';
+import StudyroomDetail from './StudyroomDetail';
+import './Main.css'
 
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 1200,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+};
+
+const { faker } = require('@faker-js/faker');
+faker.locale = "ko"
+const studyrooms = [...Array(10)].map((_, idx) => ({
+    title: faker.lorem.word(),
+    category: faker.lorem.word(),
+    description: faker.lorem.lines(),
+    hashtag: faker.lorem.word(),
+    start_date: faker.datatype.datetime(),
+    end_date: faker.datatype.datetime(),
+    limit: Math.random(0, 1) * 10,
+    img: faker.image.image(),
+}))
 const theme = createTheme();
-
-const itemData = [
-    {
-        img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-        title: 'Breakfast',
-        author: '@bkristastucchio',
-        featured: true,
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-        title: 'Burger',
-        author: '@rollelflex_graphy726',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-        title: 'Camera',
-        author: '@helloimnik',
-    },
-
-];
 
 export default function Main() {
     const [open, setOpen] = useState(false);
     const handleClose = () => {
         setOpen(false);
     };
-    const handleToggle = () => {
+    const handleToggle = (e) => {
+        console.log(e)
         setOpen(!open);
     };
+
+    const [dialog, setDialog] = useState(null)
+
+    const handleDialog = (param, e) => {
+        console.log(param)
+        setDialog(param)
+        setOpen(!open)
+    }
 
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="lg">
                 <CssBaseline />
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
+                    {/* 내 목표 */}
                     <Grid item xs={12} sm={6}>
-                        {/* 내 스터디 */}
-
-                        <Typography mt={3}>내 스터디</Typography>
-                        <ImageList sx={{ height: 300 }} >
-                            {
-                                itemData.map((item) => (
-
-                                    <ImageListItem key={item.img} >
-
-                                        <img
-                                            src={`${item.img}?w=248&fit=crop&auto=format`}
-                                            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                                            alt={item.title}
-                                            loading="lazy"
-                                        />
-                                        <ImageListItemBar
-                                            title={item.title}
-                                            subtitle={item.author}
-                                            actionIcon={
-                                                <IconButton
-                                                    sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                                    aria-label={`info about ${item.title}`}
-                                                >
-                                                    <InfoIcon />
-                                                </IconButton>
-                                            }
-                                        />
-                                    </ImageListItem>
-
-                                ))
-                            }
-                        </ImageList>
-
-
+                        <Typography m={2} variant='h6'>내 목표</Typography>
+                        <Grid
+                            container
+                            justifyContent="center"
+                            alignItems="center">
+                            <ProgressBar props={65} m={3}></ProgressBar>
+                        </Grid>
                     </Grid>
+                    {/* 내 랭킹 */}
                     <Grid item xs={12} sm={6}>
-                        {/* 내 목표 */}
-                        <Grid item xs={12}>
-                            <Typography mt={2}>내 목표</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography mt={2}>내 랭킹</Typography>
-                        </Grid>
+                        <Typography mt={2} variant='h6'>내 랭킹</Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        {/* 추천 스터디 */}
-                        <Typography mt={2}>추천 스터디</Typography>
+                        {/* 내 스터디 */}
+                        <Typography mt={3} variant='h6' >내 스터디</Typography>
                         <ImageList cols={4} >
-                            {itemData.map((item) => (
-                                <Card>
-                                    <Backdrop
-
-                                        open={open}
-                                        onClick={handleClose}>
-                                        {item.title}
-                                    </Backdrop>
-                                    <ImageListItem key={item.img}>
+                            {studyrooms.map((item) => (
+                                <Card key={item.hashtag}>
+                                    <ImageListItem >
                                         <img
                                             src={`${item.img}`}
                                             srcSet={`${item.img}`}
@@ -122,7 +93,40 @@ export default function Main() {
                                         />
                                         <ImageListItemBar
                                             title={item.title}
-                                            subtitle={item.author}
+                                            subtitle={item.hashtag}
+                                            actionIcon={
+                                                <IconButton
+                                                    sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                                                    aria-label={`info about ${item.title}`}
+                                                    onClick={(e) => handleDialog(item, e)}
+                                                >
+                                                    <InfoIcon />
+                                                </IconButton>
+                                            }
+                                        />
+                                    </ImageListItem>
+                                </Card>
+                            ))}
+                        </ImageList>
+
+                    </Grid>
+
+                    <Grid item xs={12} >
+                        {/* 추천 스터디 */}
+                        <Typography mt={2} variant='h6'>추천 스터디</Typography>
+                        <ImageList cols={4} >
+                            {studyrooms.map((item) => (
+                                <Card key={item.hashtag}>
+                                    <ImageListItem >
+                                        <img
+                                            src={`${item.img}`}
+                                            srcSet={`${item.img}`}
+                                            alt={item.title}
+                                            loading="lazy"
+                                        />
+                                        <ImageListItemBar
+                                            title={item.title}
+                                            subtitle={item.hashtag}
                                             actionIcon={
                                                 <IconButton
                                                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
@@ -151,11 +155,19 @@ export default function Main() {
                         tooltipTitle={"스터디 검색하기"}
                     />
                     <SpeedDialAction
-                        icon={<AddIcon />}
+                        icon={
+                            <Link href='/createroom'>
+                                <AddIcon />
+                            </Link>}
                         tooltipTitle={"새로운 스터디 만들기"}
                     />
                 </SpeedDial>
             </Container >
-        </ThemeProvider>
+            <Modal open={open} onClick={handleClose}>
+                <Box sx={style}>
+                    {dialog ? <StudyroomDetail info={dialog} /> : null}
+                </Box>
+            </Modal>
+        </ThemeProvider >
     );
 }

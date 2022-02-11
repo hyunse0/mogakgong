@@ -25,7 +25,7 @@ public class CommunityController {
 
     private FileService fileService;
     private CommunityService communityService;
-    private MemberService memberService;
+    private MemberServiceImpl memberServiceImpl;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 

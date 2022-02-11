@@ -10,8 +10,5 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<Member, Integer> {
     public Member findByEmail(String email);
     public List<Member> findByIsExist(Integer isExist);
-    public Member findById(int id);
-
-
 
 }
