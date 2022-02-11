@@ -2,33 +2,74 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
-import { Input, Stack } from '@mui/material';
-import { useState } from 'react';
+import { Input, InputLabel, Stack } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
+import Slider from '@mui/material/Slider';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
-export default function StudyroomInput() {
+const DEFAULT_IMG = "https://images.freeimages.com/images/small-previews/eaf/studying-ahead-1421056.jpg"
+
+export default function StudyroomInput({ onButtonClick }) {
+    const [title, setTitle] = useState('')
+    const [password, setPassword] = useState('')
+    const [description, setDescription] = useState('')
     const [hashtag, setHashtag] = useState([])
-    const [tag, setTag] = useState('')
+    const [start, setStart] = useState(null)
+    const [end, setEnd] = useState(null)
+    const [goalTime, setGoalTime] = useState(0)
     const [imgFile, setImgFile] = useState(null)
+    const [maxPeople, setMaxPeople] = useState(0)
+
+    const [tag, setTag] = useState('')
+
+    useEffect(() => {
+        onButtonClick({
+            title,
+            password,
+            description,
+            hashtag,
+            start,
+            end,
+            goalTime,
+            imgFile,
+            maxPeople
+        })
+    }, [title, password, description, hashtag, start, end, goalTime, imgFile, maxPeople])
 
     const setImgHandler = async (e) => {
         setImgFile(URL.createObjectURL(e.target.files[0]));
     }
 
-    const handleClick = () => {
-        console.info('You clicked the Chip.');
-    };
-
     const handleDelete = (toDelete) => {
-        console.info('You clicked the delete icon.');
+        // console.info('You clicked the delete icon.');
         setHashtag(hashtag.filter(tag => tag !== toDelete));
     };
 
     const onCreate = e => {
         setHashtag(enters => [...enters, tag]);
-        console.log(hashtag)
+        // console.log(hashtag)
         setTag('');
     };
+
+    const handleSliderChange = (event, newValue) => {
+        setMaxPeople(newValue);
+    };
+
+    const handleInputChange = (event) => {
+        setMaxPeople(event.target.value === '' ? '' : Number(event.target.value));
+    };
+
+    const handleBlur = () => {
+        if (maxPeople < 0) {
+            setMaxPeople(0);
+        } else if (maxPeople > 10) {
+            setMaxPeople(10);
+        }
+    };
+
     return (
         <>
             <Typography variant="h6" gutterBottom>
@@ -40,6 +81,8 @@ export default function StudyroomInput() {
                         required
                         id="title"
                         name="title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         label="스터디 이름을 입력하세요"
                         fullWidth
                         variant="standard"
@@ -50,6 +93,8 @@ export default function StudyroomInput() {
                         required
                         id="password"
                         name="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         label="비밀번호를 입력하세요"
                         fullWidth
                         variant="standard"
@@ -60,6 +105,8 @@ export default function StudyroomInput() {
                         required
                         id="description"
                         name="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                         label="스터디에 대해 설명해주세요!"
                         fullWidth
                         variant="standard"
@@ -72,7 +119,6 @@ export default function StudyroomInput() {
                                 <Chip
                                     key={index}
                                     label={tag}
-                                    onClick={handleClick}
                                     onDelete={() => handleDelete(tag)}
                                 />
                             ))}
@@ -98,57 +144,76 @@ export default function StudyroomInput() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
+                    <LocalizationProvider
+                        dateAdapter={AdapterDateFns}
+                    >
+                        <DatePicker
+                            fullWidth
+                            label="시작날짜"
+                            value={start}
+                            onChange={(newValue) => {
+                                setStart(newValue.toISOString().slice(0, 10))
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <LocalizationProvider
+                        dateAdapter={AdapterDateFns}
+                    >
+                        <DatePicker
+                            fullWidth
+                            label="종료날짜"
+                            value={end}
+                            onChange={(newValue) => {
+                                setEnd(newValue.toISOString().slice(0, 10))
+                            }}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                    </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12} sm={6}>
                     <TextField
-                        required
-                        id="city"
-                        name="city"
-                        label="City"
+                        id="goalTime"
+                        name="goalTime"
+                        value={goalTime}
+                        onChange={(e) => setGoalTime(e.target.value)}
+                        label="목표시간"
                         fullWidth
-                        autoComplete="shipping address-level2"
                         variant="standard"
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
-                        id="state"
-                        name="state"
-                        label="State/Province/Region"
-                        fullWidth
-                        variant="standard"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="zip"
-                        name="zip"
-                        label="Zip / Postal code"
-                        fullWidth
-                        autoComplete="shipping postal-code"
-                        variant="standard"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="country"
-                        name="country"
-                        label="Country"
-                        fullWidth
-                        autoComplete="shipping country"
-                        variant="standard"
-                    />
+                    <Grid container spacing={2} alignItems="center">
+                        <Grid item xs>
+                            <InputLabel shrink>인원 수를 정하세요</InputLabel>
+                            <Slider value={maxPeople} onChange={handleSliderChange} defaultValue={0} aria-label="Default" valueLabelDisplay="auto" max={10} marks />
+                        </Grid>
+                        <Grid item>
+                            <Input
+                                value={maxPeople}
+                                size="small"
+                                onChange={handleInputChange}
+                                onBlur={handleBlur}
+                                inputProps={{
+                                    step: 1,
+                                    min: 0,
+                                    max: 10,
+                                    type: 'number',
+                                    'aria-labelledby': 'input-slider',
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid item xs={12}>
                     <Box sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
                         <img
                             src=
-                            {imgFile ? imgFile
-                                : "https://images.freeimages.com/images/small-previews/eaf/studying-ahead-1421056.jpg"} height={254} />
+                            {imgFile ? imgFile : DEFAULT_IMG} height={254} />
                     </Box>
-                    <div>
-                        *해당 이미지는 기본 이미지입니다.
-                    </div>
+                    {!imgFile ? <div>*해당 이미지는 기본 이미지입니다.</div> : null}
                 </Grid>
                 <Grid item xs={12}>
                     <Input
