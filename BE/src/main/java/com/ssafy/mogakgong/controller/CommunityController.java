@@ -4,7 +4,8 @@ import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.request.CommunityRequest;
 import com.ssafy.mogakgong.response.CommunityResponse;
 import com.ssafy.mogakgong.service.CommunityService;
-import com.ssafy.mogakgong.service.MemberServiceImpl;
+import com.ssafy.mogakgong.service.FileService;
+import com.ssafy.mogakgong.service.MemberService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,9 @@ import java.util.Map;
 @RequestMapping("/community")
 public class CommunityController {
 
+    private FileService fileService;
     private CommunityService communityService;
-    private MemberServiceImpl memberServiceImpl;
+    private MemberService memberService;
     private static final String SUCCESS = "success";
     private static final String FAIL = "fail";
 
@@ -31,8 +33,12 @@ public class CommunityController {
     @ApiOperation(value = "커뮤니티 게시판 글작성", notes = "새로운 게시글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<String> writeCommunity(@RequestBody CommunityRequest communityRequest) {
         try {
-            Member member = memberServiceImpl.findOne(communityRequest.getMemberId());
-            Integer communityId = communityService.writeCommunity(communityRequest, member); // 반환이 필요할 경우 반환, 아니면 지우기
+            Member member = memberService.findOne(communityRequest.getMemberId());
+            Integer communityId = communityService.writeCommunity(communityRequest, member);
+            // 파일 저장
+            if (communityRequest.getFiles().size() != 0) {
+                fileService.saveFile(communityId, communityRequest.getFiles());
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
         }
@@ -73,8 +79,6 @@ public class CommunityController {
     @ApiOperation(value = "커뮤니티 게시판 글수정", notes = "수정할 게시글 정보를 입력한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<String> modifyCommunity(@PathVariable Integer communityId,
                                                   @RequestBody CommunityRequest communityRequest) {
-        Map<String, Object> resultMap = new HashMap<>();
-
         Pageable pageable = PageRequest.of(0, 10);
         CommunityResponse community = communityService.getCommunity(communityId, pageable);
 
@@ -83,6 +87,10 @@ public class CommunityController {
         } else {
             try {
                 communityService.modifyCommunity(communityId, communityRequest);
+                // 파일 수정
+                if (communityRequest.getFiles().containsAll(community.getFiles())) {
+                    fileService.saveFile(communityId, communityRequest.getFiles());
+                }
             } catch (Exception e) {
                 return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
             }
