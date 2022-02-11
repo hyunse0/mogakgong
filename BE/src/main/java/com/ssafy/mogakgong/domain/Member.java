@@ -1,6 +1,5 @@
 package com.ssafy.mogakgong.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -8,10 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.management.relation.Role;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -72,8 +68,12 @@ public class Member {
     @ApiModelProperty(value = "회원 등급")
     private String role;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
     private List<MemberCategory> memberCategories = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<StudyRoomMember> studyRoomMembers = new ArrayList<>();
+
 
     public Member() {
         this.role = "USER";

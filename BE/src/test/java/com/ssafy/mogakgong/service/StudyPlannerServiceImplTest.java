@@ -14,11 +14,12 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class StudyPlannerServiceTest {
+public class StudyPlannerServiceImplTest {
 
-    @Autowired StudyPlannerService studyPlannerService;
     @Autowired
-    MemberService memberService;
+    StudyPlannerServiceImpl studyPlannerServiceImpl;
+    @Autowired
+    MemberServiceImpl memberServiceImpl;
     @Autowired EntityManager em;
 
     @Test
@@ -26,13 +27,13 @@ public class StudyPlannerServiceTest {
     public void 플래너저장() throws Exception {
         //given
         StudyPlanner studyPlanner = new StudyPlanner();
-        studyPlanner.setMember(memberService.findOne(1));
+        studyPlanner.setMember(memberServiceImpl.findOne(1));
         studyPlanner.setSubject("ssafy");
         studyPlanner.setContent("화이팅");
         studyPlanner.setIsExist(1);
 
         //when
-        studyPlannerService.write(studyPlanner);
+        studyPlannerServiceImpl.write(studyPlanner);
 
         //then
         em.flush();
@@ -42,7 +43,7 @@ public class StudyPlannerServiceTest {
     //@Rollback(false)
     public void 플래너목록() throws Exception {
         //given
-        List<StudyPlanner> findStudyPlanners = studyPlannerService.findStudyPlanners(1, 1);
+        List<StudyPlanner> findStudyPlanners = studyPlannerServiceImpl.findStudyPlanners(1, 1);
 
         //when
         for(StudyPlanner now :findStudyPlanners) {
