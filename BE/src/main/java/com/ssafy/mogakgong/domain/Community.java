@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Getter
@@ -56,13 +57,13 @@ public class Community {
     @Column (name = "is_exist")
     private Integer isExist;
 
-//    @OneToMany
-//    @JoinColumn(name="comment_id...?")
-//    @ApiModelProperty(value = "커뮤니티 게시글 댓글들")
-//    private List<Comment> comments;
-//
-//    @ApiModelProperty(value = "커뮤니티 게시글 파일들")
-//    private List<FileInfo> fileInfos;
+    @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ApiModelProperty(value = "커뮤니티 게시글 댓글들")
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ApiModelProperty(value = "커뮤니티 게시글 파일들")
+    private List<FileInfo> files;
 
     @Builder
     public Community(Integer id, Member member, String title, String content, Timestamp regDate, Timestamp editDate, Integer isExist) {
