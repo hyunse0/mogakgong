@@ -39,8 +39,6 @@ public class CommentController {
     @ApiOperation(value = "댓글 작성",  notes = "새로운 댓글 정보를 입력한다. 그리고 DB입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<String> writeComment(@RequestBody CommentRequest commentRequest) {
         try {
-            Pageable pageable = PageRequest.of(0, 10);
-
             Member member = memberService.findOne(commentRequest.getMemberId());
             Community community = communityRepository.findById(commentRequest.getCommunityId()).get();
             Integer commentId = commentService.writeComment(commentRequest, member, community); // 반환이 필요할 경우 반환, 아니면 지우기

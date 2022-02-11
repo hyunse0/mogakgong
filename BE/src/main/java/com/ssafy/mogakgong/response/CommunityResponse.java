@@ -1,12 +1,14 @@
 package com.ssafy.mogakgong.response;
 
 import com.ssafy.mogakgong.domain.Community;
+import com.ssafy.mogakgong.domain.FileInfo;
 import com.ssafy.mogakgong.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Builder
 @Getter
@@ -19,6 +21,7 @@ public class CommunityResponse {
     private Timestamp editDate;
     private Integer isExist;
     private Page<CommentResponse> comments;
+    private List<FileInfo> files;
 
     public static CommunityResponse from(Community community) {
         return CommunityResponse.builder()
