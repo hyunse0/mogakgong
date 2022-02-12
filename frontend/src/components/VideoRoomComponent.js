@@ -21,8 +21,8 @@ class VideoRoomComponent extends Component {
         this.OPENVIDU_SERVER_SECRET = this.props.openviduSecret ? this.props.openviduSecret : 'MY_SECRET';
         this.hasBeenUpdated = false;
         this.layout = new OpenViduLayout();
-        let sessionName = this.props.sessionName ? this.props.sessionName : 'SessionA';
-        let userName = this.props.user ? this.props.user : 'OpenVidu_User' + Math.floor(Math.random() * 100);
+        let sessionName = this.props.roomInfo.sessionName ? this.props.roomInfo.sessionName : 'undefined'
+        let userName = this.props.roomInfo.nickname ? this.props.roomInfo.nickname : 'undefined'
         this.remotes = [];
         this.localUserAccessAllowed = false;
         this.state = {
@@ -107,12 +107,12 @@ class VideoRoomComponent extends Component {
                 console.log(token);
                 this.connect(token);
             }).catch((error) => {
-                if(this.props.error){
+                if (this.props.error) {
                     this.props.error({ error: error.error, messgae: error.message, code: error.code, status: error.status });
                 }
                 console.log('There was an error getting the token:', error.code, error.message);
                 alert('There was an error getting the token:', error.message);
-              });
+            });
         }
     }
 
@@ -126,7 +126,7 @@ class VideoRoomComponent extends Component {
                 this.connectWebCam();
             })
             .catch((error) => {
-                if(this.props.error){
+                if (this.props.error) {
                     this.props.error({ error: error.error, messgae: error.message, code: error.code, status: error.status });
                 }
                 alert('There was an error connecting to the session:', error.message);
@@ -149,7 +149,7 @@ class VideoRoomComponent extends Component {
         });
 
         if (this.state.session.capabilities.publish) {
-            publisher.on('accessAllowed' , () => {
+            publisher.on('accessAllowed', () => {
                 this.state.session.publish(publisher).then(() => {
                     this.updateSubscribers();
                     this.localUserAccessAllowed = true;
@@ -264,7 +264,7 @@ class VideoRoomComponent extends Component {
             const nickname = event.stream.connection.data.split('%')[0];
             newUser.setNickname(JSON.parse(nickname).clientData);
             this.remotes.push(newUser);
-            if(this.localUserAccessAllowed) {
+            if (this.localUserAccessAllowed) {
                 this.updateSubscribers();
             }
         });
@@ -359,11 +359,11 @@ class VideoRoomComponent extends Component {
     }
 
     async switchCamera() {
-        try{
+        try {
             const devices = await this.OV.getDevices()
             var videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-            if(videoDevices && videoDevices.length > 1) {
+            if (videoDevices && videoDevices.length > 1) {
 
                 var newVideoDevice = videoDevices.filter(device => device.deviceId !== this.state.currentVideoDevice.deviceId)
 
@@ -493,8 +493,10 @@ class VideoRoomComponent extends Component {
 
     render() {
         const mySessionId = this.state.mySessionId;
+        console.log.apply(this.state)
         const localUser = this.state.localUser;
         var chatDisplay = { display: this.state.chatDisplay };
+        // console.log("print props : ", localUser)
 
         return (
             <div className="container" id="container">
@@ -582,11 +584,11 @@ class VideoRoomComponent extends Component {
                         if (
                             window.confirm(
                                 'No connection to OpenVidu Server. This may be a certificate error at "' +
-                                    this.OPENVIDU_SERVER_URL +
-                                    '"\n\nClick OK to navigate and accept it. ' +
-                                    'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
-                                    this.OPENVIDU_SERVER_URL +
-                                    '"',
+                                this.OPENVIDU_SERVER_URL +
+                                '"\n\nClick OK to navigate and accept it. ' +
+                                'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
+                                this.OPENVIDU_SERVER_URL +
+                                '"',
                             )
                         ) {
                             window.location.assign(this.OPENVIDU_SERVER_URL + '/accept-certificate');

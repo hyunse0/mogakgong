@@ -17,6 +17,7 @@ import StopScreenShare from '@mui/icons-material/StopScreenShare';
 import Tooltip from '@mui/material/Tooltip';
 import PowerSettingsNew from '@mui/icons-material/PowerSettingsNew';
 import QuestionAnswer from '@mui/icons-material/QuestionAnswer';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 import IconButton from '@mui/material/IconButton';
 
@@ -37,7 +38,9 @@ export default class ToolbarComponent extends Component {
     }
 
 
+
     micStatusChanged() {
+        console.log(this.props)
         this.props.micStatusChanged();
     }
 
@@ -77,17 +80,20 @@ export default class ToolbarComponent extends Component {
             <AppBar className="toolbar" id="header">
                 <Toolbar className="toolbar">
                     <div id="navSessionInfo">
-
-                        {this.props.sessionId && <div id="titleContent">
-                            <span id="session-title">{mySessionId}</span>
-                        </div>}
+                        {this.props.sessionId &&
+                            <div id="titleContent">
+                                <span id="session-title">{mySessionId}</span>
+                            </div>}
                     </div>
 
                     <div className="buttonsContent">
+
+                        {/* 마이크 온오프 */}
                         <IconButton color="inherit" className="navButton" id="navMicButton" onClick={this.micStatusChanged}>
                             {localUser !== undefined && localUser.isAudioActive() ? <Mic /> : <MicOff color="secondary" />}
                         </IconButton>
 
+                        {/* 비디오 캠 온오프 */}
                         <IconButton color="inherit" className="navButton" id="navCamButton" onClick={this.camStatusChanged}>
                             {localUser !== undefined && localUser.isVideoActive() ? (
                                 <Videocam />
@@ -96,6 +102,7 @@ export default class ToolbarComponent extends Component {
                             )}
                         </IconButton>
 
+                        {/* 화면공유 */}
                         <IconButton color="inherit" className="navButton" onClick={this.screenShare}>
                             {localUser !== undefined && localUser.isScreenShareActive() ? <PictureInPicture /> : <ScreenShare />}
                         </IconButton>
@@ -107,19 +114,32 @@ export default class ToolbarComponent extends Component {
                                 </IconButton>
                             )}
 
+                        {/* 비디오 전환 */}
                         <IconButton color="inherit" className="navButton" onClick={this.switchCamera}>
                             <SwitchVideoIcon />
                         </IconButton>
+
+                        {/* 전체화면 */}
                         <IconButton color="inherit" className="navButton" onClick={this.toggleFullscreen}>
                             {localUser !== undefined && this.state.fullscreen ? <FullscreenExit /> : <Fullscreen />}
                         </IconButton>
-                        <IconButton color="secondary" className="navButton" onClick={this.leaveSession} id="navLeaveButton">
+
+                        {/* 연결 종료 */}
+                        <IconButton color="error" className="navButton" onClick={this.leaveSession} id="navLeaveButton">
                             <PowerSettingsNew />
                         </IconButton>
-                        <IconButton color="inherit" onClick={this.toggleChat} id="navChatButton">
+
+                        {/* 채팅 */}
+                        <IconButton color="primary" onClick={this.toggleChat} id="navChatButton">
                             {this.props.showNotification && <div id="point" className="" />}
-                            <Tooltip title="Chat">
+                            <Tooltip title="채팅">
                                 <QuestionAnswer />
+                            </Tooltip>
+                        </IconButton>
+
+                        <IconButton color="primary" id="navCalenderButton">
+                            <Tooltip title="스터디 플래너">
+                                <CalendarTodayIcon />
                             </Tooltip>
                         </IconButton>
                     </div>
