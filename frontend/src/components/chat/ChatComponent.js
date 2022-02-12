@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import IconButton from '@mui/icons-material/Message';
-import Fab from '@mui/icons-material/Circle';
-import HighlightOff from '@mui/icons-material/HighlightOff';
+import CloseIcon from '@mui/icons-material/Close';
 import Send from '@mui/icons-material/Send';
 
 import './ChatComponent.css';
 import Tooltip from '@mui/material/Tooltip';
+import { Button } from '@mui/material';
 
 export default class ChatComponent extends Component {
     constructor(props) {
@@ -84,10 +83,10 @@ export default class ChatComponent extends Component {
             <div id="chatContainer">
                 <div id="chatComponent" style={styleChat}>
                     <div id="chatToolbar">
-                        <span>{this.props.user.getStreamManager().stream.session.sessionId} - CHAT</span>
-                        <IconButton id="closeButton" onClick={this.close}>
-                            <HighlightOff color="secondary" />
-                        </IconButton>
+                        <span>{this.props.user.getStreamManager().stream.session.sessionId}</span>
+                        <Button id="closeButton" onClick={this.close}>
+                            <CloseIcon color="error" />
+                        </Button>
                     </div>
                     <div className="message-wrap" ref={this.chatScroll}>
                         {this.state.messageList.map((data, i) => (
@@ -114,16 +113,16 @@ export default class ChatComponent extends Component {
 
                     <div id="messageInput">
                         <input
-                            placeholder="Send a messge"
+                            placeholder="이 스터디룸에 메세지 보내기"
                             id="chatInput"
                             value={this.state.message}
                             onChange={this.handleChange}
                             onKeyPress={this.handlePressKey}
                         />
                         <Tooltip title="Send message">
-                            <Fab size="small" id="sendButton" onClick={this.sendMessage}>
+                            <Button size="small" id="sendButton" onClick={this.sendMessage}>
                                 <Send />
-                            </Fab>
+                            </Button>
                         </Tooltip>
                     </div>
                 </div>
