@@ -25,7 +25,7 @@ import java.util.List;
 public class StudyRoomServiceImplTest {
 
     @Autowired
-    private StudyRoomService studyRoomService;
+    private StudyRoomServiceImpl studyRoomServiceImpl;
     @Autowired
     private StudyRoomRepository studyRoomRepository;
     @Autowired
@@ -55,7 +55,9 @@ public class StudyRoomServiceImplTest {
         Member member = memberRepository.findById(9).get();
 
         //when
-        studyRoomService.create(studyRoomRequest, member);
+        studyRoomServiceImpl.create(studyRoomRequest, member);
+        StudyRoom studyRoom = studyRoomServiceImpl.findStudyRoomByUrl(studyRoomRequest.getUrl());
+        studyRoomServiceImpl.enter(studyRoom.getId(), member.getId(),2);
 
         //then
         em.flush();
@@ -95,8 +97,28 @@ public class StudyRoomServiceImplTest {
         studyRoomUpdateRequest.getStudyRoomHashtags().add("이공계");
 
         //when
-        studyRoomService.updateStudyRoom(9, studyRoomUpdateRequest);
+        studyRoomServiceImpl.updateStudyRoom(9, studyRoomUpdateRequest);
 
+        //then
+        em.flush();
+    }
+
+    @Test
+    //@Rollback(false)
+    public void 스터디룸_입장() throws  Exception {
+        //given
+        //when
+        studyRoomServiceImpl.enter(11,9,0);
+        //then
+        em.flush();
+    }
+
+    @Test
+    //@Rollback(false)
+    public void 스터디룸_권한변경() throws  Exception {
+        //given
+        //when
+        studyRoomServiceImpl.changeAuthority(11,9,1);
         //then
         em.flush();
     }

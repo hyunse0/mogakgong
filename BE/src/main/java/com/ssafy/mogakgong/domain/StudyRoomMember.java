@@ -24,6 +24,10 @@ public class StudyRoomMember {
     @ApiModelProperty(value = "스터디룸 멤버들의 권한")
     private Integer level;
 
+    @Column(name = "is_exist")
+    @ApiModelProperty(value = "멤버의 현재 상태, 1: 입장 중, 2: 퇴장 중")
+    private Integer isExist;
+
     @OneToOne
     @JoinColumn(name = "study_room_id")
     @ApiModelProperty(value = "해당 스터디룸의 ID")
