@@ -2,6 +2,9 @@ package com.ssafy.mogakgong.request;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class StudyRoomUpdateRequest {
         String title;
@@ -9,8 +12,13 @@ public class StudyRoomUpdateRequest {
         String description;
         String startDate;
         String endDate;
-        Integer limit;
+        Integer limitPeople;
         String img;
         Integer goalTime;
         String url;
+        List<String> studyRoomHashtags;
+
+        public StudyRoomUpdateRequest() {
+                this.studyRoomHashtags = new ArrayList<>();
+        }
 }

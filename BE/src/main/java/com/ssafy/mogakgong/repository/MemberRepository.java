@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Integer> {
-    public Member findByEmail(String email);
-    public List<Member> findByIsExist(Integer isExist);
+    Member findByEmail(String email);
+    List<Member> findByIsExist(Integer isExist);
 
 }

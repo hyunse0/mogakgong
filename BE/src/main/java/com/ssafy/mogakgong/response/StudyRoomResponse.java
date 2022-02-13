@@ -3,6 +3,7 @@ package com.ssafy.mogakgong.response;
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.domain.StudyRoom;
 import com.ssafy.mogakgong.domain.StudyRoomHashtag;
+import com.ssafy.mogakgong.domain.StudyRoomMember;
 import lombok.Builder;
 import lombok.Getter;
 
