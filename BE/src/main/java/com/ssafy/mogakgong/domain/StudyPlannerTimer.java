@@ -31,5 +31,4 @@ public class StudyPlannerTimer {
     @Column (name = "end_time")
     @ApiModelProperty(value = "스터디룸 플래너의 종료 시간")
     private Timestamp endTime;
-
 }

@@ -6,4 +6,5 @@ import lombok.Data;
 public class StudyPlannerDateRequest {
     String startDate;
     String endDate;
+
 }

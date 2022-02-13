@@ -75,4 +75,5 @@ public class StudyPlannerServiceImplTest {
         //then
         em.flush();
     }
+
 }

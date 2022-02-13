@@ -126,5 +126,4 @@ public class StudyRoomController {
         }
         return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
-
 }

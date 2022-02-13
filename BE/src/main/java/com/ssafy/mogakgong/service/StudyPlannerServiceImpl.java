@@ -80,5 +80,4 @@ public class StudyPlannerServiceImpl implements StudyPlannerService{
         studyPlannerTimer.setEndTime(Timestamp.valueOf(sdf.format(now)));
         System.out.println(sdf.format(now));
     }
-
 }

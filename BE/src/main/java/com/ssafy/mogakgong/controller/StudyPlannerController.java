@@ -94,4 +94,5 @@ public class StudyPlannerController {
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
+
 }

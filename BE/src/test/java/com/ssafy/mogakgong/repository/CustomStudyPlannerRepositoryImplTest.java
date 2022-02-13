@@ -49,4 +49,5 @@ public class CustomStudyPlannerRepositoryImplTest {
         //then
         em.flush();
     }
+    
 }

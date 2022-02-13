@@ -11,4 +11,5 @@ public interface StudyPlannerService {
     public void delete(Integer id);
     public void startTimer(Integer studyPlannerId);
     public void stopTimer(Integer studyPlannerId);
+
 }
