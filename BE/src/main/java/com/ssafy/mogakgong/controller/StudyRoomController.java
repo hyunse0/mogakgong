@@ -40,7 +40,7 @@ public class StudyRoomController {
             StudyRoom studyRoom = studyRoomServiceImpl.findStudyRoomByUrl(studyRoomRequest.getUrl());
             studyRoomServiceImpl.enter(studyRoom.getId(), member.getId(),2);
         } catch (IllegalStateException e){
-            return new ResponseEntity<>("EMAIL_DUPLICATED", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("URL_DUPLICATED", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
         }
@@ -126,5 +126,4 @@ public class StudyRoomController {
         }
         return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);
     }
-
 }

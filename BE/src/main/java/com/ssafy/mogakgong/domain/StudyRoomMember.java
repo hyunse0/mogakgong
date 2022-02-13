@@ -37,5 +37,4 @@ public class StudyRoomMember {
     @JoinColumn(name = "member_id")
     @ApiModelProperty(value = "해당 멤버들의 ID")
     private Member member;
-
 }

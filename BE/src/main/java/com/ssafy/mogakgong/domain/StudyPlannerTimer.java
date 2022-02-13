@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 public class StudyPlannerTimer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @ApiModelProperty(value = "스터디플래너 타이머 번호")
     private Integer id;
@@ -30,5 +31,4 @@ public class StudyPlannerTimer {
     @Column (name = "end_time")
     @ApiModelProperty(value = "스터디룸 플래너의 종료 시간")
     private Timestamp endTime;
-
 }

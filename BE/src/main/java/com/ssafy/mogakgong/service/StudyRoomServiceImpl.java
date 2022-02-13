@@ -10,7 +10,6 @@ import com.ssafy.mogakgong.repository.StudyRoomMemberRepository;
 import com.ssafy.mogakgong.repository.StudyRoomRepository;
 import com.ssafy.mogakgong.request.StudyRoomRequest;
 import com.ssafy.mogakgong.request.StudyRoomUpdateRequest;
-import com.ssafy.mogakgong.response.CommunityResponse;
 import com.ssafy.mogakgong.response.StudyRoomResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
-import java.util.StringTokenizer;
 
 @Service
 @Transactional(readOnly = true)

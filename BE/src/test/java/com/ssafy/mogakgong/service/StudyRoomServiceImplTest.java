@@ -122,5 +122,4 @@ public class StudyRoomServiceImplTest {
         //then
         em.flush();
     }
-
 }
