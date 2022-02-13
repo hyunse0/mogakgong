@@ -9,4 +9,5 @@ import java.util.List;
 
 @Repository
 public interface StudyPlannerTimerRepository extends JpaRepository<StudyPlannerTimer, Integer> {
+    public StudyPlannerTimer findFirstByStudyPlannerIdOrderByIdDesc(Integer studyPlannerId);
 }

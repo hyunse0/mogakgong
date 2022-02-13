@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 public class StudyPlannerTimer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @ApiModelProperty(value = "스터디플래너 타이머 번호")
     private Integer id;

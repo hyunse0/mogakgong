@@ -19,5 +19,5 @@ public interface StudyRoomService {
     public void deleteStudyRoom(Integer id);
     public void enter(Integer studyRoomId, Integer memberId, Integer level);
     public void changeAuthority(Integer studyRoomId, Integer memberId, Integer level);
-
+    public void exit(Integer studyRoomId, Integer memberId);
 }
