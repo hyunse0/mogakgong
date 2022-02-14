@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class MemberTokenRequest {
-    String token;
+    String Authorization;
 }
