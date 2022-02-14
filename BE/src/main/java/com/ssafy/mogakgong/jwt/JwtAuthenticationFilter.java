@@ -70,11 +70,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String jwtToken = JWT.create()
                 .withSubject("cos토큰")
-                .withExpiresAt(new Date(System.currentTimeMillis()+1000*60*10)) // 10분 후 파기
+                .withExpiresAt(new Date(System.currentTimeMillis()+1000*60*30)) // 10분 후 파기
                 .withClaim("id", principalDetails.getMember().getId())
                 .withClaim("username", principalDetails.getMember().getEmail())
                 .sign(Algorithm.HMAC512("cos"));
 
         response.addHeader("Authorization", "Bearer " + jwtToken);
     }
+
 }

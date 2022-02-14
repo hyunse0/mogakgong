@@ -1,6 +1,8 @@
 package com.ssafy.mogakgong.controller;
 
 import com.ssafy.mogakgong.domain.StudyPlanner;
+import com.ssafy.mogakgong.repository.CustomStudyPlannerRepositoryImpl;
+import com.ssafy.mogakgong.request.StudyPlannerDateRequest;
 import com.ssafy.mogakgong.service.StudyPlannerServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +33,7 @@ public class StudyPlannerController {
     public ResponseEntity<String> createStudyPlanner(@RequestBody StudyPlanner studyPlanner) {
         try {
             studyPlannerServiceImpl.write(studyPlanner);  // 데이터 저장
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -37,11 +42,17 @@ public class StudyPlannerController {
     // 스터디 플래너 목록
     @GetMapping("/{memberId}")
     @ApiOperation(value = "스터디플래너 목록 불러오기", notes = "사용자의 스터디 플래너의 목록을 반환한다.", response = Map.class)
-    public ResponseEntity<Map<String, Object>> getStudyPlannerList(@PathVariable int memberId) {
+    public ResponseEntity<Map<String, Object>> getStudyPlannerList(@PathVariable int memberId, @RequestBody StudyPlannerDateRequest studyPlannerDateRequest) {
         Map<String, Object> resultMap = new HashMap<>();
+        List<StudyPlanner> studyPlanners;
 
-        List<StudyPlanner> studyPlanners = studyPlannerServiceImpl.findStudyPlanners(memberId, isExist);
-
+        // 기본은 전체 날짜 값 입력하면 날짜 기간에만만
+       if(studyPlannerDateRequest == null) {
+            Timestamp date = new Timestamp(new java.util.Date().getTime());
+            studyPlanners = studyPlannerServiceImpl.findAllStudyPlanners(memberId, 1);
+        } else {
+            studyPlanners = studyPlannerServiceImpl.findByDateStudyPlanners(memberId, studyPlannerDateRequest.getStartDate(),studyPlannerDateRequest.getEndDate());
+        }
         resultMap.put("info", studyPlanners);
         resultMap.put("message", SUCCESS);
 
@@ -65,4 +76,23 @@ public class StudyPlannerController {
 
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
+
+    // 스터디 플래너 타이머 시작
+    @PostMapping("/{studyPlannerId}/start")
+    @ApiOperation(value = "스터디플래너 타이머 시작", notes = "스터디플래너 타이머를 시작한다. 그리고 DB 삽입 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
+    public ResponseEntity<String> startStudyPlannerTimer(@PathVariable("studyPlannerId") Integer studyPlannerId) {
+        studyPlannerServiceImpl.startTimer(studyPlannerId);
+
+        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    }
+
+    // 스터디 플래너 타이머 종료
+    @PostMapping("/{studyPlannerId}/stop")
+    @ApiOperation(value = "스터디플래너 타이머 종료", notes = "스터디플래너 타이머를 종료한다. 그리고 DB 삽입 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
+    public ResponseEntity<String> stopStudyPlannerTimer(@PathVariable("studyPlannerId") Integer studyPlannerId) {
+        studyPlannerServiceImpl.stopTimer(studyPlannerId);
+
+        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+    }
+
 }
