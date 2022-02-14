@@ -5,6 +5,7 @@ import com.ssafy.mogakgong.repository.CommunityRepository;
 import com.ssafy.mogakgong.repository.FileRepository;
 import com.ssafy.mogakgong.request.FileRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +20,12 @@ public class FileServiceImpl implements FileService{
     @Autowired
     private FileRepository fileRepository;
 
+    @Value("${file.directory}")
+    String fileDir;
+
     @Override
     public void saveFile(Integer communityId, List<FileRequest> files) {
         for (FileRequest fileRequest : files) {
-            // 파일 경로
-            String folder = "뭐 넣지..";
-
             // 원본 파일 이름
             String originFile = fileRequest.getOriginFile();
 
@@ -33,14 +34,23 @@ public class FileServiceImpl implements FileService{
             String ext = originFile.substring(originFile.lastIndexOf("."));
             String saveFile = uuid + ext;
 
+            // 레포지토리에 저장
             FileInfo file = FileInfo.builder()
                     .community(communityRepository.findById(communityId).get())
-                    .saveFolder(folder)
+                    .saveFolder(fileDir)
                     .originFile(originFile)
                     .saveFile(saveFile)
                     .build();
 
             fileRepository.save(file);
+
+            // 해당 경로에 저장
+
         }
+    }
+
+    @Override
+    public void deleteFile(FileInfo file) {
+        fileRepository.delete(file);
     }
 }

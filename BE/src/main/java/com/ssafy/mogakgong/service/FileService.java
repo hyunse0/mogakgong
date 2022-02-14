@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface FileService {
     void saveFile(Integer communityId, List<FileRequest> files);
+    void deleteFile(FileInfo file);
 }
