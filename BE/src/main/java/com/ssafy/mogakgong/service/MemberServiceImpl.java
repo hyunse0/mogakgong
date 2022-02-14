@@ -1,5 +1,7 @@
 package com.ssafy.mogakgong.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.repository.MemberRepository;
 import com.ssafy.mogakgong.request.MemberJoinRequest;
@@ -107,5 +109,12 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> memberOptional = memberRepository.findById(id);
         Member member = memberOptional.get();
         member.setIsExist(0);
+    }
+
+    public int tokenToId(String jwtToken) {
+        String changeJwtToken = jwtToken.replace("Bearer ", "");
+        String username = JWT.require(Algorithm.HMAC512("cos")).build().verify(changeJwtToken).getClaim("username").asString();
+        Member member = memberRepository.findByEmail(username);
+        return member.getId();
     }
 }

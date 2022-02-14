@@ -203,4 +203,14 @@ public class MemberServiceImplTest {
         em.flush();
     }
 
+    @Test
+    public void 회원아이디_반환() throws Exception {
+        //given
+        String token = "";
+        //when
+        int id = memberServiceImpl.tokenToId(token);
+        //then
+        em.flush();
+    }
+
 }
