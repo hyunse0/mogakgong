@@ -55,7 +55,11 @@ export default class ChatComponent extends Component {
         if (this.props.user && this.state.message) {
             let message = this.state.message.replace(/ +(?= )/g, '');
             if (message !== '' && message !== ' ') {
-                const data = { message: message, nickname: this.props.user.getNickname(), streamId: this.props.user.getStreamManager().stream.streamId };
+                const data = {
+                    message: message,
+                    nickname: this.props.user.getNickname(),
+                    streamId: this.props.user.getStreamManager().stream.streamId
+                };
                 this.props.user.getStreamManager().stream.session.signal({
                     data: JSON.stringify(data),
                     type: 'chat',
