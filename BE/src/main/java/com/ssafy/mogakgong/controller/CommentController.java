@@ -8,6 +8,7 @@ import com.ssafy.mogakgong.request.CommentRequest;
 import com.ssafy.mogakgong.service.CommentService;
 import com.ssafy.mogakgong.service.CommunityService;
 import com.ssafy.mogakgong.service.MemberService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Api
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/comment")

@@ -5,6 +5,7 @@ import com.ssafy.mogakgong.request.MemberJoinRequest;
 import com.ssafy.mogakgong.request.MemberProfileRequest;
 import com.ssafy.mogakgong.request.MemberUpdateRequest;
 import com.ssafy.mogakgong.service.MemberServiceImpl;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Api
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
