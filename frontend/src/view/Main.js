@@ -13,7 +13,6 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ProgressBar from './ProgressBar';
-import StudyroomDetail from './StudyroomDetail';
 import './Main.css'
 
 const style = {
@@ -42,22 +41,6 @@ const studyrooms = [...Array(10)].map((_, idx) => ({
 const theme = createTheme();
 
 export default function Main() {
-    const [open, setOpen] = useState(false);
-    const handleClose = () => {
-        setOpen(false);
-    };
-    const handleToggle = (e) => {
-        console.log(e)
-        setOpen(!open);
-    };
-
-    const [dialog, setDialog] = useState(null)
-
-    const handleDialog = (param, e) => {
-        console.log(param)
-        setDialog(param)
-        setOpen(!open)
-    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -98,7 +81,7 @@ export default function Main() {
                                                 <IconButton
                                                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                                                     aria-label={`info about ${item.title}`}
-                                                    onClick={(e) => handleDialog(item, e)}
+
                                                 >
                                                     <InfoIcon />
                                                 </IconButton>
@@ -131,7 +114,6 @@ export default function Main() {
                                                 <IconButton
                                                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                                                     aria-label={`info about ${item.title}`}
-                                                    onClick={handleToggle}
                                                 >
                                                     <InfoIcon />
                                                 </IconButton>
@@ -163,11 +145,6 @@ export default function Main() {
                     />
                 </SpeedDial>
             </Container >
-            <Modal open={open} onClick={handleClose}>
-                <Box sx={style}>
-                    {dialog ? <StudyroomDetail info={dialog} /> : null}
-                </Box>
-            </Modal>
         </ThemeProvider >
     );
 }

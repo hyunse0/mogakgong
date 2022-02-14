@@ -40,6 +40,8 @@ public class MemberController {
             memberJoinRequest.setPassword(encPassword);
             memberServiceImpl.join(memberJoinRequest);  // 데이터 저장
         } catch (IllegalStateException e) {
+            return new ResponseEntity<String>("ID_DUPLICATED", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -92,5 +94,4 @@ public class MemberController {
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
-
 }
