@@ -40,7 +40,6 @@ export default function SignUp() {
             .catch((err) => {
                 console.log(err)
             })
-        console.log(response)
     };
 
     // email & password valid check regular expression
