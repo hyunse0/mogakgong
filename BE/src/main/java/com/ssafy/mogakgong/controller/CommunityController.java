@@ -6,6 +6,7 @@ import com.ssafy.mogakgong.response.CommunityResponse;
 import com.ssafy.mogakgong.service.CommunityService;
 import com.ssafy.mogakgong.service.FileService;
 import com.ssafy.mogakgong.service.MemberService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/community")

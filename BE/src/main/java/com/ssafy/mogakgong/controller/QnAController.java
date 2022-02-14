@@ -6,6 +6,7 @@ import com.ssafy.mogakgong.request.QnARequest;
 import com.ssafy.mogakgong.response.QnAResponse;
 import com.ssafy.mogakgong.service.MemberServiceImpl;
 import com.ssafy.mogakgong.service.QnAService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Api
+@CrossOrigin(origins = "*")
 @RestController
 @AllArgsConstructor
 @RequestMapping("/qna")

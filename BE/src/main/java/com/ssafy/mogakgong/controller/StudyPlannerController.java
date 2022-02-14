@@ -4,6 +4,7 @@ import com.ssafy.mogakgong.domain.StudyPlanner;
 import com.ssafy.mogakgong.repository.CustomStudyPlannerRepositoryImpl;
 import com.ssafy.mogakgong.request.StudyPlannerDateRequest;
 import com.ssafy.mogakgong.service.StudyPlannerServiceImpl;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Api
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/studyplanner")
 @RequiredArgsConstructor
