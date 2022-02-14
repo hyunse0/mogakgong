@@ -9,6 +9,7 @@ import com.ssafy.mogakgong.response.CommunityResponse;
 import com.ssafy.mogakgong.response.StudyRoomResponse;
 import com.ssafy.mogakgong.service.MemberServiceImpl;
 import com.ssafy.mogakgong.service.StudyRoomServiceImpl;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@Api
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/studyroom")
 @RequiredArgsConstructor
