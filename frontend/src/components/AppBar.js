@@ -19,10 +19,9 @@ export default function CustomAppBar() {
                 </Typography>
                 <nav>
                     <Link
-                        to="#"
                         variant="button"
                         color="text.primary"
-                        href="#"
+                        href="community"
                         sx={{ my: 1, mx: 1.5 }}
                     >
                         커뮤니티

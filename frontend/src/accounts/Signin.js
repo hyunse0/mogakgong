@@ -14,7 +14,7 @@ import axios from 'axios';
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function SignIn({ setUserInfo }) {
 
     const emailReg = new RegExp(/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9.]+/)
 
@@ -32,19 +32,32 @@ export default function SignIn() {
         setPassword(e.target.value)
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // console.log(event.currentTarget)
-        // const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
+
         const userInput = {
-            email: email,
-            password: password
+            email,
+            password
         }
-        axios.post("/login", userInput)
-            .then(((res) => {
-                console.log(res)
-            }))
+        // console.log(userInput)
+        await axios.post("http://i6c204.p.ssafy.io/login", userInput, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((res) => {
+                console.log(res.headers.authorization)
+                localStorage.setItem('token', res.headers.authorization)
+                axios.get("http://i6c204.p.ssafy.io/member", {
+                    headers: {
+                        Authorization: `${res.headers.authorization}`
+                    }
+                })
+                    .then(res => {
+                        console.log(res)
+                    }
+                    )
+            })
             .catch((err) => {
                 console.log(err)
             })
