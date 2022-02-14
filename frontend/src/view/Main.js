@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import SpeedDial from '@mui/material/SpeedDial';
-import { Card, SpeedDialAction, SpeedDialIcon, Typography, Modal, Box, Link } from '@mui/material';
+import { Card, SpeedDialAction, SpeedDialIcon, Typography, Link } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import ImageList from '@mui/material/ImageList';
@@ -13,23 +13,13 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ProgressBar from './ProgressBar';
-import './Main.css'
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 1200,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    p: 4,
-};
+import axios from 'axios';
 
 const { faker } = require('@faker-js/faker');
-faker.locale = "ko"
+// faker.locale = "ko"
 const studyrooms = [...Array(10)].map((_, idx) => ({
     title: faker.lorem.word(),
+    nickname: faker.name.firstName(),
     category: faker.lorem.word(),
     description: faker.lorem.lines(),
     hashtag: faker.lorem.word(),
@@ -41,6 +31,14 @@ const studyrooms = [...Array(10)].map((_, idx) => ({
 const theme = createTheme();
 
 export default function Main() {
+    // const [studyrooms, setStudyroom] = useState({
+    //     axios.get()
+    // })
+
+    const saveRoomInfo = (item) => {
+        console.log(item)
+        localStorage.setItem('roomInfo', JSON.stringify(item))
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -115,7 +113,15 @@ export default function Main() {
                                                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
                                                     aria-label={`info about ${item.title}`}
                                                 >
-                                                    <InfoIcon />
+                                                    <Link
+                                                        color="inherit"
+                                                        href="/beforestudy"
+                                                        onClick={() => {
+                                                            saveRoomInfo(item)
+                                                        }}
+                                                    >
+                                                        <InfoIcon />
+                                                    </Link>
                                                 </IconButton>
                                             }
                                         />

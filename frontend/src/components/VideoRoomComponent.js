@@ -11,6 +11,7 @@ import UserModel from '../models/user-model';
 import ToolbarComponent from './toolbar/ToolbarComponent';
 
 var localUser = new UserModel();
+const roomInfo = JSON.parse(localStorage.getItem('roomInfo'))
 
 class VideoRoomComponent extends Component {
     constructor(props) {
@@ -21,8 +22,8 @@ class VideoRoomComponent extends Component {
         this.OPENVIDU_SERVER_SECRET = this.props.openviduSecret ? this.props.openviduSecret : 'MY_SECRET';
         this.hasBeenUpdated = false;
         this.layout = new OpenViduLayout();
-        let sessionName = this.props.roomInfo.sessionName ? this.props.roomInfo.sessionName : 'undefined'
-        let userName = this.props.roomInfo.nickname ? this.props.roomInfo.nickname : 'undefined'
+        let sessionName = roomInfo.title ? roomInfo.title : 'undefined'
+        let userName = roomInfo.nickname ? roomInfo.nickname : 'undefined'
         this.remotes = [];
         this.localUserAccessAllowed = false;
         this.state = {
