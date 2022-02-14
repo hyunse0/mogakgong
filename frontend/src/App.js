@@ -5,23 +5,33 @@ import Main from './view/Main'
 import VideoRoom from './components/VideoRoomComponent'
 import UserProfile from './accounts/UserProfile'
 import CreateStudyroom from './view/CreateStudyroom'
+import BeforeEnterRoom from './view/BeforeEnterRoom'
 import { useState } from 'react';
 
+const { faker } = require('@faker-js/faker');
+faker.locale = "ko"
+const studyrooms = [...Array(10)].map((_, idx) => ({
+  title: faker.lorem.word(),
+  category: faker.lorem.word(),
+  description: faker.lorem.lines(),
+  hashtag: faker.lorem.word(),
+  start_date: faker.datatype.datetime(),
+  end_date: faker.datatype.datetime(),
+  limit: Math.random(0, 1) * 10,
+  img: faker.image.image(),
+}))
 
 
 function App() {
-  const [user, setUser] = useState({
-    nickname: 'woosteel',
-    sessionName: 'mogakgong'
-  })
   return (
     <Routes>
       <Route path="/" element={<Main />} />
       <Route path="/login" element={<Signin />} />
       <Route path="/join" element={<Signup />} />
-      <Route path="/studyroom" element={<VideoRoom roomInfo={user} />} />
+      <Route path="/studyroom" element={<VideoRoom />} />
       <Route path="/profile" element={<UserProfile />} />
       <Route path="/createroom" element={<CreateStudyroom />} />
+      <Route path="/beforestudy" element={<BeforeEnterRoom />} />
     </Routes>
   )
 }

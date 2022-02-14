@@ -16,11 +16,10 @@ import DatePicker from '@mui/lab/DatePicker';
 import Input from '@mui/material/Input';
 import axios from 'axios';
 
-const URL = "http://52.78.47.87"
 const theme = createTheme();
 
 export default function SignUp() {
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         // const data = new FormData(event.currentTarget);
         console.log('signup!')
@@ -33,14 +32,15 @@ export default function SignUp() {
             goal: "null",
             passwordCheck: passwordConfirm
         }
-        console.log(userInfo)
-        axios.post("/member/join", userInfo)
+        // console.log(userInfo)
+        const response = await axios.post("http://i6c204.p.ssafy.io/member/join", userInfo)
             .then((res) => {
                 console.log(res)
             })
             .catch((err) => {
                 console.log(err)
             })
+        console.log(response)
     };
 
     // email & password valid check regular expression
@@ -82,7 +82,7 @@ export default function SignUp() {
     }
 
     const setImgHandler = async (e) => {
-        setImgFile(URL.createObjectURL(e.target.files[0]));
+        // setImgFile(URL.createObjectURL(e.target.files[0]));
     }
 
     return (

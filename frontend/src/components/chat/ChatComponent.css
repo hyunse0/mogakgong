@@ -7,10 +7,10 @@
 
 #chatToolbar {
   height: 30px;
-  background-color: #3d3d3d;
+  background-color: #1769aa;
   box-sizing: border-box;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 20px;
   text-align: center;
   padding-top: 4px;
   border-top-left-radius: 6px;
@@ -25,7 +25,7 @@
 }
 
 #chatComponent {
-  background-color: #b8b8b8;
+  background-color: #1769aa;
   position: absolute;
   z-index: 99999;
   top: 0;
@@ -68,7 +68,7 @@
 
 .msg-info p {
   font-size: 0.8em;
-  color: #000000;
+  color: #ffffff;
   font-style: italic;
 }
 
@@ -133,11 +133,11 @@ span.triangle {
 }
 .message.right .user-img {
   right: -5px;
-  border: 1px solid #c8ffe8ab;
+  border: 1px solid #ffffffab;
 }
 
 .message.right .msg-detail .msg-content {
-  background-color: #c8ffe8;
+  background-color: #ffffff;
   float: right;
 }
 .message.right .msg-detail .msg-content span.triangle {
@@ -157,6 +157,7 @@ span.triangle {
   text-align: center;
   padding: 10px 0px;
   height: 30px;
+  border: 1px solid #000000;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
 }

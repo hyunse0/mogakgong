@@ -20,13 +20,17 @@ import QuestionAnswer from '@mui/icons-material/QuestionAnswer';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 import IconButton from '@mui/material/IconButton';
-
-// const logo = require('../../assets/images/openvidu_logo.png');
+import { Button, Paper, Typography } from '@mui/material';
 
 export default class ToolbarComponent extends Component {
     constructor(props) {
         super(props);
-        this.state = { fullscreen: false };
+        this.state = {
+            fullscreen: false,
+            curTime: 0,
+            curTimeStr: '00:00:00',
+            isStarted: false,
+        };
         this.camStatusChanged = this.camStatusChanged.bind(this);
         this.micStatusChanged = this.micStatusChanged.bind(this);
         this.screenShare = this.screenShare.bind(this);
@@ -35,8 +39,41 @@ export default class ToolbarComponent extends Component {
         this.switchCamera = this.switchCamera.bind(this);
         this.leaveSession = this.leaveSession.bind(this);
         this.toggleChat = this.toggleChat.bind(this);
+
+
+        this.toggleWatch = this.toggleWatch.bind(this);
+        this.recordTime = this.recordTime.bind(this);
     }
 
+    toggleWatch() {
+        if (!this.state.isStarted) {
+            this.setState({
+                isStarted: true
+            }, () => { this.startTick(); });
+        } else {
+            this.setState({
+                isStarted: false
+            }, () => { this.endTick(); });
+        }
+    }
+
+    recordTime() {
+        this.setState({ records: [], curTime: 0, curTimeStr: '00:00:00' })
+    }
+
+    startTick() {
+        this.tick = setInterval(() => {
+            this.setState({ curTime: this.state.curTime + 10, }, () => {
+                this.setState({
+                    curTimeStr: new Date(this.state.curTime).toISOString().slice(11, 19)
+                })
+            })
+        }, 1)
+    }
+
+    endTick() {
+        clearInterval(this.tick)
+    }
 
 
     micStatusChanged() {
@@ -129,6 +166,24 @@ export default class ToolbarComponent extends Component {
                             <PowerSettingsNew />
                         </IconButton>
 
+                        {/* 스탑워치 */}
+                        <Paper elevation={3} id="stopWatch">
+                            <Typography variant='h5'>
+                                {this.state.curTimeStr}
+                            </Typography>
+                            <Button variant="outlined" onClick={this.toggleWatch} sx={{ margin: 1 }}>
+                                {this.state.isStarted ? "공부 잠시 멈추기" : "공부 시작하기"}
+                            </Button>
+                            <Button variant="outlined" color="error" onClick={this.recordTime} sx={{ margin: 1 }}>공부 시간 기록</Button>
+                        </Paper>
+
+                        {/* 스터디플래너 */}
+                        <IconButton color="primary" id="navCalenderButton">
+                            <Tooltip title="스터디 플래너">
+                                <CalendarTodayIcon />
+                            </Tooltip>
+                        </IconButton>
+
                         {/* 채팅 */}
                         <IconButton color="primary" onClick={this.toggleChat} id="navChatButton">
                             {this.props.showNotification && <div id="point" className="" />}
@@ -137,11 +192,6 @@ export default class ToolbarComponent extends Component {
                             </Tooltip>
                         </IconButton>
 
-                        <IconButton color="primary" id="navCalenderButton">
-                            <Tooltip title="스터디 플래너">
-                                <CalendarTodayIcon />
-                            </Tooltip>
-                        </IconButton>
                     </div>
                 </Toolbar>
             </AppBar>
