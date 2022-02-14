@@ -8,6 +8,7 @@ import com.ssafy.mogakgong.service.MemberServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -96,4 +97,18 @@ public class MemberController {
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
     }
+
+    // 회원 ID 반환하기
+    @GetMapping("")
+    @ApiOperation(value = "회원 ID 정보 갖고 오기", notes = "회원의 ID 정보를 갖고 온다.", response = Map.class)
+    public  ResponseEntity<Map<String, Object>> getMemberId(@RequestHeader HttpHeaders headers) {
+        Map<String, Object> resultMap = new HashMap<>();
+        HttpStatus status = HttpStatus.OK;
+        int id = memberServiceImpl.tokenToId(headers.getFirst("Authorization"));
+        resultMap.put("id", id);
+        resultMap.put("message", SUCCESS);
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, status);
+    }
+
 }

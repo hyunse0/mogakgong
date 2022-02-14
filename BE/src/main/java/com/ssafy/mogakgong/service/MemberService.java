@@ -16,4 +16,5 @@ public interface MemberService {
     public Member findOne(Integer memberId);
     public void update(Integer id, MemberUpdateRequest memberUpdateRequest);
     public void delete(Integer id);
+    public int tokenToId(String jwtToken);
 }
