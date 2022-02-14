@@ -103,10 +103,10 @@ public class MemberController {
     // 회원 ID 반환하기
     @GetMapping("")
     @ApiOperation(value = "회원 ID 정보 갖고 오기", notes = "회원의 ID 정보를 갖고 온다.", response = Map.class)
-    public  ResponseEntity<Map<String, Object>> getMemberId(@RequestBody MemberTokenRequest memberTokenRequest) {
+    public  ResponseEntity<Map<String, Object>> getMemberId(@RequestHeader MemberTokenRequest memberTokenRequest) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
-        int id = memberServiceImpl.tokenToId(memberTokenRequest.getToken());
+        int id = memberServiceImpl.tokenToId(memberTokenRequest.getAuthorization());
         resultMap.put("id", id);
         resultMap.put("message", SUCCESS);
 
