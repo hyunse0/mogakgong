@@ -1,16 +1,14 @@
 package com.ssafy.mogakgong.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.request.MemberJoinRequest;
 import com.ssafy.mogakgong.request.MemberProfileRequest;
-import com.ssafy.mogakgong.request.MemberTokenRequest;
 import com.ssafy.mogakgong.request.MemberUpdateRequest;
 import com.ssafy.mogakgong.service.MemberServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -103,10 +101,10 @@ public class MemberController {
     // 회원 ID 반환하기
     @GetMapping("")
     @ApiOperation(value = "회원 ID 정보 갖고 오기", notes = "회원의 ID 정보를 갖고 온다.", response = Map.class)
-    public  ResponseEntity<Map<String, Object>> getMemberId(@RequestHeader MemberTokenRequest memberTokenRequest) {
+    public  ResponseEntity<Map<String, Object>> getMemberId(@RequestHeader HttpHeaders headers) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
-        int id = memberServiceImpl.tokenToId(memberTokenRequest.getAuthorization());
+        int id = memberServiceImpl.tokenToId(headers.getFirst("Authorization"));
         resultMap.put("id", id);
         resultMap.put("message", SUCCESS);
 
