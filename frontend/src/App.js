@@ -6,6 +6,7 @@ import VideoRoom from './components/VideoRoomComponent'
 import UserProfile from './accounts/UserProfile'
 import CreateStudyroom from './view/CreateStudyroom'
 import BeforeEnterRoom from './view/BeforeEnterRoom'
+import Community from './view/Community'
 import { useState } from 'react';
 
 const { faker } = require('@faker-js/faker');
@@ -23,15 +24,18 @@ const studyrooms = [...Array(10)].map((_, idx) => ({
 
 
 function App() {
+  const [userInfo, setUserInfo] = useState(null)
+
   return (
     <Routes>
       <Route path="/" element={<Main />} />
-      <Route path="/login" element={<Signin />} />
+      <Route path="/login" element={<Signin setUserInfo={setUserInfo} />} />
       <Route path="/join" element={<Signup />} />
       <Route path="/studyroom" element={<VideoRoom />} />
       <Route path="/profile" element={<UserProfile />} />
       <Route path="/createroom" element={<CreateStudyroom />} />
       <Route path="/beforestudy" element={<BeforeEnterRoom />} />
+      <Route path="/community" element={<Community />} />
     </Routes>
   )
 }
