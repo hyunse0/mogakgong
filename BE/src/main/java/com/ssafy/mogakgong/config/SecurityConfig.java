@@ -24,7 +24,7 @@ import javax.persistence.Basic;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이 클래스 자체가 스프링 시큐리티 필터
 
-    private final CorsFilter corsFilter;
+    //private final CorsFilter corsFilter;
     private final MemberRepository memberRepository;
 
     @Bean
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이 클래
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// 세션 사용하지 않겠다.
                 .and()
-                .addFilter(corsFilter)
+                //.addFilter(corsFilter)
                 .formLogin().disable()
                 .httpBasic().disable()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
