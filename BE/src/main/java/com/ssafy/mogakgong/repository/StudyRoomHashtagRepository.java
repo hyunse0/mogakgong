@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface StudyRoomHashtagRepository extends JpaRepository<StudyRoomHashtag, Integer> {
-    public List<StudyRoomHashtag> findByStudyRoomId(Integer studyRoomId);
-    public void deleteAllByStudyRoomId(Integer studyRoomId);
+    List<StudyRoomHashtag> findByStudyRoomId(Integer studyRoomId);
+    void deleteAllByStudyRoomId(Integer studyRoomId);
 }
