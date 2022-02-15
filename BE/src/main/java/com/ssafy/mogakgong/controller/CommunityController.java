@@ -1,8 +1,11 @@
 package com.ssafy.mogakgong.controller;
 
+import com.ssafy.mogakgong.domain.FileInfo;
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.request.CommunityRequest;
+import com.ssafy.mogakgong.response.CommentResponse;
 import com.ssafy.mogakgong.response.CommunityResponse;
+import com.ssafy.mogakgong.service.CommentService;
 import com.ssafy.mogakgong.service.CommunityService;
 import com.ssafy.mogakgong.service.FileService;
 import com.ssafy.mogakgong.service.MemberService;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Api
@@ -27,6 +31,7 @@ import java.util.Map;
 public class CommunityController {
 
     private FileService fileService;
+    private CommentService commentService;
     private CommunityService communityService;
     private MemberService memberService;
     private static final String SUCCESS = "success";
@@ -91,7 +96,13 @@ public class CommunityController {
             try {
                 communityService.modifyCommunity(communityId, communityRequest);
                 // 파일 수정
-                if (communityRequest.getFiles().containsAll(community.getFiles())) {
+                if (!communityRequest.getFiles().containsAll(community.getFiles())) {
+                    // 기존에 있던 파일 삭제
+                    for (FileInfo file : community.getFiles()) {
+                        fileService.deleteFile(file);
+                    }
+
+                    // 새로 요청들어온 파일 저장
                     fileService.saveFile(communityId, communityRequest.getFiles());
                 }
             } catch (Exception e) {
@@ -105,7 +116,24 @@ public class CommunityController {
     @ApiOperation(value = "커뮤니티 게시판 글삭제", notes = "게시글의 is_exist를 0로 변경한다. 그리고 DB삭제 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = String.class)
     public ResponseEntity<String> deleteCommunity(@PathVariable Integer communityId) {
         try {
+            Pageable pageable = PageRequest.of(0, 10);
+            CommunityResponse community = communityService.getCommunity(communityId, pageable);
+
+            // 댓글 삭제
+            Page<CommentResponse> comments = community.getComments();
+            for (CommentResponse comment : comments.getContent()) {
+                commentService.deleteComment(comment.getId());
+            }
+
+            // 파일 삭제
+            List<FileInfo> files = community.getFiles();
+            for (FileInfo file : files) {
+                fileService.deleteFile(file);
+            }
+
+            // 게시글 삭제
             communityService.deleteCommunity(communityId);
+
         } catch (Exception e) {
             return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
         }
