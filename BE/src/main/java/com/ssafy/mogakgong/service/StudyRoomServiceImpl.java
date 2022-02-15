@@ -1,23 +1,19 @@
 package com.ssafy.mogakgong.service;
 
-import com.ssafy.mogakgong.domain.Member;
-import com.ssafy.mogakgong.domain.StudyRoom;
-import com.ssafy.mogakgong.domain.StudyRoomHashtag;
-import com.ssafy.mogakgong.domain.StudyRoomMember;
-import com.ssafy.mogakgong.repository.MemberRepository;
-import com.ssafy.mogakgong.repository.StudyRoomHashtagRepository;
-import com.ssafy.mogakgong.repository.StudyRoomMemberRepository;
-import com.ssafy.mogakgong.repository.StudyRoomRepository;
+import com.ssafy.mogakgong.domain.*;
+import com.ssafy.mogakgong.repository.*;
 import com.ssafy.mogakgong.request.StudyRoomRequest;
 import com.ssafy.mogakgong.request.StudyRoomUpdateRequest;
 import com.ssafy.mogakgong.response.StudyRoomResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,11 +25,13 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     private final StudyRoomRepository studyRoomRepository;
     private final StudyRoomMemberRepository studyRoomMemberRepository;
     private final StudyRoomHashtagRepository studyRoomHashtagRepository;
+    private final StudyRoomCategoryRepository studyRoomCategoryRepository;
     private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
     private Integer exist = 1;
 
     @Transactional
-    public void create(StudyRoomRequest studyRoomRequest, Member member) {
+    public Integer create(StudyRoomRequest studyRoomRequest, Member member) {
         StudyRoom studyRoom = StudyRoom.builder()
                 .title(studyRoomRequest.getTitle())
                 .password(studyRoomRequest.getPassword())
@@ -47,7 +45,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
                 .isExist(exist)
                 .member(member)
                 .build();
-        validateDuplicateStudyRoom(studyRoom);
+        //validateDuplicateStudyRoom(studyRoom);
         studyRoomRepository.save(studyRoom);
 
         for(String s : studyRoomRequest.getStudyRoomHashtags()){
@@ -57,32 +55,59 @@ public class StudyRoomServiceImpl implements StudyRoomService {
                     .build();
             studyRoomHashtagRepository.save(studyRoomHashtag);
         }
+        updateStudyRoomCategory(studyRoom.getId(), studyRoomRequest.getStudyRoomCategories());
+        return studyRoom.getId();
     }
 
-    public void validateDuplicateStudyRoom(StudyRoom studyRoom) {
-        // 해당 url 을 사용중인 스터디룸 탐색
-        StudyRoom findStudyRoom = studyRoomRepository.findByUrl(studyRoom.getUrl());
-        // 사용중인 스터디룸이 존재한다면
-        if ( findStudyRoom != null) {
-            throw new IllegalStateException("이미 존재하는 url 입니다.");
-        }
-    }
-
-    public StudyRoom findStudyRoomByUrl(String url) {
-        // 해당 url 을 사용중인 스터디룸 탐색
-        StudyRoom findStudyRoom = studyRoomRepository.findByUrl(url);
-        // 사용중인 스터디룸이 존재한다면
-        return findStudyRoom;
-    }
+//    public void validateDuplicateStudyRoom(StudyRoom studyRoom) {
+//        // 해당 url 을 사용중인 스터디룸 탐색
+//        StudyRoom findStudyRoom = studyRoomRepository.findByUrl(studyRoom.getUrl());
+//        // 사용중인 스터디룸이 존재한다면
+//        if ( findStudyRoom != null) {
+//            throw new IllegalStateException("이미 존재하는 url 입니다.");
+//        }
+//    }
 
     public Page<StudyRoomResponse> getStudyRoomList(Pageable pageable) {
-        return studyRoomRepository.findByIsExistOrderByIdDesc(1, pageable)
+
+        Page<StudyRoomResponse> studyRoomResponses = studyRoomRepository.findByIsExistOrderByIdDesc(1, pageable)
                 .map(StudyRoomResponse::from);
+        for(StudyRoomResponse response : studyRoomResponses){
+            List<StudyRoomHashtag> studyRoomHashtags = studyRoomHashtagRepository.findByStudyRoomId(response.getId());
+            List<String> tmpHashtag = new ArrayList<>();
+            for(StudyRoomHashtag hashtag : studyRoomHashtags) {
+                tmpHashtag.add(hashtag.getName());
+            }
+            response.setStudyRoomHashtags(tmpHashtag);
+        }
+        return studyRoomResponses;
     }
 
-    public StudyRoomResponse getStudyRoom(Integer studyRoomId, Pageable pageable) {
-        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId).get();
+    public List<String> getStudyRoomCategories(Integer studyRoomId) {
+        List<String> categories = new ArrayList<>();
+        List<StudyRoomCategory> studyRoomCategories = studyRoomCategoryRepository.findByStudyRoomId(studyRoomId);
+        if(studyRoomCategories != null) {
+            for(StudyRoomCategory studyRoomCategory : studyRoomCategories) {
+                Category findCategory = categoryRepository.findById(studyRoomCategory.getId()).get();
+                categories.add(findCategory.getName());
+            }
+        }
+        return categories;
+    }
+
+    public List<String> getStudyRoomHashtags(Integer studyRoomId) {
+        List<String> hashTags = new ArrayList<>();
         List<StudyRoomHashtag> studyRoomHashtags = studyRoomHashtagRepository.findByStudyRoomId(studyRoomId);
+        if(studyRoomHashtags != null) {
+            for(StudyRoomHashtag studyRoomHashtag : studyRoomHashtags) {
+                hashTags.add(studyRoomHashtag.getName());
+            }
+        }
+        return hashTags;
+    }
+
+    public StudyRoomResponse getStudyRoom(Integer studyRoomId, Pageable pageable, List<String> categories, List<String> hashtags) {
+        StudyRoom studyRoom = studyRoomRepository.findById(studyRoomId).get();
 
         return StudyRoomResponse.builder()
                 .id(studyRoom.getId())
@@ -95,8 +120,10 @@ public class StudyRoomServiceImpl implements StudyRoomService {
                 .img(studyRoom.getImg())
                 .goalTime(studyRoom.getGoalTime())
                 .url(studyRoom.getUrl())
+                .isExist(studyRoom.getIsExist())
                 .member(studyRoom.getMember())
-                .studyRoomHashtags(studyRoomHashtags)
+                .studyRoomHashtags(hashtags)
+                .studyRoomCategories(categories)
                 .build();
     }
 
@@ -122,6 +149,24 @@ public class StudyRoomServiceImpl implements StudyRoomService {
                     .build();
             studyRoomHashtagRepository.save(studyRoomHashtag);
         }
+        updateStudyRoomCategory(id, studyRoomUpdateRequest.getStudyRoomCategories());
+    }
+
+    // 스터디룸 카테고리 추가
+    @Transactional
+    public void updateStudyRoomCategory(Integer studyRoomId, List<String> studyRoomCategories) {
+        studyRoomCategoryRepository.deleteAllByStudyRoomId(studyRoomId); // 기존 카테고리 삭제
+        for (String category : studyRoomCategories) {
+            Category findCategory = categoryRepository.findFirstByName(category);
+            if(findCategory == null) {
+                System.out.println("카테고리 이름 틀림");
+                continue;
+            }
+            StudyRoomCategory studyRoomCategory = new StudyRoomCategory();
+            studyRoomCategory.setStudyRoom(studyRoomRepository.findById(studyRoomId).get());
+            studyRoomCategory.setCategory(findCategory);
+            studyRoomCategoryRepository.save(studyRoomCategory); // 새로운 카테고리 추가
+        }
     }
 
     @Transactional
@@ -129,12 +174,20 @@ public class StudyRoomServiceImpl implements StudyRoomService {
         Optional<StudyRoom> studyRoomOptional = studyRoomRepository.findById(id);
         StudyRoom studyRoom = studyRoomOptional.get();
         studyRoom.setIsExist(0);
+        studyRoomCategoryRepository.deleteAllByStudyRoomId(id);
+    }
+
+    public void checkPass(String password, Integer studyRoomId) {
+        StudyRoom findStudyRoom = studyRoomRepository.findById(studyRoomId).get();
+        if(!findStudyRoom.getPassword().equals(password)) {
+            throw new SecurityException("비밀번호가 틀립니다.");
+        }
     }
 
     @Transactional
     public void enter(Integer studyRoomId, Integer memberId, Integer level) {
 
-        StudyRoomMember checkStudyRoomMember = studyRoomMemberRepository.findByMemberId(memberId);
+        StudyRoomMember checkStudyRoomMember = studyRoomMemberRepository.findByStudyRoomIdAndMemberId(studyRoomId, memberId);
         if(checkStudyRoomMember != null) { // 입장 이력이 있을 때 로직처리
             if(checkStudyRoomMember.getLevel() == 3){
                 throw new IllegalStateException("블랙리스트 회원입니다.");
@@ -164,4 +217,5 @@ public class StudyRoomServiceImpl implements StudyRoomService {
         StudyRoomMember studyRoomMember = studyRoomMemberRepository.findByStudyRoomIdAndMemberId(studyRoomId, memberId);
         studyRoomMember.setIsExist(0);
     }
+
 }

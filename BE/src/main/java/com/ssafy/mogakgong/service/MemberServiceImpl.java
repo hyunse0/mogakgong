@@ -2,16 +2,22 @@ package com.ssafy.mogakgong.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.ssafy.mogakgong.domain.Member;
+import com.ssafy.mogakgong.domain.*;
+import com.ssafy.mogakgong.repository.CategoryRepository;
+import com.ssafy.mogakgong.repository.MemberCategoryRepository;
 import com.ssafy.mogakgong.repository.MemberRepository;
 import com.ssafy.mogakgong.request.MemberJoinRequest;
 import com.ssafy.mogakgong.request.MemberUpdateRequest;
+import com.ssafy.mogakgong.response.MemberResponse;
+import com.ssafy.mogakgong.response.StudyRoomResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +30,8 @@ public class MemberServiceImpl implements MemberService {
 
     // 변경할 일이 없으므로 final 로 작성하는 걸 추천.
     private final MemberRepository memberRepository;
+    private final MemberCategoryRepository memberCategoryRepository;
+    private final CategoryRepository categoryRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 //    @Autowired // 생성자가 하나만 있는 경우 spring 이 자동으로 Autowire 인잭션을 해줌, 작성 안해도 됨
@@ -91,6 +99,31 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
+    public List<String> getCategories(Integer memberId) {
+        List<String> categories = new ArrayList<>();
+        List<MemberCategory> memberCategories = memberCategoryRepository.findByMemberId(memberId);
+        if(memberCategories != null) {
+            for(MemberCategory memberCategory : memberCategories) {
+                Category findCategory = categoryRepository.findById(memberCategory.getId()).get();
+                categories.add(findCategory.getName());
+            }
+        }
+        return categories;
+    }
+
+    public MemberResponse getMember(Member member, List<String> categories) {
+        return MemberResponse.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .password(member.getPassword())
+                .nickname(member.getNickname())
+                .img(member.getImg())
+                .birth(member.getBirth())
+                .goal(member.getGoal())
+                .category(categories)
+                .build();
+    }
+
     // 회원 정보 수정
     @Transactional
     public void update(Integer id, MemberUpdateRequest memberUpdateRequest) {
@@ -103,12 +136,30 @@ public class MemberServiceImpl implements MemberService {
         prevMember.setImg(memberUpdateRequest.getImg());
     }
 
+    // 회원 정보 카테고리 추가
+    @Transactional
+    public void updateCategory(Integer memberId, List<String> memberCategories) {
+        memberCategoryRepository.deleteAllByMemberId(memberId); // 기존 카테고리 삭제
+        for (String category : memberCategories) {
+            Category findCategory = categoryRepository.findFirstByName(category);
+            if(findCategory == null) {
+                System.out.println("카테고리 이름 틀림");
+                continue;
+            }
+            MemberCategory memberCategory = new MemberCategory();
+            memberCategory.setMember(memberRepository.findById(memberId).get());
+            memberCategory.setCategory(findCategory);
+            memberCategoryRepository.save(memberCategory); // 새로운 카테고리 추가
+        }
+    }
+
     // 회원 정보 삭제
     @Transactional
     public void delete(Integer id) {
         Optional<Member> memberOptional = memberRepository.findById(id);
         Member member = memberOptional.get();
         member.setIsExist(0);
+        memberCategoryRepository.deleteAllByMemberId(id);
     }
 
     public Member tokenToId(String jwtToken) {

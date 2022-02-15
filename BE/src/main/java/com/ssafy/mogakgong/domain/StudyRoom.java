@@ -74,8 +74,8 @@ public class StudyRoom {
     @ApiModelProperty(value = "스터디룸 방장 정보")
     private Member member;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "studyRoom")
-    private List<StudyRoomHashtag> studyRoomHashtags = new ArrayList<>();
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "studyRoom")
+//    private List<StudyRoomHashtag> studyRoomHashtags = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "studyRoom")
     private List<StudyRoomCategory> studyRoomCategories = new ArrayList<>();

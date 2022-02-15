@@ -1,9 +1,11 @@
 package com.ssafy.mogakgong.controller;
 
+import com.ssafy.mogakgong.domain.Category;
 import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.request.MemberJoinRequest;
 import com.ssafy.mogakgong.request.MemberProfileRequest;
 import com.ssafy.mogakgong.request.MemberUpdateRequest;
+import com.ssafy.mogakgong.response.MemberResponse;
 import com.ssafy.mogakgong.service.MemberServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Api
@@ -67,7 +70,7 @@ public class MemberController {
     @ApiOperation(value = "회원 수정", notes = "기존의 회원 정보를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
     public ResponseEntity<String> updateMember(@PathVariable("memberId") Integer memberId, @RequestBody MemberUpdateRequest memberUpdateRequest) {
         memberServiceImpl.update(memberId, memberUpdateRequest);
-
+        memberServiceImpl.updateCategory(memberId, memberUpdateRequest.getMemberCategories());
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 
@@ -83,16 +86,18 @@ public class MemberController {
     // 회원정보 불러오기
     @GetMapping("/{memberId}/profile")
     @ApiOperation(value = "회원 프로필 정보 갖고 오기", notes = "회원의 프로필 정보를 갖고 온다.(기본 회원 정보 + 카테고리 등)", response = Map.class)
-    public ResponseEntity<Map<String, Object>> getMemberInfo(@PathVariable("memberID") Integer id, @PathVariable String memberId){
+    public ResponseEntity<Map<String, Object>> getMemberInfo(@PathVariable("memberId") Integer memberId){
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
 
-        Member member = memberServiceImpl.findOne(id);
+        Member member = memberServiceImpl.findOne(memberId);
         if ( member == null || member.getIsExist() != isExist) {
             resultMap.put("message", FAIL);
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
         }
-        resultMap.put("info", member);
+        List<String> categories = memberServiceImpl.getCategories(memberId);
+        MemberResponse memberResponse = memberServiceImpl.getMember(member, categories);
+        resultMap.put("info", memberResponse);
         resultMap.put("message", SUCCESS);
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
