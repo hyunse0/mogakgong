@@ -39,13 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 이 클래
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), memberRepository))
                 .authorizeRequests()
                 //.authenticated()
-                .antMatchers("/studyroom", "GET")
+                .antMatchers("/api/v2/**", "/swagger-ui.html", "/swagger/**",
+                        "/swagger-resources/**", "/webjars/**", "/v2/api-docs")
                 .permitAll()
-                .antMatchers("/community/**", "GET")
-                .permitAll()
-                .antMatchers("/member/join")
-                .permitAll()
-                .antMatchers("/login")
+                .antMatchers("/studyroom", "GET", "/community/**", "GET", "/member/join", "/login")
                 .permitAll()
                 .anyRequest().access("hasRole('ROLE_USER')");
     }
