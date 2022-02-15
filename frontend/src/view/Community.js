@@ -6,9 +6,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
-import { Button, Container, CssBaseline, Typography } from '@mui/material';
+import { Button, Container, CssBaseline, Paper, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState } from 'react';
+import CreateArticle from '../components/community/CreateArticle'
+import DetailArticle from '../components/community/DetailArticle'
 
 const theme = createTheme();
 
@@ -62,13 +64,18 @@ const onClickHandler = (event) => {
 }
 
 export default function Community() {
-    const [open, setOpen] = useState(false);
     const [openArticle, setOpenArticle] = useState(null)
-    const handleOpen = (item) => {
-        setOpen(true)
+
+    const [openDetail, setOpenDetail] = useState(false);
+    const handleDetailOpen = (item) => {
+        setOpenDetail(true)
         setOpenArticle(item)
     };
-    const handleClose = () => setOpen(false);
+    const handleDetailClose = () => setOpenDetail(false);
+
+    const [openCreate, setOpenCreate] = useState(false)
+    const handleCreateOpen = () => setOpenCreate(true);
+    const handleCreateClose = () => setOpenDetail(false);
 
     return (
         <ThemeProvider theme={theme}>
@@ -86,7 +93,7 @@ export default function Community() {
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <TableRow key={row.id} onClick={() => handleOpen(row)}>
+                            <TableRow key={row.id} onClick={() => handleDetailOpen(row)}>
                                 <TableCell>{row.date}</TableCell>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.shipTo}</TableCell>
@@ -95,10 +102,10 @@ export default function Community() {
                         ))}
                     </TableBody>
                 </Table>
-                <Button>스터디원 모집하러 가기</Button>
+                <Button onClick={handleCreateOpen}>스터디원 모집하러 가기</Button>
                 <Modal
-                    open={open}
-                    onClose={handleClose}>
+                    open={openDetail}
+                    onClose={handleDetailClose}>
                     <Box >
                         {openArticle ?
                             <>
@@ -112,7 +119,16 @@ export default function Community() {
 
                     </Box>
                 </Modal>
+                <Modal
+                    open={openCreate}
+                    onClose={handleCreateClose}
+                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                >
+                    <Paper sx={{ width: '60%', height: '80%', overflow: 'auto' }}>
+                        <CreateArticle />
+                    </Paper>
+                </Modal>
             </Container>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }
