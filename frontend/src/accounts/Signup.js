@@ -14,11 +14,14 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import Input from '@mui/material/Input';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const theme = createTheme();
 
 export default function SignUp() {
+    const navigate = useNavigate()
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         // const data = new FormData(event.currentTarget);
@@ -33,11 +36,14 @@ export default function SignUp() {
             passwordCheck: passwordConfirm
         }
         // console.log(userInfo)
-        const response = await axios.post("http://i6c204.p.ssafy.io/member/join", userInfo)
+        await axios.post("http://i6c204.p.ssafy.io/member/join", userInfo)
             .then((res) => {
                 console.log(res)
+                alert('회원가입 완료!')
+                navigate("/login")
             })
             .catch((err) => {
+                alert('정보를 다시 확인해주세요.')
                 console.log(err)
             })
     };

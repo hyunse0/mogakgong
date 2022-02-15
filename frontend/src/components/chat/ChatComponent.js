@@ -87,7 +87,9 @@ export default class ChatComponent extends Component {
             <div id="chatContainer">
                 <div id="chatComponent" style={styleChat}>
                     <div id="chatToolbar">
-                        <span>{this.props.user.getStreamManager().stream.session.sessionId}</span>
+                        {/* <span>{this.props.user.getStreamManager().stream.session.sessionId}</span>
+                        <span>{this.props.user.getStreamManager().stream.session.sessionId}</span> */}
+                        <span>채팅</span>
                         <Button id="closeButton" onClick={this.close}>
                             <CloseIcon color="error" />
                         </Button>
