@@ -111,10 +111,10 @@ public class MemberServiceImpl implements MemberService {
         member.setIsExist(0);
     }
 
-    public int tokenToId(String jwtToken) {
+    public Member tokenToId(String jwtToken) {
         String changeJwtToken = jwtToken.replace("Bearer ", "");
         String username = JWT.require(Algorithm.HMAC512("cos")).build().verify(changeJwtToken).getClaim("username").asString();
         Member member = memberRepository.findByEmail(username);
-        return member.getId();
+        return member;
     }
 }

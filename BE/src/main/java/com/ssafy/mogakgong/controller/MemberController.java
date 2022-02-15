@@ -104,8 +104,8 @@ public class MemberController {
     public  ResponseEntity<Map<String, Object>> getMemberId(@RequestHeader HttpHeaders headers) {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
-        int id = memberServiceImpl.tokenToId(headers.getFirst("Authorization"));
-        resultMap.put("id", id);
+        Member member = memberServiceImpl.tokenToId(headers.getFirst("Authorization"));
+        resultMap.put("member", member);
         resultMap.put("message", SUCCESS);
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
