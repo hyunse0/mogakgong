@@ -17,8 +17,10 @@ public class StudyRoomUpdateRequest {
         Integer goalTime;
         String url;
         List<String> studyRoomHashtags;
+        List<String> studyRoomCategories;
 
         public StudyRoomUpdateRequest() {
                 this.studyRoomHashtags = new ArrayList<>();
+                this.studyRoomCategories = new ArrayList<>();
         }
 }

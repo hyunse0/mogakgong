@@ -11,7 +11,6 @@ import {
 
 
 export const Profile = (props) => {
-    console.log(props.profile)
 
     return (
         <Card {...props}>

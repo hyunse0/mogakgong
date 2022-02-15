@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Api
@@ -39,9 +40,9 @@ public class StudyRoomController {
     public ResponseEntity<String> createStudyRoom(@RequestBody StudyRoomRequest studyRoomRequest) {
         try {
             Member member = memberServiceImpl.findOne(studyRoomRequest.getMemberId());
-            studyRoomServiceImpl.create(studyRoomRequest, member);
-            StudyRoom studyRoom = studyRoomServiceImpl.findStudyRoomByUrl(studyRoomRequest.getUrl());
-            studyRoomServiceImpl.enter(studyRoom.getId(), member.getId(),2);
+            Integer studyRoomId = studyRoomServiceImpl.create(studyRoomRequest, member);
+            studyRoomServiceImpl.enter(studyRoomId, member.getId(),2);
+            //studyRoomServiceImpl.updateStudyRoomCategory(studyRoom.getId(),studyRoomRequest.getStudyRoomCategories());
         } catch (IllegalStateException e){
             return new ResponseEntity<>("URL_DUPLICATED", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -68,10 +69,15 @@ public class StudyRoomController {
         Map<String, Object> resultMap = new HashMap<>();
 
         Pageable pageable = PageRequest.of(0, 10);
+        List<String> categories = studyRoomServiceImpl.getStudyRoomCategories(studyRoomId);
+        List<String> hashtags = studyRoomServiceImpl.getStudyRoomHashtags(studyRoomId);
+        StudyRoomResponse studyRoom = studyRoomServiceImpl.getStudyRoom(studyRoomId, pageable, categories, hashtags);
 
-        StudyRoomResponse studyRoom = studyRoomServiceImpl.getStudyRoom(studyRoomId, pageable);
-
-        if(studyRoom == null || studyRoom.getIsExist() == 0) {
+        if (studyRoom == null) {
+            resultMap.put("message", FAIL);
+            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
+        }
+        if (studyRoom.getIsExist() == 0) {
             resultMap.put("message", FAIL);
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.BAD_REQUEST);
         } else {
@@ -85,6 +91,7 @@ public class StudyRoomController {
     @ApiOperation(value = "스터디룸 수정", notes = "새로운 스터디룸 정보를 입력한다. 그리고 DB 수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
     public ResponseEntity<String> modifyStudyRoom(@PathVariable("studyRoomId") Integer studyRoomId, @RequestBody StudyRoomUpdateRequest studyRoomUpdateRequest ) {
         studyRoomServiceImpl.updateStudyRoom(studyRoomId, studyRoomUpdateRequest);
+        studyRoomServiceImpl.updateStudyRoomCategory(studyRoomId,studyRoomUpdateRequest.getStudyRoomCategories());
         return null;
     }
 
@@ -97,12 +104,15 @@ public class StudyRoomController {
 
     @PostMapping("/{studyRoomId}/member/{memberId}")
     @ApiOperation(value = "스터디룸에 멤버 입장", notes = "스터디룸 멤버 테이블에 멤버 정보를 입력한다. 그리고 DB 입력 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
-    public ResponseEntity<String> enterStudyRoom(@RequestBody @PathVariable("studyRoomId") Integer studyRoomId, @PathVariable("memberId") Integer memberId) {
+    public ResponseEntity<String> enterStudyRoom(@RequestBody String password, @PathVariable("studyRoomId") Integer studyRoomId, @PathVariable("memberId") Integer memberId) {
         try {
+            studyRoomServiceImpl.checkPass(password, studyRoomId);
             studyRoomServiceImpl.enter(studyRoomId, memberId, 0); // 0: 일반
-        }  catch (IllegalStateException e) {
+        } catch (SecurityException e) {
+            return new ResponseEntity<>("CHECK_PASSWORD", HttpStatus.OK);
+        } catch (IllegalStateException e) {
             return new ResponseEntity<>("BLACKLIST", HttpStatus.OK);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(SUCCESS, HttpStatus.CREATED);

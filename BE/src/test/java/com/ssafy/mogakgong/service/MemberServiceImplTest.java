@@ -4,10 +4,13 @@ import com.ssafy.mogakgong.domain.Member;
 import com.ssafy.mogakgong.repository.MemberRepository;
 import com.ssafy.mogakgong.request.MemberJoinRequest;
 import com.ssafy.mogakgong.request.MemberUpdateRequest;
+import com.ssafy.mogakgong.response.MemberResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -81,24 +85,15 @@ public class MemberServiceImplTest {
     //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원정보_수정() throws Exception {
         //given
-        MemberJoinRequest member1 = new MemberJoinRequest();
-        member1.setEmail("test@naver.com");
-        member1.setPassword("abc");
-        member1.setNickname("ssafy");
-        member1.setIsExist(1);
-        member1.setType("mogakgong");
-        memberServiceImpl.join(member1);
-
-        Member member = memberRepository.findByEmail("test@naver.com");
-
-        MemberUpdateRequest member2 = new MemberUpdateRequest();
-        member2.setPassword("bcd");
-        member2.setNickname("ssafy2");
+        int memberId = 9;
 
         //when
-        memberServiceImpl.update(member.getId(), member2);
+        Member member = memberServiceImpl.findOne(memberId);
+        List<String> categories = memberServiceImpl.getCategories(memberId);
+        MemberResponse memberResponse = memberServiceImpl.getMember(member, categories);
 
         //then
+        System.out.println(categories);
         em.flush();
     }
 
@@ -159,44 +154,6 @@ public class MemberServiceImplTest {
         memberServiceImpl.join(member3);
         List<Member> members = memberServiceImpl.findMembers();
         if(members.size()!=3)
-            throw new IllegalStateException("조회 실패");
-
-        //then
-        em.flush();
-    }
-
-    @Test
-    //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
-    public void 회원정보_삭제() throws Exception {
-        //given
-        MemberJoinRequest member1 = new MemberJoinRequest();
-        member1.setEmail("test@ssafy.com");
-        member1.setPassword("abc");
-        member1.setNickname("ssafy");
-        member1.setIsExist(1);
-        member1.setType("mogakgong");
-
-        MemberJoinRequest member2 = new MemberJoinRequest();
-        member2.setEmail("test@naver.com");
-        member2.setPassword("abc");
-        member2.setNickname("ssafy");
-        member2.setIsExist(1);
-        member2.setType("mogakgong");
-
-        MemberJoinRequest member3 = new MemberJoinRequest();
-        member3.setEmail("test@daum.net");
-        member3.setPassword("abc");
-        member3.setNickname("ssafy");
-        member3.setIsExist(1);
-        member3.setType("mogakgong");
-
-        //when
-        memberServiceImpl.join(member1);
-        memberServiceImpl.join(member2);
-        memberServiceImpl.join(member3);
-        memberServiceImpl.delete(member3.getId());
-        List<Member> members = memberServiceImpl.findMembers();
-        if(members.size()!=2)
             throw new IllegalStateException("조회 실패");
 
         //then

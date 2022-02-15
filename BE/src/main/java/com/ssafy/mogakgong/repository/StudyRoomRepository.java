@@ -10,6 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudyRoomRepository extends JpaRepository<StudyRoom, Integer> {
     Page<StudyRoom> findByIsExistOrderByIdDesc(Integer isExist, Pageable pageable);
-    StudyRoom findByUrl(String url);
 
 }

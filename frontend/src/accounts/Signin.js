@@ -43,7 +43,7 @@ export default function SignIn({ setUserInfo, setStudyroom }) {
         }
 
         // 로그인
-        await axios.post("http://i6c204.p.ssafy.io/login", userInput, {
+        await axios.post("http://i6c204.p.ssafy.io:8081/api/login", userInput, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -53,21 +53,21 @@ export default function SignIn({ setUserInfo, setStudyroom }) {
                 localStorage.setItem('token', res.headers.authorization)
 
                 // 로그인 후 회원정보 불러오기
-                axios.get("http://i6c204.p.ssafy.io/member", {
+                axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
                     headers: {
                         Authorization: localStorage.getItem('token')
                     }
                 })
                     .then(res => {
-                        console.log(res.data)
-                        setUserInfo(res.data)
+                        console.log(res.data.member)
+                        setUserInfo(res.data.member)
                     })
                     .catch(err => {
                         console.log(err)
                     })
 
                 // 로그인 후 스터디룸 정보 불러오기
-                axios.get("http://i6c204.p.ssafy.io/studyroom?page=0&spp=10", {
+                axios.get("http://i6c204.p.ssafy.io:8081/api/studyroom?page=0&spp=10", {
                     headers: {
                         Authorization: localStorage.getItem('token')
                     },
@@ -75,6 +75,7 @@ export default function SignIn({ setUserInfo, setStudyroom }) {
                     .then(res => {
                         console.log(res.data.info.content)
                         setStudyroom(res.data.info.content)
+                        navigate("/");
                     })
                     .catch((err) => {
                         console.log(err)
@@ -84,7 +85,6 @@ export default function SignIn({ setUserInfo, setStudyroom }) {
                 alert('정보가 일치하지 않습니다.')
                 console.log(err)
             })
-        navigate("/");
     };
 
     return (

@@ -1,5 +1,6 @@
 import { Box, Container, CssBaseline, Grid, Typography } from '@mui/material';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { Profile } from './profile/Profile';
 import { ProfileDetail } from './profile/ProfileDetail';
 
@@ -14,8 +15,23 @@ const profile = {
     img: faker.image.image(),
 }
 
-export default function Account() {
-    const [userInfo, setUserInfo] = useState(profile)
+export default function Account({ userInfo, setUserInfo }) {
+    // console.log(userInfo)
+
+    useEffect(() => {
+        axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
+            headers: {
+                Authorization: localStorage.getItem('token')
+            }
+        })
+            .then(res => {
+                console.log(res.data.member)
+                setUserInfo(res.data.member)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [])
 
     return (
         <>
