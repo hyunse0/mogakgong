@@ -68,11 +68,11 @@ public class Member {
     @ApiModelProperty(value = "회원 등급")
     private String role;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<MemberCategory> memberCategories = new ArrayList<>();
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+//    private List<MemberCategory> memberCategories = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
-    private List<StudyRoomMember> studyRoomMembers = new ArrayList<>();
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+//    private List<StudyRoomMember> studyRoomMembers = new ArrayList<>();
 
 
     public Member() {

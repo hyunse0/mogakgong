@@ -60,7 +60,7 @@ public class CommunityController {
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
-    @GetMapping("/{communityId")
+    @GetMapping("/{communityId}")
     @ApiOperation(value = "커뮤니티 게시판 글보기", notes = "글번호에 해당하는 게시글의 정보를 반환한다.", response = Map.class)
     public ResponseEntity<Map<String, Object>> getCommunity(@PathVariable Integer communityId) {
         Map<String, Object> resultMap = new HashMap<>();
