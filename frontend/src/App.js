@@ -24,7 +24,7 @@ import { useState } from 'react';
 
 
 function App() {
-  const [userInfo, setUserInfo] = useState(null)
+  const [userInfo, setUserInfo] = useState({})
   const [studyrooms, setStudyroom] = useState([])
 
   return (
@@ -33,7 +33,7 @@ function App() {
       <Route path="/login" element={<Signin setUserInfo={setUserInfo} setStudyroom={setStudyroom} />} />
       <Route path="/join" element={<Signup />} />
       <Route path="/studyroom" element={<VideoRoom />} />
-      <Route path="/profile" element={<UserProfile userInfo={userInfo} />} />
+      <Route path="/profile" element={<UserProfile userInfo={userInfo} setUserInfo={setUserInfo} />} />
       <Route path="/createroom" element={<CreateStudyroom />} />
       <Route path="/beforestudy" element={<BeforeEnterRoom />} />
       <Route path="/community" element={<Community />} />
