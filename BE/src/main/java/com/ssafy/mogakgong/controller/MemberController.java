@@ -110,7 +110,9 @@ public class MemberController {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
         Member member = memberServiceImpl.tokenToId(headers.getFirst("Authorization"));
-        resultMap.put("member", member);
+        List<String> categories = memberServiceImpl.getCategories(member.getId());
+        MemberResponse memberResponse = memberServiceImpl.getMember(member, categories);
+        resultMap.put("member", memberResponse);
         resultMap.put("message", SUCCESS);
 
         return new ResponseEntity<Map<String, Object>>(resultMap, status);
