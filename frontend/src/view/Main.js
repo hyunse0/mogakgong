@@ -15,19 +15,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ProgressBar from './ProgressBar';
 import axios from 'axios';
 
-// const { faker } = require('@faker-js/faker');
-// faker.locale = "ko"
-// const studyrooms = [...Array(10)].map((_, idx) => ({
-//     title: faker.lorem.word(),
-//     nickname: faker.name.firstName(),
-//     category: faker.lorem.word(),
-//     description: faker.lorem.lines(),
-//     hashtag: faker.lorem.word(),
-//     start_date: faker.datatype.datetime(),
-//     end_date: faker.datatype.datetime(),
-//     limit: Math.random(0, 1) * 10,
-//     img: faker.image.image(),
-// }))
 const DEFAULT_IMG = "https://images.freeimages.com/images/small-previews/eaf/studying-ahead-1421056.jpg"
 const theme = createTheme();
 
@@ -35,19 +22,21 @@ export default function Main({ studyrooms, setStudyroom }) {
 
     // 새로고침시 상태를 다시 불러오기 위함
     useEffect(() => {
-        axios.get("http://i6c204.p.ssafy.io/studyroom?page=0&spp=10", {
+        axios.get("http://i6c204.p.ssafy.io:8081/api/studyroom?page=0&spp=10", {
             headers: {
                 Authorization: localStorage.getItem('token')
             },
         })
             .then(res => {
-                console.log(res.data.info.content)
+                // console.log(res.data.info.content)
                 setStudyroom(res.data.info.content)
             })
             .catch((err) => {
                 console.log(err)
             })
-    })
+
+        // console.log(studyrooms)
+    }, [studyrooms])
 
     // 선택한 room 정보 localStorage에 저장
     const saveRoomInfo = (item) => {
@@ -83,7 +72,7 @@ export default function Main({ studyrooms, setStudyroom }) {
                                     <ImageListItem >
                                         <img
                                             src={item.img ? item.img : DEFAULT_IMG}
-                                            srcSet={`${item.img}`}
+                                            // srcSet={`${item.img}`}
                                             alt={DEFAULT_IMG}
                                             loading="lazy"
                                         />
@@ -111,12 +100,12 @@ export default function Main({ studyrooms, setStudyroom }) {
                         {/* 추천 스터디 */}
                         <Typography mt={2} variant='h6'>추천 스터디</Typography>
                         <ImageList cols={4} >
-                            {studyrooms.map((item) => (
+                            {localStorage.getItem('token') ? studyrooms.map((item) => (
                                 <Card key={item.hashtag}>
                                     <ImageListItem >
                                         <img
                                             src={item.img ? item.img : DEFAULT_IMG}
-                                            srcSet={`${item.img}`}
+                                            // srcSet={`${item.img}`}
                                             loading="lazy"
                                         />
                                         <ImageListItemBar
@@ -141,7 +130,7 @@ export default function Main({ studyrooms, setStudyroom }) {
                                         />
                                     </ImageListItem>
                                 </Card>
-                            ))}
+                            )) : <div>로그인 하세요</div>}
                         </ImageList>
                     </Grid>
                 </Grid>

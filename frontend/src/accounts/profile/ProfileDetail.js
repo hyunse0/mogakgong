@@ -7,21 +7,72 @@ import {
     CardHeader,
     Divider,
     Grid,
-    TextField
+    TextField,
+    Chip,
+    Select,
+    InputLabel,
+    OutlinedInput,
+    MenuItem,
+    useTheme
 } from '@mui/material';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DatePicker from '@mui/lab/DatePicker';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+];
+
+function getStyles(name, myCategory, theme) {
+    return {
+        fontWeight:
+            myCategory.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
+
 export const ProfileDetail = (props) => {
     const [userInfo, setUserInfo] = useState(props.profile)
 
-    const handleChange = (event) => {
-        console.log(event)
-        setUserInfo({
-            ...userInfo,
-            [event.target.name]: event.target.value
-        });
+    const [myCategory, setMyCategory] = useState([]);
+    const theme = useTheme();
+
+    // const handleCategory = (event) => {
+    //     console.log(event)
+    //     setUserInfo({
+    //         ...userInfo,
+    //         [event.target.name]: event.target.value
+    //     });
+    // };
+
+    const handleCategory = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setMyCategory(
+            typeof value === 'string' ? value.split(',') : value,
+        );
     };
 
     return (
@@ -37,20 +88,22 @@ export const ProfileDetail = (props) => {
                 />
                 <Divider />
                 <CardContent>
-                    <Grid
-                        container
-                        spacing={3}
-                    >
-                        <Grid
-                            item
-                            md={6}
-                            xs={12}
-                        >
+                    <Grid container spacing={3}>
+                        <Grid item md={6} xs={12} >
                             <TextField
                                 fullWidth
-                                label={userInfo.ninckname}
+                                label="닉네임"
                                 name="nickname"
-                                onChange={handleChange}
+                                onChange={(e) => {
+                                    setUserInfo((prev) => {
+                                        return {
+                                            ...prev,
+                                            ninckname: e.target.value
+                                        }
+                                    })
+                                    console.log(userInfo)
+                                }
+                                }
                                 value={userInfo.ninckname}
                                 variant="outlined"
                             />
@@ -61,60 +114,64 @@ export const ProfileDetail = (props) => {
                             >
                                 <DatePicker
                                     fullWidth
-                                    label="Birth"
+                                    label="생년월일"
                                     value={userInfo.birth}
-                                    onChange={handleChange}
+                                    onChange={e => {
+                                        setUserInfo((prev) => {
+                                            return {
+                                                ...prev,
+                                                birth: e.toISOString().slice(0, 10)
+                                            }
+                                        })
+                                    }}
                                     renderInput={(params) => <TextField fullWidth {...params} />}
                                 />
                             </LocalizationProvider>
                         </Grid>
-                        <Grid item md={6} xs={12}>
+                        <Grid item xs={12}>
                             <TextField
                                 fullWidth
-                                label="Email"
-                                name="email"
-                                onChange={handleChange}
-                                disabled
-                                value={userInfo.email}
+                                label="회원 목표"
+                                name="목표"
+                                onChange={e => {
+                                    setUserInfo(prev => {
+                                        return {
+                                            ...prev,
+                                            goal: e.target.value
+                                        }
+                                    })
+                                }}
+                                value={userInfo.goal}
                                 variant="outlined"
                             />
                         </Grid>
-                        <Grid item md={6} xs={12}>
-                            <TextField
+                        <Grid item xs={12}>
+                            <Select
+                                label="카테고리 설정"
                                 fullWidth
-                                label="Phone Number"
-                                name="phone"
-                                onChange={handleChange}
-                                type="number"
-                                value={userInfo.phone}
-                                variant="outlined"
-                            />
-                        </Grid>
-                        <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                label="Country"
-                                name="country"
-                                onChange={handleChange}
-                                required
-                                value={userInfo.country}
-                                variant="outlined"
-                            />
-                        </Grid>
-                        <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                label="Select State"
-                                name="state"
-                                onChange={handleChange}
-                                required
-                                select
-                                SelectProps={{ native: true }}
-                                value={userInfo.state}
-                                variant="outlined"
+                                multiple
+                                value={myCategory}
+                                onChange={handleCategory}
+                                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                                renderValue={(selected) => (
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                        {selected.map((value) => (
+                                            <Chip key={value} label={value} />
+                                        ))}
+                                    </Box>
+                                )}
+                                MenuProps={MenuProps}
                             >
-
-                            </TextField>
+                                {names.map((name) => (
+                                    <MenuItem
+                                        key={name}
+                                        value={name}
+                                        style={getStyles(name, myCategory, theme)}
+                                    >
+                                        {name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
                         </Grid>
                     </Grid>
                 </CardContent>
