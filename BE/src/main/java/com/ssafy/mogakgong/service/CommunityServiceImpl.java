@@ -1,6 +1,5 @@
 package com.ssafy.mogakgong.service;
 
-import com.ssafy.mogakgong.domain.Comment;
 import com.ssafy.mogakgong.domain.Community;
 import com.ssafy.mogakgong.domain.FileInfo;
 import com.ssafy.mogakgong.domain.Member;
@@ -80,23 +79,9 @@ public class CommunityServiceImpl implements CommunityService{
 
     @Override
     public void deleteCommunity(Integer communityId) {
-        // 게시글 삭제
         Optional<Community> communityOptional = communityRepository.findById(communityId);
         Community community = communityOptional.get();
         community.changeIsExist(0);
         communityRepository.save(community);
-
-        // 댓글 삭제
-        List<Comment> comments = community.getComments();
-        for (Comment comment : comments) {
-            comment.changeIsExist(0);
-            commentRepository.save(comment);
-        }
-
-        // 파일 삭제
-        List<FileInfo> files = community.getFiles();
-        for (FileInfo file : files) {
-            fileRepository.delete(file);
-        }
     }
 }

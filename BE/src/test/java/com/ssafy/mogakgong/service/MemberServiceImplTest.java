@@ -208,7 +208,7 @@ public class MemberServiceImplTest {
         //given
         String token = "";
         //when
-        int id = memberServiceImpl.tokenToId(token);
+        Member member = memberServiceImpl.tokenToId(token);
         //then
         em.flush();
     }
