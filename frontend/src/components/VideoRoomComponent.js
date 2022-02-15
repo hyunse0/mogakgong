@@ -28,6 +28,7 @@ class VideoRoomComponent extends Component {
         this.localUserAccessAllowed = false;
         this.state = {
             mySessionId: sessionName,
+            token: 'a' + roomInfo.id,
             myUserName: userName,
             session: undefined,
             localUser: undefined,
@@ -556,7 +557,7 @@ class VideoRoomComponent extends Component {
      */
 
     getToken() {
-        return this.createSession(this.state.mySessionId).then((sessionId) => this.createToken(sessionId));
+        return this.createSession(this.state.token).then((sessionId) => this.createToken(sessionId));
     }
 
     createSession(sessionId) {

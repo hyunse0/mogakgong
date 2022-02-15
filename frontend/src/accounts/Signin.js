@@ -10,11 +10,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const theme = createTheme();
 
-export default function SignIn({ setUserInfo }) {
+export default function SignIn({ setUserInfo, setStudyroom }) {
+    const navigate = useNavigate();
 
     const emailReg = new RegExp(/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9.]+/)
 
@@ -39,28 +41,50 @@ export default function SignIn({ setUserInfo }) {
             email,
             password
         }
-        // console.log(userInput)
+
+        // 로그인
         await axios.post("http://i6c204.p.ssafy.io/login", userInput, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
             .then((res) => {
-                console.log(res.headers.authorization)
+                // console.log(res.headers.authorization)
                 localStorage.setItem('token', res.headers.authorization)
+
+                // 로그인 후 회원정보 불러오기
                 axios.get("http://i6c204.p.ssafy.io/member", {
                     headers: {
-                        Authorization: `${res.headers.authorization}`
+                        Authorization: localStorage.getItem('token')
                     }
                 })
                     .then(res => {
-                        console.log(res)
-                    }
-                    )
+                        console.log(res.data)
+                        setUserInfo(res.data)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+
+                // 로그인 후 스터디룸 정보 불러오기
+                axios.get("http://i6c204.p.ssafy.io/studyroom?page=0&spp=10", {
+                    headers: {
+                        Authorization: localStorage.getItem('token')
+                    },
+                })
+                    .then(res => {
+                        console.log(res.data.info.content)
+                        setStudyroom(res.data.info.content)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
             })
             .catch((err) => {
+                alert('정보가 일치하지 않습니다.')
                 console.log(err)
             })
+        navigate("/");
     };
 
     return (
