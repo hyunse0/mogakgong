@@ -35,8 +35,8 @@ export default function Main({ studyrooms, setStudyroom }) {
                 console.log(err)
             })
 
-        // console.log(studyrooms)
-    }, [studyrooms])
+        console.log(studyrooms)
+    }, [])
 
     // 선택한 room 정보 localStorage에 저장
     const saveRoomInfo = (item) => {
@@ -68,11 +68,10 @@ export default function Main({ studyrooms, setStudyroom }) {
                         <Typography mt={3} variant='h6' >내 스터디</Typography>
                         <ImageList cols={4} >
                             {studyrooms.map((item) => (
-                                <Card key={item.hashtag}>
+                                <Card key={item.id}>
                                     <ImageListItem >
                                         <img
                                             src={item.img ? item.img : DEFAULT_IMG}
-                                            // srcSet={`${item.img}`}
                                             alt={DEFAULT_IMG}
                                             loading="lazy"
                                         />
@@ -82,10 +81,16 @@ export default function Main({ studyrooms, setStudyroom }) {
                                             actionIcon={
                                                 <IconButton
                                                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                                    aria-label={`info about ${item.title}`}
-
+                                                    onClick={() => {
+                                                        saveRoomInfo(item)
+                                                    }}
                                                 >
-                                                    <InfoIcon />
+                                                    <Link
+                                                        color="inherit"
+                                                        href="/beforestudy"
+                                                    >
+                                                        <InfoIcon />
+                                                    </Link>
                                                 </IconButton>
                                             }
                                         />
@@ -101,11 +106,11 @@ export default function Main({ studyrooms, setStudyroom }) {
                         <Typography mt={2} variant='h6'>추천 스터디</Typography>
                         <ImageList cols={4} >
                             {localStorage.getItem('token') ? studyrooms.map((item) => (
-                                <Card key={item.hashtag}>
+                                <Card key={item.id}>
                                     <ImageListItem >
                                         <img
                                             src={item.img ? item.img : DEFAULT_IMG}
-                                            // srcSet={`${item.img}`}
+                                            alt="null"
                                             loading="lazy"
                                         />
                                         <ImageListItemBar
@@ -114,14 +119,13 @@ export default function Main({ studyrooms, setStudyroom }) {
                                             actionIcon={
                                                 <IconButton
                                                     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                                                    aria-label={`info about ${item.title}`}
+                                                    onClick={() => {
+                                                        saveRoomInfo(item)
+                                                    }}
                                                 >
                                                     <Link
                                                         color="inherit"
                                                         href="/beforestudy"
-                                                        onClick={() => {
-                                                            saveRoomInfo(item)
-                                                        }}
                                                     >
                                                         <InfoIcon />
                                                     </Link>
@@ -140,7 +144,6 @@ export default function Main({ studyrooms, setStudyroom }) {
                     sx={{ position: 'fixed', bottom: 32, right: 32, color: 'rgba(255, 255, 255, 0.54)' }}
                     icon={<SpeedDialIcon />}
                 >
-
                     <SpeedDialAction
                         icon={<SearchIcon />}
                         tooltipTitle={"스터디 검색하기"}
