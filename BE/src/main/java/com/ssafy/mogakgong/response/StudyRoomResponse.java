@@ -5,6 +5,7 @@ import com.ssafy.mogakgong.domain.StudyRoom;
 import com.ssafy.mogakgong.domain.StudyRoomHashtag;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -24,7 +25,10 @@ public class StudyRoomResponse {
     private String url;
     private Integer isExist;
     private Member member;
-    private List<StudyRoomHashtag> studyRoomHashtags;
+    @Setter
+    private List<String> studyRoomHashtags;
+    @Setter
+    private List<String> studyRoomCategories;
 
     public static StudyRoomResponse from (StudyRoom studyRoom) {
         return StudyRoomResponse.builder()

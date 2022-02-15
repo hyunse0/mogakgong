@@ -18,8 +18,10 @@ public class StudyRoomRequest {
     String url;
     Integer memberId;
     List<String> studyRoomHashtags;
+    List<String> studyRoomCategories;
 
     public StudyRoomRequest() {
         this.studyRoomHashtags = new ArrayList<>();
+        this.studyRoomCategories = new ArrayList<>();
     }
 }
