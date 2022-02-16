@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 public class MemberUpdateRequest {
-    String password;
     String nickname;
     String img;
     Date birth;
