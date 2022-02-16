@@ -1,5 +1,6 @@
 package com.ssafy.mogakgong.service;
 
+import com.querydsl.core.QueryResults;
 import com.ssafy.mogakgong.domain.*;
 import com.ssafy.mogakgong.repository.*;
 import com.ssafy.mogakgong.request.StudyRoomRequest;
@@ -28,6 +29,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     private final StudyRoomCategoryRepository studyRoomCategoryRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final CustomRepositoryImpl customRepository;
     private Integer exist = 1;
 
     @Transactional
@@ -73,12 +75,41 @@ public class StudyRoomServiceImpl implements StudyRoomService {
         Page<StudyRoomResponse> studyRoomResponses = studyRoomRepository.findByIsExistOrderByIdDesc(1, pageable)
                 .map(StudyRoomResponse::from);
         for(StudyRoomResponse response : studyRoomResponses){
-            List<StudyRoomHashtag> studyRoomHashtags = studyRoomHashtagRepository.findByStudyRoomId(response.getId());
-            List<String> tmpHashtag = new ArrayList<>();
-            for(StudyRoomHashtag hashtag : studyRoomHashtags) {
-                tmpHashtag.add(hashtag.getName());
-            }
-            response.setStudyRoomHashtags(tmpHashtag);
+            response.setStudyRoomHashtags(getStudyRoomHashtags(response.getId()));
+            response.setStudyRoomCategories(getStudyRoomCategories(response.getId()));
+        }
+        return studyRoomResponses;
+    }
+
+    public Page<StudyRoomResponse> getRecommendStudyRoomList(Integer memberId, Pageable pageable) {
+
+        List<StudyRoom> recommendList = customRepository.findByRecommend(memberId);
+        int start = (int)pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > recommendList.size() ? recommendList.size() : (start + pageable.getPageSize());
+        Page<StudyRoom> studyRooms =
+                new PageImpl<>(recommendList.subList(start, end), pageable, recommendList.size());
+        Page<StudyRoomResponse> studyRoomResponses = studyRooms.map(StudyRoomResponse::from);
+        for(StudyRoomResponse response : studyRoomResponses){
+            response.setStudyRoomHashtags(getStudyRoomHashtags(response.getId()));
+            response.setStudyRoomCategories(getStudyRoomCategories(response.getId()));
+        }
+        return studyRoomResponses;
+    }
+
+    public Page<StudyRoomResponse> getHistoryStudyRoomList(Integer memberId, Pageable pageable) {
+        List<StudyRoomMember> studyRoomMembers = studyRoomMemberRepository.findByMemberId(memberId);
+        List<StudyRoom> historyList = new ArrayList<>();
+        for(StudyRoomMember studyRoomMember : studyRoomMembers) {
+            historyList.add(studyRoomMember.getStudyRoom());
+        }
+        int start = (int)pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > historyList.size() ? historyList.size() : (start + pageable.getPageSize());
+        Page<StudyRoom> studyRooms =
+                new PageImpl<>(historyList.subList(start, end), pageable, historyList.size());
+        Page<StudyRoomResponse> studyRoomResponses = studyRooms.map(StudyRoomResponse::from);
+        for(StudyRoomResponse response : studyRoomResponses){
+            response.setStudyRoomHashtags(getStudyRoomHashtags(response.getId()));
+            response.setStudyRoomCategories(getStudyRoomCategories(response.getId()));
         }
         return studyRoomResponses;
     }
@@ -88,7 +119,7 @@ public class StudyRoomServiceImpl implements StudyRoomService {
         List<StudyRoomCategory> studyRoomCategories = studyRoomCategoryRepository.findByStudyRoomId(studyRoomId);
         if(studyRoomCategories != null) {
             for(StudyRoomCategory studyRoomCategory : studyRoomCategories) {
-                Category findCategory = categoryRepository.findById(studyRoomCategory.getId()).get();
+                Category findCategory = categoryRepository.findById(studyRoomCategory.getCategory().getId()).get();
                 categories.add(findCategory.getName());
             }
         }

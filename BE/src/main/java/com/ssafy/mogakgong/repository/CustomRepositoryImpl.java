@@ -1,23 +1,22 @@
 package com.ssafy.mogakgong.repository;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.mogakgong.domain.Member;
-import com.ssafy.mogakgong.domain.QStudyPlanner;
-import com.ssafy.mogakgong.domain.StudyPlanner;
+import com.ssafy.mogakgong.domain.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class CustomStudyPlannerRepositoryImpl implements CustomStudyPlannerRepository {
+public class CustomRepositoryImpl implements CustomRepository {
 
     private final EntityManager em;
     private final MemberRepository memberRepository;
-
 
     // queryDSL 테스트용
     public List<StudyPlanner> findByIsExist() {
@@ -49,6 +48,38 @@ public class CustomStudyPlannerRepositoryImpl implements CustomStudyPlannerRepos
                 , studyPlanner.member.eq(member))
                 .fetch();
 
+    }
+
+    public List<StudyRoom> findByRecommend(Integer memberId){
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        QStudyRoom studyRoom = QStudyRoom.studyRoom;
+        QStudyRoomCategory studyRoomCategory = QStudyRoomCategory.studyRoomCategory;
+        QMemberCategory memberCategory = QMemberCategory.memberCategory;
+        QMember member = QMember.member;
+        Member findMember = memberRepository.findById(memberId).get();
+
+//        select distinct study_room_id
+//        from study_room_category src
+//        where src.category_id in (
+//        select category_id
+//        from member_category mc
+//        inner join member m
+//        on m.id = mc.member_id
+//        where m.id=9);
+
+        return queryFactory
+                .selectDistinct(studyRoom)
+                .from(studyRoomCategory)
+                .where(studyRoomCategory.category.id.in(
+                        JPAExpressions
+                                .select(memberCategory.id)
+                                .from(memberCategory)
+                                .innerJoin(member)
+                                .on(member.eq(memberCategory.member))
+                                .where(member.eq(findMember))
+                ))
+                .fetch();
     }
 
 }
