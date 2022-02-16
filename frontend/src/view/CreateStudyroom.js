@@ -11,15 +11,17 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import StudyroomInput from '../components/studyroom/StudyroomInput'
 import Review from '../components/studyroom/Review';
 import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const steps = ['정보입력', '확인'];
 const theme = createTheme();
+const BASE_URL = 'http://i6c204.p.ssafy.io:8081/api'
 
-function getStepContent(step, info, func) {
+function getStepContent(step, info, category, func) {
     switch (step) {
         case 0:
-            return <StudyroomInput onButtonClick={func} />
+            return <StudyroomInput category={category} onButtonClick={func} />
         case 1:
             return <Review props={info} />;
 
@@ -28,11 +30,18 @@ function getStepContent(step, info, func) {
     }
 }
 
-export default function Checkout() {
+export default function Checkout({ userInfo }) {
+    const navigate = useNavigate()
+    console.log(userInfo)
+
+    const [categorys, setCategorys] = useState([])
     const [activeStep, setActiveStep] = useState(0);
 
-    const handleNext = () => {
+    const handleNext = (e) => {
         setActiveStep(activeStep + 1);
+        if (activeStep === steps.length - 1) {
+            createRoom()
+        }
     };
 
     const handleBack = () => {
@@ -40,15 +49,42 @@ export default function Checkout() {
     };
 
     const [roomInfo, setRoomInfo] = useState(null)
+
     const handleRoomInfo = (info) => {
         setRoomInfo(info)
     }
 
     useEffect(() => {
-    })
+        axios.get(BASE_URL + '/category', {
+            headers: {
+                Authorization: localStorage.getItem('token')
+            },
+        })
+            .then(res => {
+                console.log(res.data.info)
+                setCategorys(res.data.info)
+            })
+    }, [])
 
-    const createRoom = (event) => {
-        // axios.post()
+    const createRoom = async () => {
+        const data = {
+            ...roomInfo,
+            memberId: userInfo.id,
+            url: ""
+        }
+        console.log(data)
+        await axios.post(BASE_URL + '/studyroom', data, {
+            headers: {
+                Authorization: localStorage.getItem('token'),
+                "Content-type": "application/json"
+            }
+        })
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     return (
@@ -75,14 +111,14 @@ export default function Checkout() {
                                 <Typography variant="subtitle1">
                                     설명이 들어갈 자리입니다.
                                 </Typography>
-                                <Button sx={{ mt: 3, ml: 1 }} onClick={createRoom}>
+                                <Button sx={{ mt: 3, ml: 1 }}>
                                     홈으로 돌아가기
                                 </Button>
 
                             </Box>
                         ) : (
                             <>
-                                {getStepContent(activeStep, roomInfo, handleRoomInfo)}
+                                {getStepContent(activeStep, roomInfo, categorys, handleRoomInfo)}
                                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                                     {activeStep !== 0 && (
                                         <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
@@ -90,13 +126,19 @@ export default function Checkout() {
                                         </Button>
                                     )}
 
-                                    <Button
-                                        variant="contained"
-                                        onClick={handleNext}
-                                        sx={{ mt: 3, ml: 1 }}
-                                    >
-                                        {activeStep === steps.length - 1 ? '스터디룸 생성하기' : '다음'}
-                                    </Button>
+                                    {activeStep === steps.length - 1 ?
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleNext}
+                                            sx={{ mt: 3, ml: 1 }}
+                                        >스터디룸 생성하기
+                                        </Button>
+                                        : <Button
+                                            variant="contained"
+                                            onClick={handleNext}
+                                            sx={{ mt: 3, ml: 1 }}
+                                        >다음
+                                        </Button>}
                                 </Box>
                             </>
                         )}
