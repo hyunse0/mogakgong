@@ -2,7 +2,7 @@ package com.ssafy.mogakgong.service;
 
 import com.ssafy.mogakgong.domain.StudyPlanner;
 import com.ssafy.mogakgong.domain.StudyPlannerTimer;
-import com.ssafy.mogakgong.repository.CustomStudyPlannerRepositoryImpl;
+import com.ssafy.mogakgong.repository.CustomRepositoryImpl;
 import com.ssafy.mogakgong.repository.StudyPlannerRepository;
 import com.ssafy.mogakgong.repository.StudyPlannerTimerRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +21,7 @@ public class StudyPlannerServiceImpl implements StudyPlannerService{
 
     private final StudyPlannerRepository studyPlannerRepository;
     private final StudyPlannerTimerRepository studyPlannerTimerRepository;
-    private final CustomStudyPlannerRepositoryImpl customStudyPlannerRepository;
+    private final CustomRepositoryImpl customStudyPlannerRepository;
 
     // 스터디 플래너 작성
     @Transactional // 읽기 전용이면 안 되는 기능이므로 다시 붙임

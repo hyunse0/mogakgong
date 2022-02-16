@@ -13,6 +13,8 @@ import java.util.List;
 public interface StudyRoomService {
     public Integer create(StudyRoomRequest studyRoomRequest, Member member);
 //    public void validateDuplicateStudyRoom(StudyRoom studyRoom);
+    public Page<StudyRoomResponse> getRecommendStudyRoomList(Integer memberId, Pageable pageable);
+    public Page<StudyRoomResponse> getStudyRoomList(Pageable pageable);
     public StudyRoomResponse getStudyRoom(Integer studyRoomId, Pageable pageable, List<String> categories, List<String> hashtags);
     public void updateStudyRoom(Integer id, StudyRoomUpdateRequest studyRoomUpdateRequest);
     public void deleteStudyRoom(Integer id);

@@ -1,6 +1,9 @@
 package com.ssafy.mogakgong.repository;
 
+import com.ssafy.mogakgong.domain.Category;
 import com.ssafy.mogakgong.domain.StudyPlanner;
+import com.ssafy.mogakgong.domain.StudyRoom;
+import io.swagger.models.auth.In;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +17,10 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class CustomStudyPlannerRepositoryImplTest {
+public class CustomRepositoryImplTest {
 
     @Autowired
-    CustomStudyPlannerRepository customStudyPlannerRepository;
+    CustomRepositoryImpl customRepositoryImpl;
     @Autowired
     EntityManager em;
 
@@ -26,7 +29,7 @@ public class CustomStudyPlannerRepositoryImplTest {
         //given
 
         //when
-        List<StudyPlanner> studyPlannerList = customStudyPlannerRepository.findByIsExist();
+        List<StudyPlanner> studyPlannerList = customRepositoryImpl.findByIsExist();
         for(StudyPlanner s : studyPlannerList){
             System.out.println(s.getSubject());
         }
@@ -40,12 +43,26 @@ public class CustomStudyPlannerRepositoryImplTest {
         String start = "2022-02-09 00:00:00";
         String end = "2022-02-10 00:00:00";
         //when
-        List<StudyPlanner> studyPlannerList = customStudyPlannerRepository.findByRegDate(9, start, end);
+        List<StudyPlanner> studyPlannerList = customRepositoryImpl.findByRegDate(9, start, end);
 
         for(StudyPlanner s : studyPlannerList){
             System.out.println(s.getSubject());
         }
 
+        //then
+        em.flush();
+    }
+
+    @Test
+    public void 추천_스터디룸_검색() throws Exception {
+        //given
+        Integer memberId = 9;
+
+        //when
+        List<StudyRoom> studyRooms = customRepositoryImpl.findByRecommend(memberId);
+        for(StudyRoom s : studyRooms){
+            System.out.println(s.getId());
+        }
         //then
         em.flush();
     }
