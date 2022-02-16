@@ -7,25 +7,28 @@ import UserProfile from './accounts/UserProfile'
 import CreateStudyroom from './view/CreateStudyroom'
 import BeforeEnterRoom from './view/BeforeEnterRoom'
 import Community from './view/Community'
-import { useState } from 'react';
-
-// const { faker } = require('@faker-js/faker');
-// faker.locale = "ko"
-// const studyrooms = [...Array(10)].map((_, idx) => ({
-//   title: faker.lorem.word(),
-//   category: faker.lorem.word(),
-//   description: faker.lorem.lines(),
-//   hashtag: faker.lorem.word(),
-//   start_date: faker.datatype.datetime(),
-//   end_date: faker.datatype.datetime(),
-//   limit: Math.random(0, 1) * 10,
-//   img: faker.image.image(),
-// }))
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
 function App() {
   const [userInfo, setUserInfo] = useState({})
   const [studyrooms, setStudyroom] = useState([])
+
+  useEffect(() => {
+    axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
+      headers: {
+        Authorization: localStorage.getItem('token')
+      }
+    })
+      .then(res => {
+        setUserInfo(res.data.member)
+        console.log(userInfo)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [])
 
   return (
     <Routes>
@@ -34,7 +37,7 @@ function App() {
       <Route path="/join" element={<Signup />} />
       <Route path="/studyroom" element={<VideoRoom />} />
       <Route path="/profile" element={<UserProfile userInfo={userInfo} setUserInfo={setUserInfo} />} />
-      <Route path="/createroom" element={<CreateStudyroom />} />
+      <Route path="/createroom" element={<CreateStudyroom userInfo={userInfo} />} />
       <Route path="/beforestudy" element={<BeforeEnterRoom />} />
       <Route path="/community" element={<Community />} />
     </Routes>

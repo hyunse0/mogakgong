@@ -36,29 +36,29 @@ const names = [
     'Kelly Snyder',
 ];
 
-function getStyles(name, myCategory, theme) {
+function getStyles(name, studyRoomCategories, theme) {
     return {
         fontWeight:
-            myCategory.indexOf(name) === -1
+            studyRoomCategories.indexOf(name) === -1
                 ? theme.typography.fontWeightRegular
                 : theme.typography.fontWeightMedium,
     };
 }
 
-export default function StudyroomInput({ onButtonClick }) {
+export default function StudyroomInput({ category, onButtonClick }) {
 
-    const [myCategory, setMyCategory] = useState([]);
     const theme = useTheme();
 
     const [title, setTitle] = useState('')
+    const [studyRoomCategories, setMyCategory] = useState([]);
     const [password, setPassword] = useState('')
     const [description, setDescription] = useState('')
-    const [hashtag, setHashtag] = useState([])
-    const [start, setStart] = useState(null)
-    const [end, setEnd] = useState(null)
+    const [studyRoomHashtags, setHashtag] = useState([])
+    const [startDate, setStart] = useState(null)
+    const [endDate, setEnd] = useState(null)
     const [goalTime, setGoalTime] = useState(0)
-    const [imgFile, setImgFile] = useState(null)
-    const [maxPeople, setMaxPeople] = useState(0)
+    const [img, setImgFile] = useState('')
+    const [limit_people, setMaxPeople] = useState(0)
 
     const [tag, setTag] = useState('')
 
@@ -67,14 +67,15 @@ export default function StudyroomInput({ onButtonClick }) {
             title,
             password,
             description,
-            hashtag,
-            start,
-            end,
+            studyRoomHashtags,
+            startDate,
+            endDate,
             goalTime,
-            imgFile,
-            maxPeople
+            img,
+            limit_people,
+            studyRoomCategories
         })
-    }, [title, password, description, hashtag, start, end, goalTime, imgFile, maxPeople])
+    }, [title, password, description, studyRoomHashtags, startDate, endDate, goalTime, img, limit_people, studyRoomCategories])
 
     const handleCategory = (event) => {
         const {
@@ -91,7 +92,7 @@ export default function StudyroomInput({ onButtonClick }) {
 
     const handleDelete = (toDelete) => {
         // console.info('You clicked the delete icon.');
-        setHashtag(hashtag.filter(tag => tag !== toDelete));
+        setHashtag(studyRoomHashtags.filter(tag => tag !== toDelete));
     };
 
     const onCreate = e => {
@@ -109,9 +110,9 @@ export default function StudyroomInput({ onButtonClick }) {
     };
 
     const handleBlur = () => {
-        if (maxPeople < 0) {
+        if (limit_people < 0) {
             setMaxPeople(0);
-        } else if (maxPeople > 10) {
+        } else if (limit_people > 10) {
             setMaxPeople(10);
         }
     };
@@ -159,9 +160,9 @@ export default function StudyroomInput({ onButtonClick }) {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    {hashtag ?
+                    {studyRoomHashtags ?
                         <Stack direction="row" spacing={1}>
-                            {hashtag.map((tag, index) => (
+                            {studyRoomHashtags.map((tag, index) => (
                                 <Chip
                                     key={index}
                                     label={tag}
@@ -194,7 +195,7 @@ export default function StudyroomInput({ onButtonClick }) {
                         label="카테고리 설정"
                         fullWidth
                         multiple
-                        value={myCategory}
+                        value={studyRoomCategories}
                         onChange={handleCategory}
                         input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
                         renderValue={(selected) => (
@@ -206,13 +207,13 @@ export default function StudyroomInput({ onButtonClick }) {
                         )}
                         MenuProps={MenuProps}
                     >
-                        {names.map((name) => (
+                        {category.map((cate) => (
                             <MenuItem
-                                key={name}
-                                value={name}
-                                style={getStyles(name, myCategory, theme)}
+                                key={cate.id}
+                                value={cate.name}
+                                style={getStyles(cate, studyRoomCategories, theme)}
                             >
-                                {name}
+                                {cate.name}
                             </MenuItem>
                         ))}
                     </Select>
@@ -224,9 +225,9 @@ export default function StudyroomInput({ onButtonClick }) {
                         <DatePicker
                             fullWidth
                             label="시작날짜"
-                            value={start}
+                            value={startDate}
                             onChange={(newValue) => {
-                                setStart(newValue.toISOString().slice(0, 10))
+                                setStart(newValue.toISOString().slice(0, 10) + " 00:00:00")
                             }}
                             renderInput={(params) => <TextField {...params} />}
                         />
@@ -239,9 +240,9 @@ export default function StudyroomInput({ onButtonClick }) {
                         <DatePicker
                             fullWidth
                             label="종료날짜"
-                            value={end}
+                            value={endDate}
                             onChange={(newValue) => {
-                                setEnd(newValue.toISOString().slice(0, 10))
+                                setEnd(newValue.toISOString().slice(0, 10) + " 00:00:00")
                             }}
                             renderInput={(params) => <TextField {...params} />}
                         />
@@ -262,11 +263,11 @@ export default function StudyroomInput({ onButtonClick }) {
                     <Grid container spacing={2} alignItems="center">
                         <Grid item xs>
                             <InputLabel shrink>인원 수를 정하세요</InputLabel>
-                            <Slider value={maxPeople} onChange={handleSliderChange} defaultValue={0} aria-label="Default" valueLabelDisplay="auto" max={10} marks />
+                            <Slider value={limit_people} onChange={handleSliderChange} defaultValue={0} aria-label="Default" valueLabelDisplay="auto" max={10} marks />
                         </Grid>
                         <Grid item>
                             <Input
-                                value={maxPeople}
+                                value={limit_people}
                                 size="small"
                                 onChange={handleInputChange}
                                 onBlur={handleBlur}
@@ -285,9 +286,9 @@ export default function StudyroomInput({ onButtonClick }) {
                     <Box sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
                         <img
                             src=
-                            {imgFile ? imgFile : DEFAULT_IMG} height={254} />
+                            {img ? img : DEFAULT_IMG} height={254} />
                     </Box>
-                    {!imgFile ? <div>*해당 이미지는 기본 이미지입니다.</div> : null}
+                    {!img ? <div>*해당 이미지는 기본 이미지입니다.</div> : null}
                 </Grid>
                 <Grid item xs={12}>
                     <Input

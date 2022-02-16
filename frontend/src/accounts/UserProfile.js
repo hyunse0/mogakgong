@@ -6,7 +6,7 @@ import { ProfileDetail } from './profile/ProfileDetail';
 
 
 export default function Account({ userInfo, setUserInfo }) {
-    // console.log(userInfo)
+    console.log(userInfo)
 
     useEffect(() => {
         axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
@@ -48,7 +48,7 @@ export default function Account({ userInfo, setUserInfo }) {
                             <Profile profile={userInfo} />
                         </Grid>
                         <Grid item lg={8} md={6} xs={12}>
-                            <ProfileDetail profile={userInfo} />
+                            <ProfileDetail userInfo={userInfo} setUserInfo={setUserInfo} />
                         </Grid>
                     </Grid>
                 </Container>

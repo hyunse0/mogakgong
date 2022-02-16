@@ -59,7 +59,6 @@ export default function SignIn({ setUserInfo, setStudyroom }) {
                     }
                 })
                     .then(res => {
-                        console.log(res.data.member)
                         setUserInfo(res.data.member)
                     })
                     .catch(err => {
