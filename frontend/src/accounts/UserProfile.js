@@ -1,19 +1,9 @@
 import { Box, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Profile } from './profile/Profile';
 import { ProfileDetail } from './profile/ProfileDetail';
 
-const { faker } = require('@faker-js/faker');
-faker.locale = "ko"
-const profile = {
-    email: faker.internet.email(),
-    ninckname: faker.internet.userName(),
-    category: faker.lorem.word(),
-    goal: faker.lorem.lines(),
-    birth: faker.datatype.datetime(),
-    img: faker.image.image(),
-}
 
 export default function Account({ userInfo, setUserInfo }) {
     // console.log(userInfo)

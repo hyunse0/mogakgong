@@ -1,7 +1,6 @@
 package com.ssafy.mogakgong.controller;
 
 import com.ssafy.mogakgong.domain.StudyPlanner;
-import com.ssafy.mogakgong.repository.CustomStudyPlannerRepositoryImpl;
 import com.ssafy.mogakgong.request.StudyPlannerDateRequest;
 import com.ssafy.mogakgong.service.StudyPlannerServiceImpl;
 import io.swagger.annotations.Api;
@@ -11,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
