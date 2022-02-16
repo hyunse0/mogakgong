@@ -40,20 +40,19 @@ public class StudyRoomServiceImplTest {
     public void 스터디룸_등록() throws Exception {
         //given
         StudyRoomRequest studyRoomRequest = new StudyRoomRequest();
-        studyRoomRequest.setTitle("공무원방");
+        studyRoomRequest.setTitle("인강시청방");
         studyRoomRequest.setPassword("1234");
-        //studyRoomRequest.setDescription("모여서 각자 코딩하는 방");
+        studyRoomRequest.setDescription("인강 시청하며 추천하는 방");
         studyRoomRequest.setStartDate("2022-02-09 00:00:00");
         studyRoomRequest.setEndDate("2022-02-10 00:00:00");
         studyRoomRequest.setLimit_people(4);
         //studyRoomRequest.setImg("noImg");
         studyRoomRequest.setGoalTime(6);
-        studyRoomRequest.setUrl("www.url2.com");
+        //studyRoomRequest.setUrl("www.url2.com");
 
-        studyRoomRequest.getStudyRoomHashtags().add("조용");
-        studyRoomRequest.getStudyRoomHashtags().add("시간엄수");
+        studyRoomRequest.getStudyRoomHashtags().add("자유로운 분위기");
         //studyRoomRequest.getStudyRoomHashtags().add("인공지능");
-        studyRoomRequest.getStudyRoomCategories().add("고시");
+        studyRoomRequest.getStudyRoomCategories().add("취업");
         studyRoomRequest.getStudyRoomCategories().add("자격증");
 
         Member member = memberRepository.findById(18).get();
@@ -71,9 +70,9 @@ public class StudyRoomServiceImplTest {
     public void 스터디룸_수정() throws Exception {
         //given
         StudyRoomUpdateRequest studyRoomUpdateRequest = new StudyRoomUpdateRequest();
-        studyRoomUpdateRequest.setTitle("모각코방");
+        studyRoomUpdateRequest.setTitle("세무회계방");
         studyRoomUpdateRequest.setPassword("1234");
-        studyRoomUpdateRequest.setDescription("모여서 각자 코딩하는 방");
+        studyRoomUpdateRequest.setDescription("세무회계 공부하는 방");
         studyRoomUpdateRequest.setStartDate("2022-02-09 00:00:00");
         studyRoomUpdateRequest.setEndDate("2022-02-10 00:00:00");
         studyRoomUpdateRequest.setLimitPeople(4);
@@ -83,7 +82,7 @@ public class StudyRoomServiceImplTest {
         studyRoomUpdateRequest.getStudyRoomHashtags().add("수학");
         studyRoomUpdateRequest.getStudyRoomHashtags().add("과학");
         studyRoomUpdateRequest.getStudyRoomHashtags().add("이공계");
-        studyRoomUpdateRequest.getStudyRoomCategories().add("취업");
+        studyRoomUpdateRequest.getStudyRoomCategories().add("세무,회계");
         studyRoomUpdateRequest.getStudyRoomCategories().add("자기개발");
 
         //when

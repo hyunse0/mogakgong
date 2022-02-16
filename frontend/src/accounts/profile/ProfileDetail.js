@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -10,7 +10,6 @@ import {
     TextField,
     Chip,
     Select,
-    InputLabel,
     OutlinedInput,
     MenuItem,
     useTheme
@@ -18,6 +17,9 @@ import {
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DatePicker from '@mui/lab/DatePicker';
+import axios from 'axios';
+
+const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -29,19 +31,6 @@ const MenuProps = {
         },
     },
 };
-
-const names = [
-    'Oliver Hansen',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
 
 function getStyles(name, myCategory, theme) {
     return {
@@ -55,16 +44,12 @@ function getStyles(name, myCategory, theme) {
 export const ProfileDetail = (props) => {
     const [userInfo, setUserInfo] = useState(props.profile)
 
+    // 사용자가 선택한 카테고리 배열
     const [myCategory, setMyCategory] = useState([]);
     const theme = useTheme();
 
-    // const handleCategory = (event) => {
-    //     console.log(event)
-    //     setUserInfo({
-    //         ...userInfo,
-    //         [event.target.name]: event.target.value
-    //     });
-    // };
+    // 전체 카테고리 배열
+    const [categorys, setCategorys] = useState([])
 
     const handleCategory = (event) => {
         const {
@@ -74,6 +59,31 @@ export const ProfileDetail = (props) => {
             typeof value === 'string' ? value.split(',') : value,
         );
     };
+
+    // 회원정보 수정
+    const submitUserInfo = async (e) => {
+        e.preventDefault();
+
+        const editedInfo = {
+            ...userInfo,
+            category: myCategory
+        }
+        console.log(editedInfo)
+        // await axios.post()
+    }
+
+    useEffect(() => {
+        axios.get(BASE_URL + '/category', {
+            headers: {
+                Authorization: localStorage.getItem('token')
+            },
+        })
+            .then(res => {
+                console.log(res.data.info)
+                setCategorys(res.data.info)
+            })
+        setUserInfo(props.profile)
+    }, [])
 
     return (
         <form
@@ -93,7 +103,8 @@ export const ProfileDetail = (props) => {
                             <TextField
                                 fullWidth
                                 label="닉네임"
-                                name="nickname"
+                                value={userInfo.ninckname}
+                                placeholder={userInfo.ninckname}
                                 onChange={(e) => {
                                     setUserInfo((prev) => {
                                         return {
@@ -104,7 +115,6 @@ export const ProfileDetail = (props) => {
                                     console.log(userInfo)
                                 }
                                 }
-                                value={userInfo.ninckname}
                                 variant="outlined"
                             />
                         </Grid>
@@ -131,8 +141,7 @@ export const ProfileDetail = (props) => {
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
-                                label="회원 목표"
-                                name="목표"
+                                label="당신의 목표를 적어주세요"
                                 onChange={e => {
                                     setUserInfo(prev => {
                                         return {
@@ -162,13 +171,13 @@ export const ProfileDetail = (props) => {
                                 )}
                                 MenuProps={MenuProps}
                             >
-                                {names.map((name) => (
+                                {categorys.map((category) => (
                                     <MenuItem
-                                        key={name}
-                                        value={name}
-                                        style={getStyles(name, myCategory, theme)}
+                                        key={category.id}
+                                        value={category.name}
+                                        style={getStyles(category.name, myCategory, theme)}
                                     >
-                                        {name}
+                                        {category.name}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -184,8 +193,11 @@ export const ProfileDetail = (props) => {
                     }}
                 >
                     <Button
+                        fullWidth
                         color="primary"
                         variant="contained"
+                        onClick={submitUserInfo}
+                        variant="outlined"
                     >
                         저장하기
                     </Button>

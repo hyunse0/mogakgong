@@ -2,7 +2,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
-import { Input, InputLabel, Stack } from '@mui/material';
+import { Input, InputLabel, MenuItem, OutlinedInput, Select, Stack, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
 import Slider from '@mui/material/Slider';
@@ -12,7 +12,44 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 const DEFAULT_IMG = "https://images.freeimages.com/images/small-previews/eaf/studying-ahead-1421056.jpg"
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
+
+const names = [
+    'Oliver Hansen',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+];
+
+function getStyles(name, myCategory, theme) {
+    return {
+        fontWeight:
+            myCategory.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    };
+}
+
 export default function StudyroomInput({ onButtonClick }) {
+
+    const [myCategory, setMyCategory] = useState([]);
+    const theme = useTheme();
+
     const [title, setTitle] = useState('')
     const [password, setPassword] = useState('')
     const [description, setDescription] = useState('')
@@ -38,6 +75,15 @@ export default function StudyroomInput({ onButtonClick }) {
             maxPeople
         })
     }, [title, password, description, hashtag, start, end, goalTime, imgFile, maxPeople])
+
+    const handleCategory = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setMyCategory(
+            typeof value === 'string' ? value.split(',') : value,
+        );
+    };
 
     const setImgHandler = async (e) => {
         setImgFile(URL.createObjectURL(e.target.files[0]));
@@ -142,6 +188,34 @@ export default function StudyroomInput({ onButtonClick }) {
                             }
                         }}
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    <Select
+                        label="카테고리 설정"
+                        fullWidth
+                        multiple
+                        value={myCategory}
+                        onChange={handleCategory}
+                        input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                        renderValue={(selected) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                {selected.map((value) => (
+                                    <Chip key={value} label={value} />
+                                ))}
+                            </Box>
+                        )}
+                        MenuProps={MenuProps}
+                    >
+                        {names.map((name) => (
+                            <MenuItem
+                                key={name}
+                                value={name}
+                                style={getStyles(name, myCategory, theme)}
+                            >
+                                {name}
+                            </MenuItem>
+                        ))}
+                    </Select>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <LocalizationProvider

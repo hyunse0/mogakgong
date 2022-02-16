@@ -42,7 +42,6 @@ public class StudyRoomController {
             Member member = memberServiceImpl.findOne(studyRoomRequest.getMemberId());
             Integer studyRoomId = studyRoomServiceImpl.create(studyRoomRequest, member);
             studyRoomServiceImpl.enter(studyRoomId, member.getId(),2);
-            //studyRoomServiceImpl.updateStudyRoomCategory(studyRoom.getId(),studyRoomRequest.getStudyRoomCategories());
         } catch (IllegalStateException e){
             return new ResponseEntity<>("URL_DUPLICATED", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
@@ -57,6 +56,7 @@ public class StudyRoomController {
         Map<String, Object> resultMap = new HashMap<>();
 
         Page<StudyRoomResponse> studyRoomList = studyRoomServiceImpl.getStudyRoomList(pageable);
+//        Page<StudyRoomResponse> studyRoomList = studyRoomServiceImpl.getRecommendStudyRoomList(9, pageable);
         resultMap.put("info", studyRoomList);
         resultMap.put("message", SUCCESS);
 
