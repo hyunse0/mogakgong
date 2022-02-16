@@ -131,7 +131,6 @@ public class MemberServiceImpl implements MemberService {
         Member prevMember = memberOptional.get();
         prevMember.setBirth(memberUpdateRequest.getBirth());
         prevMember.setNickname(memberUpdateRequest.getNickname());
-        prevMember.setPassword(memberUpdateRequest.getPassword());
         prevMember.setGoal(memberUpdateRequest.getGoal());
         prevMember.setImg(memberUpdateRequest.getImg());
     }
