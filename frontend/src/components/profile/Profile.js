@@ -9,11 +9,11 @@ import {
     Typography
 } from '@mui/material';
 
-
-export const Profile = (props) => {
+export const Profile = ({ userInfo, setUserInfo }) => {
+    console.log(userInfo)
 
     return (
-        <Card {...props}>
+        <Card>
             <CardContent>
                 <Box
                     sx={{
@@ -23,7 +23,7 @@ export const Profile = (props) => {
                     }}
                 >
                     <Avatar
-                        src={props.profile.img}
+                        src={userInfo ? userInfo.img : ''}
                         sx={{
                             height: 64,
                             mb: 2,
@@ -35,13 +35,13 @@ export const Profile = (props) => {
                         gutterBottom
                         variant="h5"
                     >
-                        {props.profile.email}
+                        {userInfo ? userInfo.email : ''}
                     </Typography>
                     <Typography
                         color="textSecondary"
                         variant="body2"
                     >
-                        {props.profile.ninckname}
+                        {userInfo ? userInfo.nickname : ''}
                     </Typography>
                 </Box>
             </CardContent>

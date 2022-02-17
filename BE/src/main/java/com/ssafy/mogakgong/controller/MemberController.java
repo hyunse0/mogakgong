@@ -14,8 +14,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,9 +71,11 @@ public class MemberController {
     // 회원정보 수정
     @PutMapping("/{memberId}")
     @ApiOperation(value = "회원 수정", notes = "기존의 회원 정보를 수정한다. 그리고 DB수정 성공여부에 따라 'success' 또는 'fail' 문자열을 반환한다.", response = Map.class)
-    public ResponseEntity<String> updateMember(@PathVariable("memberId") Integer memberId, @RequestBody MemberUpdateRequest memberUpdateRequest) {
+    public ResponseEntity<String> updateMember(@PathVariable("memberId") Integer memberId, @RequestBody MemberUpdateRequest memberUpdateRequest
+    , HttpServletResponse response, @RequestHeader HttpHeaders headers) {
         memberServiceImpl.update(memberId, memberUpdateRequest);
         memberServiceImpl.updateCategory(memberId, memberUpdateRequest.getMemberCategories());
+        response.setHeader("Authorization", headers.getFirst("Authorization"));
         return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
     }
 

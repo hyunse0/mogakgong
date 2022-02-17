@@ -6,38 +6,69 @@ import VideoRoom from './components/VideoRoomComponent'
 import UserProfile from './accounts/UserProfile'
 import CreateStudyroom from './view/CreateStudyroom'
 import BeforeEnterRoom from './view/BeforeEnterRoom'
-import Community from './view/Community'
-import { useState } from 'react';
+import MyAppBar from './components/AppBar'
+// import Community from './view/Community'
+import Page404 from './components/Page404'
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-// const { faker } = require('@faker-js/faker');
-// faker.locale = "ko"
-// const studyrooms = [...Array(10)].map((_, idx) => ({
-//   title: faker.lorem.word(),
-//   category: faker.lorem.word(),
-//   description: faker.lorem.lines(),
-//   hashtag: faker.lorem.word(),
-//   start_date: faker.datatype.datetime(),
-//   end_date: faker.datatype.datetime(),
-//   limit: Math.random(0, 1) * 10,
-//   img: faker.image.image(),
-// }))
-
+const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
 
 function App() {
   const [userInfo, setUserInfo] = useState({})
   const [studyrooms, setStudyroom] = useState([])
+  const [rcmStudyrooms, setRcmStudyroom] = useState([])
+
+  const fetchUserInfo = async () => {
+    try {
+      const res = await axios.get(BASE_URL + "/member", {
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      })
+      setUserInfo(res.data.member)
+      console.log('응답값 :', res.data.member)
+      // console.log('userinfo:', userInfo)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  useEffect(() => {
+    fetchUserInfo();
+    console.log(userInfo)
+  }, [])
 
   return (
-    <Routes>
-      <Route path="/" element={<Main studyrooms={studyrooms} setStudyroom={setStudyroom} />} />
-      <Route path="/login" element={<Signin setUserInfo={setUserInfo} setStudyroom={setStudyroom} />} />
-      <Route path="/join" element={<Signup />} />
-      <Route path="/studyroom" element={<VideoRoom />} />
-      <Route path="/profile" element={<UserProfile userInfo={userInfo} setUserInfo={setUserInfo} />} />
-      <Route path="/createroom" element={<CreateStudyroom />} />
-      <Route path="/beforestudy" element={<BeforeEnterRoom />} />
-      <Route path="/community" element={<Community />} />
-    </Routes>
+    <>
+      <MyAppBar userInfo={userInfo} setUserInfo={setUserInfo} />
+      <Routes>
+        <Route path="/" element={
+          <Main
+            studyrooms={studyrooms}
+            setStudyroom={setStudyroom}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+            rcmStudyrooms={rcmStudyrooms}
+            setRcmStudyroom={setRcmStudyroom}
+          />} />
+        <Route path="/login" element={
+          <Signin
+            studyrooms={studyrooms}
+            setStudyroom={setStudyroom}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+            rcmStudyrooms={rcmStudyrooms}
+            setRcmStudyroom={setRcmStudyroom}
+          />} />
+        <Route path="/join" element={<Signup />} />
+        <Route path="/studyroom" element={<VideoRoom />} />
+        <Route path="/profile" element={<UserProfile userInfo={userInfo} setUserInfo={setUserInfo} />} />
+        <Route path="/createroom" element={<CreateStudyroom userInfo={userInfo} />} />
+        <Route path="/beforestudy" element={<BeforeEnterRoom />} />
+        <Route path="/community" element={<Page404 />} />
+        <Route element={<Page404 />} />
+      </Routes>
+    </>
   )
 }
 

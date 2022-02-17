@@ -17,9 +17,7 @@ import {
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DatePicker from '@mui/lab/DatePicker';
-import axios from 'axios';
-
-const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
+import api from '../api';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -41,8 +39,8 @@ function getStyles(name, myCategory, theme) {
     };
 }
 
-export const ProfileDetail = (props) => {
-    const [userInfo, setUserInfo] = useState(props.profile)
+export const ProfileDetail = ({ userInfo, setUserInfo }) => {
+    console.log(userInfo)
 
     // 사용자가 선택한 카테고리 배열
     const [myCategory, setMyCategory] = useState([]);
@@ -61,7 +59,7 @@ export const ProfileDetail = (props) => {
     };
 
     // 회원정보 수정
-    const submitUserInfo = async (e) => {
+    const submitUserInfo = (e) => {
         e.preventDefault();
 
         const editedInfo = {
@@ -69,27 +67,32 @@ export const ProfileDetail = (props) => {
             category: myCategory
         }
         console.log(editedInfo)
-        // await axios.post()
+        api.put(`/member/${userInfo.id}`, editedInfo, {
+            headers: {
+                Authorization: localStorage.getItem('token')
+            }
+        })
+            .then(res => {
+                console.log(editedInfo)
+            })
     }
 
     useEffect(() => {
-        axios.get(BASE_URL + '/category', {
+        api.get('/category', {
             headers: {
                 Authorization: localStorage.getItem('token')
-            },
+            }
+        }).then(res => {
+            console.log(res)
+            setCategorys(res.data.info)
         })
-            .then(res => {
-                console.log(res.data.info)
-                setCategorys(res.data.info)
-            })
-        setUserInfo(props.profile)
     }, [])
 
     return (
         <form
             autoComplete="off"
             noValidate
-            {...props}
+            {...userInfo}
         >
             <Card>
                 <CardHeader
@@ -103,8 +106,8 @@ export const ProfileDetail = (props) => {
                             <TextField
                                 fullWidth
                                 label="닉네임"
-                                value={userInfo.ninckname}
-                                placeholder={userInfo.ninckname}
+                                defaultValue={userInfo ? userInfo.nickname : ''}
+                                placeholder={userInfo ? userInfo.nickname : ''}
                                 onChange={(e) => {
                                     setUserInfo((prev) => {
                                         return {
@@ -112,7 +115,6 @@ export const ProfileDetail = (props) => {
                                             ninckname: e.target.value
                                         }
                                     })
-                                    console.log(userInfo)
                                 }
                                 }
                                 variant="outlined"
@@ -125,7 +127,7 @@ export const ProfileDetail = (props) => {
                                 <DatePicker
                                     fullWidth
                                     label="생년월일"
-                                    value={userInfo.birth}
+                                    value={userInfo ? userInfo.birth : ""}
                                     onChange={e => {
                                         setUserInfo((prev) => {
                                             return {
@@ -150,7 +152,7 @@ export const ProfileDetail = (props) => {
                                         }
                                     })
                                 }}
-                                value={userInfo.goal}
+                                defaultValue={userInfo ? userInfo.goal : ''}
                                 variant="outlined"
                             />
                         </Grid>

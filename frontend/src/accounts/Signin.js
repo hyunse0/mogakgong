@@ -11,11 +11,12 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from '../components/api';
+
 
 const theme = createTheme();
 
-export default function SignIn({ setUserInfo, setStudyroom }) {
+export default function SignIn({ userInfo, setUserInfo, setStudyroom, setRcmStudyroom }) {
     const navigate = useNavigate();
 
     const emailReg = new RegExp(/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9.]+/)
@@ -43,7 +44,7 @@ export default function SignIn({ setUserInfo, setStudyroom }) {
         }
 
         // 로그인
-        await axios.post("http://i6c204.p.ssafy.io:8081/api/login", userInput, {
+        await api.post("/login", userInput, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -53,38 +54,37 @@ export default function SignIn({ setUserInfo, setStudyroom }) {
                 localStorage.setItem('token', res.headers.authorization)
 
                 // 로그인 후 회원정보 불러오기
-                axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
+                api.get("/member", {
                     headers: {
                         Authorization: localStorage.getItem('token')
                     }
                 })
                     .then(res => {
-                        console.log(res.data.member)
-                        setUserInfo(res.data.member)
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-
-                // 로그인 후 스터디룸 정보 불러오기
-                axios.get("http://i6c204.p.ssafy.io:8081/api/studyroom?page=0&spp=10", {
-                    headers: {
-                        Authorization: localStorage.getItem('token')
-                    },
-                })
-                    .then(res => {
-                        console.log(res.data.info.content)
-                        setStudyroom(res.data.info.content)
-                        navigate("/");
-                    })
-                    .catch((err) => {
-                        console.log(err)
+                        setUserInfo(() => res.data.member)
+                        api.get("/main/" + `${res.data.member.id}`, {
+                            headers: {
+                                Authorization: localStorage.getItem('token')
+                            },
+                        })
+                            .then(res => {
+                                console.log(res)
+                                setStudyroom(res.data.historyStudyRoom.content)
+                                setRcmStudyroom(res.data.recommendStudyRoom.content)
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
                     })
             })
+            .catch(err => {
+                console.log(err)
+            })
+
             .catch((err) => {
                 alert('정보가 일치하지 않습니다.')
                 console.log(err)
             })
+        navigate('/')
     };
 
     return (
