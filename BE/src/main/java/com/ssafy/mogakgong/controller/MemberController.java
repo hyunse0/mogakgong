@@ -115,8 +115,11 @@ public class MemberController {
         Map<String, Object> resultMap = new HashMap<>();
         HttpStatus status = HttpStatus.OK;
         Member member = memberServiceImpl.tokenToId(headers.getFirst("Authorization"));
+        System.out.println("에러확인1");
         List<String> categories = memberServiceImpl.getCategories(member.getId());
+        System.out.println("에러확인2");
         MemberResponse memberResponse = memberServiceImpl.getMember(member, categories);
+        System.out.println("에러확인3");
         resultMap.put("member", memberResponse);
         resultMap.put("message", SUCCESS);
 
