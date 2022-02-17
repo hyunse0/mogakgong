@@ -64,6 +64,7 @@ export default function SignIn({ userInfo, setUserInfo, setStudyroom, setRcmStud
                     .then(res => {
                         console.log("회원정보 불러오기 성공 : ", res.data)
                         setUserInfo(res.data.member)
+                        localStorage.setItem('user', JSON.stringify(res.data.member))
 
                         // 스터디룸 정보 불러오기
                         api.get("/main/" + `${res.data.member.id}`, {
