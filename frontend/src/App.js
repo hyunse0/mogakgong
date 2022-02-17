@@ -77,7 +77,7 @@ function App() {
             setRcmStudyroom={setRcmStudyroom}
           />} />
         <Route path="/join" element={<Signup />} />
-        <Route path="/studyroom" element={<VideoRoom />} />
+        <Route path="/studyroom" element={<VideoRoom userInfo={userInfo} />} />
         <Route path="/profile" element={<UserProfile userInfo={userInfo} setUserInfo={setUserInfo} />} />
         <Route path="/createroom" element={<CreateStudyroom userInfo={userInfo} />} />
         <Route path="/beforestudy" element={<BeforeEnterRoom />} />
