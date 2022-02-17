@@ -41,8 +41,8 @@ function getStyles(name, myCategory, theme) {
     };
 }
 
-export const ProfileDetail = (props) => {
-    const [userInfo, setUserInfo] = useState(props.profile)
+export const ProfileDetail = ({ userInfo, setUserInfo }) => {
+    console.log(userInfo)
 
     // 사용자가 선택한 카테고리 배열
     const [myCategory, setMyCategory] = useState([]);
@@ -61,7 +61,7 @@ export const ProfileDetail = (props) => {
     };
 
     // 회원정보 수정
-    const submitUserInfo = async (e) => {
+    const submitUserInfo = (e) => {
         e.preventDefault();
 
         const editedInfo = {
@@ -69,27 +69,25 @@ export const ProfileDetail = (props) => {
             category: myCategory
         }
         console.log(editedInfo)
-        // await axios.post()
+        axios.put(BASE_URL + `/member/${userInfo.id}`, editedInfo, {
+            headers: {
+                Authorization: localStorage.getItem('token')
+            }
+        })
+            .then(res => {
+                console.log(editedInfo)
+            })
     }
 
     useEffect(() => {
-        axios.get(BASE_URL + '/category', {
-            headers: {
-                Authorization: localStorage.getItem('token')
-            },
-        })
-            .then(res => {
-                console.log(res.data.info)
-                setCategorys(res.data.info)
-            })
-        setUserInfo(props.profile)
+        setUserInfo(userInfo)
     }, [])
 
     return (
         <form
             autoComplete="off"
             noValidate
-            {...props}
+            {...userInfo}
         >
             <Card>
                 <CardHeader
@@ -103,8 +101,8 @@ export const ProfileDetail = (props) => {
                             <TextField
                                 fullWidth
                                 label="닉네임"
-                                value={userInfo.ninckname}
-                                placeholder={userInfo.ninckname}
+                                defaultValue={userInfo.nickname}
+                                placeholder={userInfo.nickname}
                                 onChange={(e) => {
                                     setUserInfo((prev) => {
                                         return {
@@ -150,7 +148,7 @@ export const ProfileDetail = (props) => {
                                         }
                                     })
                                 }}
-                                value={userInfo.goal}
+                                defaultValue={userInfo.goal}
                                 variant="outlined"
                             />
                         </Grid>

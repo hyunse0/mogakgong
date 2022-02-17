@@ -35,19 +35,29 @@ export default function Review({ props }) {
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="해시태그" />
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        {props.hashtag}
+                        {props.studyRoomHashtags.map((item) => (
+                            <span> {item} </span>
+                        ))}
+                    </Typography>
+                </ListItem>
+                <ListItem sx={{ py: 1, px: 0 }}>
+                    <ListItemText primary="카테고리" />
+                    <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                        {props.studyRoomCategories.map((item) => (
+                            <span> {item} </span>
+                        ))}
                     </Typography>
                 </ListItem>
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="시작일" />
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        {props.start}
+                        {props.startDate}
                     </Typography>
                 </ListItem>
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="종료일" />
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        {props.end}
+                        {props.endDate}
                     </Typography>
                 </ListItem>
                 <ListItem sx={{ py: 1, px: 0 }}>
@@ -59,13 +69,16 @@ export default function Review({ props }) {
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="최대인원" />
                     <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                        {props.maxPeople}명
+                        {props.limit_people}명
                     </Typography>
                 </ListItem>
                 <ListItem sx={{ py: 1, px: 0 }}>
                     <ListItemText primary="이미지" />
                     <Box sx={{ display: 'flex', alignContent: 'center', justifyContent: 'center' }}>
-                        <img src={props.imgFile ? props.imgFile : DEFAULT_IMG} height={254} />
+                        <img
+                            src={props.img ? props.img : DEFAULT_IMG}
+                            height={254}
+                            alt='null' />
                     </Box>
                 </ListItem>
             </List>

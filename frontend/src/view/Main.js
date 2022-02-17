@@ -18,20 +18,34 @@ import axios from 'axios';
 const DEFAULT_IMG = "https://images.freeimages.com/images/small-previews/eaf/studying-ahead-1421056.jpg"
 const theme = createTheme();
 
-export default function Main({ studyrooms, setStudyroom }) {
+export default function Main({ studyrooms, setStudyroom, userInfo, setUserInfo, rcmStudyrooms, setRcmStudyroom }) {
 
     // 새로고침시 상태를 다시 불러오기 위함
     useEffect(() => {
-        axios.get("http://i6c204.p.ssafy.io:8081/api/studyroom?page=0&spp=10", {
+        axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
             headers: {
                 Authorization: localStorage.getItem('token')
-            },
+            }
         })
             .then(res => {
-                // console.log(res.data.info.content)
-                setStudyroom(res.data.info.content)
+                console.log(res.data.member)
+                setUserInfo(res.data.member)
+                axios.get("http://i6c204.p.ssafy.io:8081/api/main/" + `${res.data.member
+                    .id}`, {
+                    headers: {
+                        Authorization: localStorage.getItem('token')
+                    },
+                })
+                    .then(res => {
+                        console.log(res)
+                        setStudyroom(res.data.historyStudyRoom.content)
+                        setRcmStudyroom(res.data.recommendStudyRoom.content)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err)
             })
 
@@ -105,7 +119,7 @@ export default function Main({ studyrooms, setStudyroom }) {
                         {/* 추천 스터디 */}
                         <Typography mt={2} variant='h6'>추천 스터디</Typography>
                         <ImageList cols={4} >
-                            {localStorage.getItem('token') ? studyrooms.map((item) => (
+                            {rcmStudyrooms ? rcmStudyrooms.map((item) => (
                                 <Card key={item.id}>
                                     <ImageListItem >
                                         <img
@@ -134,7 +148,7 @@ export default function Main({ studyrooms, setStudyroom }) {
                                         />
                                     </ImageListItem>
                                 </Card>
-                            )) : <div>로그인 하세요</div>}
+                            )) : <div>추천 스터디룸이 없습니다.</div>}
                         </ImageList>
                     </Grid>
                 </Grid>
