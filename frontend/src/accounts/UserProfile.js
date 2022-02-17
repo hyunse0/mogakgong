@@ -1,6 +1,4 @@
 import { Box, Container, CssBaseline, Grid, Typography } from '@mui/material';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { Profile } from '../components/profile/Profile';
 import { ProfileDetail } from '../components/profile/ProfileDetail';
 
