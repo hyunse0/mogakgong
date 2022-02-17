@@ -12,11 +12,10 @@ import StudyroomInput from '../components/studyroom/StudyroomInput'
 import Review from '../components/studyroom/Review';
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from '../components/api'
 
 const steps = ['정보입력', '확인'];
 const theme = createTheme();
-const BASE_URL = 'http://i6c204.p.ssafy.io:8081/api'
 
 function getStepContent(step, info, category, func) {
     switch (step) {
@@ -55,7 +54,7 @@ export default function Checkout({ userInfo }) {
     }
 
     useEffect(() => {
-        axios.get(BASE_URL + '/category', {
+        api.get('/category', {
             headers: {
                 Authorization: localStorage.getItem('token')
             },
@@ -73,7 +72,7 @@ export default function Checkout({ userInfo }) {
             url: ""
         }
         console.log(data)
-        await axios.post(BASE_URL + '/studyroom', data, {
+        await api.post('/studyroom', data, {
             headers: {
                 Authorization: localStorage.getItem('token'),
                 "Content-type": "application/json"

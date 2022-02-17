@@ -11,9 +11,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from '../components/api';
 
-const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
 
 const theme = createTheme();
 
@@ -45,7 +44,7 @@ export default function SignIn({ userInfo, setUserInfo, setStudyroom, setRcmStud
         }
 
         // 로그인
-        await axios.post(BASE_URL + "/login", userInput, {
+        await api.post("/login", userInput, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -55,14 +54,14 @@ export default function SignIn({ userInfo, setUserInfo, setStudyroom, setRcmStud
                 localStorage.setItem('token', res.headers.authorization)
 
                 // 로그인 후 회원정보 불러오기
-                axios.get(BASE_URL + "/member", {
+                api.get("/member", {
                     headers: {
                         Authorization: localStorage.getItem('token')
                     }
                 })
                     .then(res => {
                         setUserInfo(() => res.data.member)
-                        axios.get(BASE_URL + "/main/" + `${res.data.member.id}`, {
+                        api.get("/main/" + `${res.data.member.id}`, {
                             headers: {
                                 Authorization: localStorage.getItem('token')
                             },

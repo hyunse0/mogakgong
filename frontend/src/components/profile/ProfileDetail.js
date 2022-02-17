@@ -17,9 +17,7 @@ import {
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DatePicker from '@mui/lab/DatePicker';
-import axios from 'axios';
-
-const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
+import api from '../api';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -69,7 +67,7 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
             category: myCategory
         }
         console.log(editedInfo)
-        axios.put(BASE_URL + `/member/${userInfo.id}`, editedInfo, {
+        api.put(`/member/${userInfo.id}`, editedInfo, {
             headers: {
                 Authorization: localStorage.getItem('token')
             }
@@ -80,7 +78,7 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
     }
 
     useEffect(() => {
-        axios.get(BASE_URL + '/category', {
+        api.get('/category', {
             headers: {
                 Authorization: localStorage.getItem('token')
             }

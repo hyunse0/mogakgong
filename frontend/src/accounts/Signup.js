@@ -15,7 +15,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import Input from '@mui/material/Input';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import api from '../components/api';
 
 const theme = createTheme();
 
@@ -36,7 +36,7 @@ export default function SignUp() {
             passwordCheck: passwordConfirm
         }
         // console.log(userInfo)
-        await axios.post("https://i6c204.p.ssafy.io/api/member/join", userInfo)
+        await api.post("member/join", userInfo)
             .then((res) => {
                 console.log(res)
                 alert('회원가입 완료!')

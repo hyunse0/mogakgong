@@ -13,24 +13,23 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ProgressBar from './ProgressBar';
-import axios from 'axios';
+import api from '../components/api'
 
 const DEFAULT_IMG = "https://images.freeimages.com/images/small-previews/eaf/studying-ahead-1421056.jpg"
-const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
 const theme = createTheme();
 
 export default function Main({ studyrooms, setStudyroom, userInfo, setUserInfo, rcmStudyrooms, setRcmStudyroom }) {
 
     // 새로고침시 상태를 다시 불러오기 위함
     useEffect(() => {
-        axios.get(BASE_URL + "/member", {
+        api.get("/member", {
             headers: {
                 Authorization: localStorage.getItem('token')
             }
         })
             .then(res => {
                 // setUserInfo(res.data.member)
-                axios.get(BASE_URL + "/main/" + `${res.data.member
+                api.get("/main/" + `${res.data.member
                     .id}`, {
                     headers: {
                         Authorization: localStorage.getItem('token')

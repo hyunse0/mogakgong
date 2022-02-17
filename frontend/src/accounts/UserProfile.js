@@ -1,8 +1,8 @@
 import { Box, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Profile } from './profile/Profile';
-import { ProfileDetail } from './profile/ProfileDetail';
+import { Profile } from '../components/profile/Profile';
+import { ProfileDetail } from '../components/profile/ProfileDetail';
 
 
 export default function UserProfile({ userInfo, setUserInfo }) {

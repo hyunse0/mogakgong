@@ -8,8 +8,6 @@ import {
     Divider,
     Typography
 } from '@mui/material';
-import axios from 'axios';
-import { useEffect } from 'react';
 
 export const Profile = ({ userInfo, setUserInfo }) => {
     console.log(userInfo)
