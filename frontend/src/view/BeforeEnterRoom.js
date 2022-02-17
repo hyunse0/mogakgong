@@ -63,12 +63,6 @@ export default function BeforeEnterRoom() {
                                         </Typography>
                                     </ListItem>
                                     <ListItem sx={{ py: 1, px: 0 }}>
-                                        <ListItemText primary="비밀번호" />
-                                        <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                                            {roomInfo.password}
-                                        </Typography>
-                                    </ListItem>
-                                    <ListItem sx={{ py: 1, px: 0 }}>
                                         <ListItemText primary="설명" />
                                         <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
                                             {roomInfo.description}
@@ -93,13 +87,13 @@ export default function BeforeEnterRoom() {
                                     <ListItem sx={{ py: 1, px: 0 }}>
                                         <ListItemText primary="시작일" />
                                         <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                                            {roomInfo.startDate.slice(0, 10)}
+                                            {roomInfo.startDate ? roomInfo.startDate.slice(0, 10) : ""}
                                         </Typography>
                                     </ListItem>
                                     <ListItem sx={{ py: 1, px: 0 }}>
                                         <ListItemText primary="종료일" />
                                         <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                                            {roomInfo.endDate.slice(0, 10)}
+                                            {roomInfo.endDate ? roomInfo.endDate.slice(0, 10) : ""}
                                         </Typography>
                                     </ListItem>
                                     <ListItem sx={{ py: 1, px: 0 }}>
