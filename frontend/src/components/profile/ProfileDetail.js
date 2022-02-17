@@ -18,6 +18,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import DatePicker from '@mui/lab/DatePicker';
 import api from '../api';
+import { useNavigate } from 'react-router-dom';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -40,6 +41,7 @@ function getStyles(name, myCategory, theme) {
 }
 
 export const ProfileDetail = ({ userInfo, setUserInfo }) => {
+    const navigate = useNavigate();
     console.log(userInfo)
 
     // 사용자가 선택한 카테고리 배열
@@ -59,21 +61,26 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
     };
 
     // 회원정보 수정
-    const submitUserInfo = (e) => {
+    const submitUserInfo = async (e) => {
         e.preventDefault();
 
         const editedInfo = {
             ...userInfo,
-            category: myCategory
+            memberCategories: myCategory
         }
-        console.log(editedInfo)
-        api.put(`/member/${userInfo.id}`, editedInfo, {
+        await api.put(`/member/${userInfo.id}`, editedInfo, {
             headers: {
                 Authorization: localStorage.getItem('token')
             }
         })
             .then(res => {
                 console.log(editedInfo)
+                console.log(res)
+                alert('회원정보 수정 완료!')
+                navigate("/")
+            })
+            .catch(err => {
+                console.log(err)
             })
     }
 
