@@ -11,6 +11,7 @@ import MyAppBar from './components/AppBar'
 import Page404 from './components/Page404'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import api from './components/api'
 
 const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
 
@@ -18,24 +19,37 @@ function App() {
   const [userInfo, setUserInfo] = useState({})
   const [studyrooms, setStudyroom] = useState([])
   const [rcmStudyrooms, setRcmStudyroom] = useState([])
+  const [totalStudyrooms, setTotalStudyroom] = useState([])
 
   const fetchUserInfo = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/member", {
+      const res = await api.get("/member", {
         headers: {
           Authorization: localStorage.getItem('token')
         }
       })
       setUserInfo(res.data.member)
       console.log('응답값 :', res.data.member)
-      // console.log('userinfo:', userInfo)
     } catch (err) {
       console.log(err)
     }
   }
+
+  const fetchStudyroom = async () => {
+    try {
+      const res = await api.get("/studyroom?page=0&size=20")
+      console.log(res.data.info.content)
+      setTotalStudyroom(res.data.info.content)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     fetchUserInfo();
-    console.log(userInfo)
+    fetchStudyroom();
+    // console.log(userInfo)
+    // console.log(totalStudyrooms)
   }, [])
 
   return (
@@ -50,6 +64,8 @@ function App() {
             setUserInfo={setUserInfo}
             rcmStudyrooms={rcmStudyrooms}
             setRcmStudyroom={setRcmStudyroom}
+            totalStudyrooms={totalStudyrooms}
+            setTotalStudyroom={setTotalStudyroom}
           />} />
         <Route path="/login" element={
           <Signin
