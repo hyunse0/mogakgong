@@ -42,8 +42,6 @@ public class StudyRoomController {
             Member member = memberServiceImpl.findOne(studyRoomRequest.getMemberId());
             Integer studyRoomId = studyRoomServiceImpl.create(studyRoomRequest, member);
             studyRoomServiceImpl.enter(studyRoomId, member.getId(),2);
-        } catch (IllegalStateException e){
-            return new ResponseEntity<>("URL_DUPLICATED", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(FAIL, HttpStatus.BAD_REQUEST);
         }

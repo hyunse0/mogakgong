@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,14 +35,14 @@ public class MemberServiceImplTest {
     @Autowired BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
-    //@Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
+    @Rollback(false) // test 내용 자동으로 롤백을 하는데 보고 싶다면 설정
     public void 회원가입() throws Exception {
         //given
         MemberJoinRequest member = new MemberJoinRequest();
-        member.setEmail("test@daum.net");
-        member.setPassword("abc");
-        member.setNickname("ssafy");
-        member.setImg("noImage");
+        member.setEmail("test@test.com");
+        member.setPassword("abcd");
+        member.setNickname("test용");
+        //member.setImg("noImage");
         member.setBirth("2020-02-02");
         member.setGoal("화팅");
         //when
