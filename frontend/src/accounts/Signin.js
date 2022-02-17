@@ -15,7 +15,7 @@ import axios from 'axios';
 
 const theme = createTheme();
 
-export default function SignIn({ setUserInfo, setStudyroom }) {
+export default function SignIn({ userInfo, setUserInfo, setStudyroom, setRcmStudyroom }) {
     const navigate = useNavigate();
 
     const emailReg = new RegExp(/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9.]+/)
@@ -59,31 +59,31 @@ export default function SignIn({ setUserInfo, setStudyroom }) {
                     }
                 })
                     .then(res => {
-                        setUserInfo(res.data.member)
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-
-                // 로그인 후 스터디룸 정보 불러오기
-                axios.get("http://i6c204.p.ssafy.io:8081/api/studyroom?page=0&spp=10", {
-                    headers: {
-                        Authorization: localStorage.getItem('token')
-                    },
-                })
-                    .then(res => {
-                        console.log(res.data.info.content)
-                        setStudyroom(res.data.info.content)
-                        navigate("/");
-                    })
-                    .catch((err) => {
-                        console.log(err)
+                        setUserInfo(() => res.data.member)
+                        axios.get("http://i6c204.p.ssafy.io:8081/api/main/" + `${res.data.member.id}`, {
+                            headers: {
+                                Authorization: localStorage.getItem('token')
+                            },
+                        })
+                            .then(res => {
+                                console.log(res)
+                                setStudyroom(res.data.historyStudyRoom.content)
+                                setRcmStudyroom(res.data.recommendStudyRoom.content)
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
                     })
             })
+            .catch(err => {
+                console.log(err)
+            })
+
             .catch((err) => {
                 alert('정보가 일치하지 않습니다.')
                 console.log(err)
             })
+        navigate('/')
     };
 
     return (

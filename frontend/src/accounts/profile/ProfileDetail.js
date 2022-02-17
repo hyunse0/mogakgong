@@ -80,15 +80,7 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
     }
 
     useEffect(() => {
-        axios.get(BASE_URL + '/category', {
-            headers: {
-                Authorization: localStorage.getItem('token')
-            },
-        })
-            .then(res => {
-                console.log(res.data.info)
-                setCategorys(res.data.info)
-            })
+        setUserInfo(userInfo)
     }, [])
 
     return (
