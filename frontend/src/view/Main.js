@@ -16,21 +16,21 @@ import ProgressBar from './ProgressBar';
 import axios from 'axios';
 
 const DEFAULT_IMG = "https://images.freeimages.com/images/small-previews/eaf/studying-ahead-1421056.jpg"
+const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
 const theme = createTheme();
 
 export default function Main({ studyrooms, setStudyroom, userInfo, setUserInfo, rcmStudyrooms, setRcmStudyroom }) {
 
     // 새로고침시 상태를 다시 불러오기 위함
     useEffect(() => {
-        axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
+        axios.get(BASE_URL + "/member", {
             headers: {
                 Authorization: localStorage.getItem('token')
             }
         })
             .then(res => {
-                console.log(res.data.member)
-                setUserInfo(res.data.member)
-                axios.get("http://i6c204.p.ssafy.io:8081/api/main/" + `${res.data.member
+                // setUserInfo(res.data.member)
+                axios.get(BASE_URL + "/main/" + `${res.data.member
                     .id}`, {
                     headers: {
                         Authorization: localStorage.getItem('token')

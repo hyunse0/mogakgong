@@ -80,7 +80,14 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
     }
 
     useEffect(() => {
-        setUserInfo(userInfo)
+        axios.get(BASE_URL + '/category', {
+            headers: {
+                Authorization: localStorage.getItem('token')
+            }
+        }).then(res => {
+            console.log(res)
+            setCategorys(res.data.info)
+        })
     }, [])
 
     return (
@@ -101,8 +108,8 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
                             <TextField
                                 fullWidth
                                 label="닉네임"
-                                defaultValue={userInfo.nickname}
-                                placeholder={userInfo.nickname}
+                                defaultValue={userInfo ? userInfo.nickname : ''}
+                                placeholder={userInfo ? userInfo.nickname : ''}
                                 onChange={(e) => {
                                     setUserInfo((prev) => {
                                         return {
@@ -110,7 +117,6 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
                                             ninckname: e.target.value
                                         }
                                     })
-                                    console.log(userInfo)
                                 }
                                 }
                                 variant="outlined"
@@ -123,7 +129,7 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
                                 <DatePicker
                                     fullWidth
                                     label="생년월일"
-                                    value={userInfo.birth}
+                                    value={userInfo ? userInfo.birth : ""}
                                     onChange={e => {
                                         setUserInfo((prev) => {
                                             return {
@@ -148,7 +154,7 @@ export const ProfileDetail = ({ userInfo, setUserInfo }) => {
                                         }
                                     })
                                 }}
-                                defaultValue={userInfo.goal}
+                                defaultValue={userInfo ? userInfo.goal : ''}
                                 variant="outlined"
                             />
                         </Grid>
