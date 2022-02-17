@@ -6,14 +6,7 @@ import { ProfileDetail } from './profile/ProfileDetail';
 
 
 export default function UserProfile({ userInfo, setUserInfo }) {
-    const [user, setUser] = useState(userInfo)
-
-    useEffect(() => {
-        setUser(userInfo)
-        console.log('useeffect : run!')
-    }, [userInfo, user])
-
-    console.log("user:", user)
+    console.log("user:", userInfo)
 
     return (
         <>
@@ -37,10 +30,10 @@ export default function UserProfile({ userInfo, setUserInfo }) {
                         spacing={3}
                     >
                         <Grid item lg={4} md={6} xs={12}>
-                            <Profile userInfo={userInfo} setUserInfo={setUserInfo} />
+                            <Profile userInfo={userInfo} />
                         </Grid>
                         <Grid item lg={8} md={6} xs={12}>
-                            {/* <ProfileDetail userInfo={userInfo} setUserInfo={setUserInfo} /> */}
+                            <ProfileDetail userInfo={userInfo} setUserInfo={setUserInfo} />
                         </Grid>
                     </Grid>
                 </Container>

@@ -12,27 +12,30 @@ import Page404 from './components/Page404'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const BASE_URL = "http://i6c204.p.ssafy.io:8081/api"
 
 function App() {
-  const [userInfo, setUserInfo] = useState(null)
+  const [userInfo, setUserInfo] = useState({})
   const [studyrooms, setStudyroom] = useState([])
   const [rcmStudyrooms, setRcmStudyroom] = useState([])
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const res = await axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
-          headers: {
-            Authorization: localStorage.getItem('token')
-          }
-        })
-        setUserInfo(res.data.member)
-        console.log(userInfo)
-      } catch (err) {
-        console.log(err)
-      }
+  const fetchUserInfo = async () => {
+    try {
+      const res = await axios.get(BASE_URL + "/member", {
+        headers: {
+          Authorization: localStorage.getItem('token')
+        }
+      })
+      setUserInfo(res.data.member)
+      console.log('응답값 :', res.data.member)
+      // console.log('userinfo:', userInfo)
+    } catch (err) {
+      console.log(err)
     }
+  }
+  useEffect(() => {
     fetchUserInfo();
+    console.log(userInfo)
   }, [])
 
   return (

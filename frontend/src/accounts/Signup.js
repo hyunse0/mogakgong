@@ -36,7 +36,7 @@ export default function SignUp() {
             passwordCheck: passwordConfirm
         }
         // console.log(userInfo)
-        await axios.post("http://i6c204.p.ssafy.io/member/join", userInfo)
+        await axios.post("https://i6c204.p.ssafy.io/api/member/join", userInfo)
             .then((res) => {
                 console.log(res)
                 alert('회원가입 완료!')
