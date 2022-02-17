@@ -7,7 +7,7 @@ import UserProfile from './accounts/UserProfile'
 import CreateStudyroom from './view/CreateStudyroom'
 import BeforeEnterRoom from './view/BeforeEnterRoom'
 import MyAppBar from './components/AppBar'
-import Community from './view/Community'
+// import Community from './view/Community'
 import Page404 from './components/Page404'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
