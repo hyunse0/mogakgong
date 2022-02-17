@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import MyAppBar from './components/AppBar'
 import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.render(
   <React.StrictMode>
-    <MyAppBar />
     <BrowserRouter>
       <App />
     </BrowserRouter>

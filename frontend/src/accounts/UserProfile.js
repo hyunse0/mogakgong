@@ -1,27 +1,19 @@
 import { Box, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Profile } from './profile/Profile';
 import { ProfileDetail } from './profile/ProfileDetail';
 
 
-export default function Account({ userInfo, setUserInfo }) {
-    console.log(userInfo)
+export default function UserProfile({ userInfo, setUserInfo }) {
+    const [user, setUser] = useState(userInfo)
 
     useEffect(() => {
-        axios.get("http://i6c204.p.ssafy.io:8081/api/member", {
-            headers: {
-                Authorization: localStorage.getItem('token')
-            }
-        })
-            .then(res => {
-                console.log(res.data.member)
-                setUserInfo(res.data.member)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }, [])
+        setUser(userInfo)
+        console.log('useeffect : run!')
+    }, [userInfo, user])
+
+    console.log("user:", user)
 
     return (
         <>
@@ -45,10 +37,10 @@ export default function Account({ userInfo, setUserInfo }) {
                         spacing={3}
                     >
                         <Grid item lg={4} md={6} xs={12}>
-                            <Profile profile={userInfo} />
+                            <Profile userInfo={userInfo} setUserInfo={setUserInfo} />
                         </Grid>
                         <Grid item lg={8} md={6} xs={12}>
-                            <ProfileDetail userInfo={userInfo} setUserInfo={setUserInfo} />
+                            {/* <ProfileDetail userInfo={userInfo} setUserInfo={setUserInfo} /> */}
                         </Grid>
                     </Grid>
                 </Container>
@@ -56,3 +48,4 @@ export default function Account({ userInfo, setUserInfo }) {
         </>
     )
 };
+

@@ -1,26 +1,37 @@
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { Button, Typography, Link } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { useEffect } from 'react';
 // import { useState } from 'react';
 
+export default function CustomAppBar({ userInfo, setUserInfo }) {
+    const logout = (e) => {
+        // e.preventDefault();
+        localStorage.removeItem('token')
+        setUserInfo()
+    }
 
-export default function CustomAppBar() {
+    useEffect(() => {
+        setUserInfo()
+    }, [])
 
     return (
         <AppBar
             position="static"
-            color="default"
             elevation={0}
-            sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
+            style={{ backgroundColor: '#0c151c' }}
         >
             <Toolbar sx={{ flexWrap: 'wrap' }}>
-                <Typography variant="h4" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-                    모각공
+                <Typography variant="h4" color="inherit" noWrap sx={{ flexGrow: 1 }} >
+                    <Link href="/" color="inherit" underline="none">
+                        모각공
+                    </Link>
                 </Typography>
                 <nav>
                     <Link
                         variant="button"
-                        color="text.primary"
+                        color="inherit"
                         href="community"
                         sx={{ my: 1, mx: 1.5 }}
                     >
@@ -28,7 +39,7 @@ export default function CustomAppBar() {
                     </Link>
                     <Link
                         variant="button"
-                        color="text.primary"
+                        color="inherit"
                         href="/studyroom"
                         sx={{ my: 1, mx: 1.5 }}
                     >
@@ -36,16 +47,22 @@ export default function CustomAppBar() {
                     </Link>
                     <Link
                         variant="button"
-                        color="text.primary"
+                        color="inherit"
                         href="/profile"
                         sx={{ my: 1, mx: 1.5 }}
                     >
                         프로필
                     </Link>
                 </nav>
-                <Button href="/login" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-                    로그인
-                </Button>
+                {userInfo ?
+                    <Button onClick={logout} variant="contained" color="primary" href="/login" sx={{ my: 1, mx: 1.5 }}>
+                        로그아웃
+                    </Button>
+                    : <Button variant="contained" color="primary" href="/login" sx={{ my: 1, mx: 1.5 }}>
+                        로그인
+                    </Button>
+                }
+
             </Toolbar>
         </AppBar>
     )
