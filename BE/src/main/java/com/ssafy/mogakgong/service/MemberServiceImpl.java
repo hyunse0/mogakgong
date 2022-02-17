@@ -101,11 +101,14 @@ public class MemberServiceImpl implements MemberService {
 
     public List<String> getCategories(Integer memberId) {
         List<String> categories = new ArrayList<>();
+        System.out.println("에러확인2-1");
         List<MemberCategory> memberCategories = memberCategoryRepository.findByMemberId(memberId);
+        System.out.println("에러확인2-2");
         if(memberCategories != null) {
+            System.out.println("에러확인2-3");
             for(MemberCategory memberCategory : memberCategories) {
-                Category findCategory = categoryRepository.findById(memberCategory.getId()).get();
-                categories.add(findCategory.getName());
+                //Category findCategory = categoryRepository.findById(memberCategory.getId()).get();
+                categories.add(memberCategory.getCategory().getName());
             }
         }
         return categories;
