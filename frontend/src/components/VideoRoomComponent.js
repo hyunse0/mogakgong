@@ -12,18 +12,19 @@ import ToolbarComponent from './toolbar/ToolbarComponent';
 
 var localUser = new UserModel();
 const roomInfo = JSON.parse(localStorage.getItem('roomInfo'))
+const me = JSON.parse(localStorage.getItem('user')) || {}
 
 class VideoRoomComponent extends Component {
     constructor(props) {
         super(props);
         this.OPENVIDU_SERVER_URL = this.props.openviduServerUrl
             ? this.props.openviduServerUrl
-            : 'https://' + window.location.hostname + ':8443';
+            : 'https://' + window.location.hostname + ':4443';
         this.OPENVIDU_SERVER_SECRET = this.props.openviduSecret ? this.props.openviduSecret : 'MY_SECRET';
         this.hasBeenUpdated = false;
         this.layout = new OpenViduLayout();
         let sessionName = roomInfo.title ? roomInfo.title : 'undefined'
-        let userName = roomInfo.nickname ? roomInfo.nickname : 'undefined'
+        let userName = me.nickname ? me.nickname : 'undefined'
         this.remotes = [];
         this.localUserAccessAllowed = false;
         this.state = {
@@ -54,6 +55,7 @@ class VideoRoomComponent extends Component {
         this.checkSize = this.checkSize.bind(this);
     }
 
+
     componentDidMount() {
         const openViduLayoutOptions = {
             maxRatio: 3 / 2, // The narrowest ratio that will be used (default 2x3)
@@ -67,6 +69,8 @@ class VideoRoomComponent extends Component {
             bigFirst: true, // Whether to place the big one in the top left (true) or bottom right
             animate: true, // Whether you want to animate the transitions
         };
+
+        console.log(this.props)
 
         this.layout.initLayoutContainer(document.getElementById('layout'), openViduLayoutOptions);
         window.addEventListener('beforeunload', this.onbeforeunload);

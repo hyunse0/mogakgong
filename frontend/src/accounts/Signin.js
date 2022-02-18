@@ -50,8 +50,10 @@ export default function SignIn({ userInfo, setUserInfo, setStudyroom, setRcmStud
             }
         })
             .then((res) => {
-                // console.log(res.headers.authorization)
+                localStorage.removeItem('token')
                 localStorage.setItem('token', res.headers.authorization)
+                console.log(res.headers.authorization)
+                console.log('로그인 성공')
 
                 // 로그인 후 회원정보 불러오기
                 api.get("/member", {
@@ -60,7 +62,11 @@ export default function SignIn({ userInfo, setUserInfo, setStudyroom, setRcmStud
                     }
                 })
                     .then(res => {
-                        setUserInfo(() => res.data.member)
+                        console.log("회원정보 불러오기 성공 : ", res.data)
+                        setUserInfo(res.data.member)
+                        localStorage.setItem('user', JSON.stringify(res.data.member))
+
+                        // 스터디룸 정보 불러오기
                         api.get("/main/" + `${res.data.member.id}`, {
                             headers: {
                                 Authorization: localStorage.getItem('token')
@@ -70,21 +76,23 @@ export default function SignIn({ userInfo, setUserInfo, setStudyroom, setRcmStud
                                 console.log(res)
                                 setStudyroom(res.data.historyStudyRoom.content)
                                 setRcmStudyroom(res.data.recommendStudyRoom.content)
+                                alert("로그인 성공")
+                                navigate('/')
                             })
                             .catch((err) => {
                                 console.log(err)
+                                alert("스터디룸 불러오기 실패")
                             })
                     })
+                    .catch(err => {
+                        console.log(err)
+                        alert('회원 정보 불러오기 실패')
+                    })
             })
-            .catch(err => {
-                console.log(err)
-            })
-
             .catch((err) => {
                 alert('정보가 일치하지 않습니다.')
                 console.log(err)
             })
-        navigate('/')
     };
 
     return (
