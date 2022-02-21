@@ -237,13 +237,13 @@ SSAFY 광주 2반 공통 프로젝트 4팀
 
   이메일과 패스워드 입력 시 입력에 맞추어 즉시 피드백 가능
 
-![signup](C:\Users\SSAFY\Desktop\공통 플젝 발표\signup.png)
+![signup](README.assets\signup.png)
 
 
 
 - ##### 로그인
 
-![login](C:\Users\SSAFY\Videos\Movavi Library\login.gif)
+![login](README.assets\login.gif)
 
 
 
@@ -251,13 +251,13 @@ SSAFY 광주 2반 공통 프로젝트 4팀
 
   로그인하지 않아 '내 스터디'와 '추천 스터디'가 뜨지 않는 메인 페이지
 
-![main_before_login](C:\Users\SSAFY\Videos\Movavi Library\main_before_login.gif)
+![main_before_login](README.assets/main_before_login.gif)
 
 
 
 - ##### 로그인 후 메인 페이지
 
-![main](C:\Users\SSAFY\Videos\Movavi Library\main.gif)
+![main](README.assets/main.gif)
 
 
 
@@ -265,7 +265,7 @@ SSAFY 광주 2반 공통 프로젝트 4팀
 
   닉네임과 생일, 목표 및 관심사 설정 가능
 
-![profile](C:\Users\SSAFY\Videos\Movavi Library\profile.gif)
+![profile](README.assets/profile.gif)
 
 
 
@@ -275,19 +275,19 @@ SSAFY 광주 2반 공통 프로젝트 4팀
 
   리뷰 페이지를 통해 입력을 잘못한 부분이 있는지 확인 가능
 
-![create_studyroom](C:\Users\SSAFY\Videos\Movavi Library\create_studyroom.gif)
+![create_studyroom](README.assets/create_studyroom.gif)
 
 
 
 - ##### 스터디룸 입장
 
-![studyroom](C:\Users\SSAFY\Videos\Movavi Library\studyroom.gif)
+![studyroom](README.assets/studyroom.gif)
 
 
 
 - ##### 채팅 기능
 
-![chatting](C:\Users\SSAFY\Videos\Movavi Library\chatting.gif)
+![chatting](README.assets/chatting.gif)
 
 
 
