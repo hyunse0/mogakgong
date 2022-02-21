@@ -82,25 +82,6 @@ SSAFY 광주 2반 공통 프로젝트 4팀
   3. 공부하는 시간에 따라 돈을 낼 필요가 없음
   4. 언제 어디서나 시간과 장소에 구애받지 않고 독립적인 공부 습관 형성 가능
 
-### 팀원 소개
-
-팀원 소개
-
-팀규칙
-
-### 프로젝트 명세
-
-[기능명세서](https://docs.google.com/spreadsheets/d/18-CeEBBO8wSRqbJIzstc_J5Cyt1iNi4LRHm5akPiwvw/edit?usp=sharing)
-
-[유즈케이스](https://app.diagrams.net/#G1sagDOmQBDiuSQeBHrKMscmzctqgiRLNo)
-
-ERD
-[와이어프레임](https://docs.google.com/presentation/d/1yVuQeDnOL--OQ7ABIADai3rTTZEwzWQRAwQoF91Pxrk/edit)
-
-API 명세서
-
-아키텍처
-
 ### 시연 영상
 
 ### 느낀점
