@@ -237,13 +237,13 @@ SSAFY 광주 2반 공통 프로젝트 4팀
 
   이메일과 패스워드 입력 시 입력에 맞추어 즉시 피드백 가능
 
-![signup](README.assets\signup.png)
+![signup](README.assets/signup.png)
 
 
 
 - ##### 로그인
 
-![login](README.assets\login.gif)
+![login](README.assets/login.gif)
 
 
 
